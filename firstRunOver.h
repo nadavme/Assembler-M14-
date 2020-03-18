@@ -25,7 +25,7 @@ typedef struct first_word /*we've choosed to define the machine language word wi
     unsigned short source_3 : 1;
 
     unsigned int opCode : 4;
-};
+}first_word;
 
 typedef struct second_word /*word for 1st and 2nd methods (mio'n methods)*/
 {
@@ -35,8 +35,8 @@ typedef struct second_word /*word for 1st and 2nd methods (mio'n methods)*/
     unsigned short op_is_relocatable : 1;
     unsigned short op_is_absolute : 1;
 
-    unsigned short num_or_addres : 12;
-};
+    unsigned short num_or_addres : 12;/*in this 12 bits we'll store the actual value or the memory addres.*/
+}second_word;
 
 typedef struct third_word /*word for 3rd and 4th methods (mio'n methods)*/
 {
@@ -46,8 +46,12 @@ typedef struct third_word /*word for 3rd and 4th methods (mio'n methods)*/
     unsigned short op_is_relocatable : 1;
     unsigned short op_is_absolute : 1;
 
-    unsigned short bit : 3;/*stoped here*/
-};
+    unsigned short destination_register : 3;/*this bits will contain the number of register which has the 
+                                                                            memory addres of the value of the destination operand. */
+    
+    unsigned short source_register : 3;/*this bits will contain the number of register which has the 
+                                                                            memory addres of the value of the source operand. */
+}third_word;
 
 
 #endif //MAABADA-MMN14_FIRSTRUNOVER_H
