@@ -6,6 +6,12 @@
 #define MAABADA-MMN14_FIRSTRUNOVER_H
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+#include "symbolsTable.h"
+
+
 
 
 typedef struct first_word /*we've choosed to define the machine language word with bit fields, lets see how it goes... Nadav The king, Matan the princess ;-) */
@@ -35,7 +41,7 @@ typedef struct second_word /*word for methods 0,1 (mio'n methods)*/
     unsigned short op_is_relocatable : 1; /*R*/
     unsigned short op_is_absolute : 1; /*A*/
 
-    unsigned short num_or_addres : 12;/*in this 12 bits we'll store the actual value or the memory addres.*/
+    unsigned short num_or_address : 12;/*in this 12 bits we'll store the actual value or the memory address.*/
 }second_word;
 
 typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
@@ -47,11 +53,21 @@ typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
     unsigned short op_is_absolute : 1; /*A*/
 
     unsigned short destination_register : 3;/*this bits will contain the number of register which has the 
-                                                                            memory addres of the value of the destination operand. */
+                                                                            memory address of the value of the destination operand. */
     
     unsigned short source_register : 3;/*this bits will contain the number of register which has the 
-                                                                            memory addres of the value of the source operand. */
+                                                                            memory address of the value of the source operand. */
 }third_word;
+
+
+char lineParser(char line);
+
+bool isLineValid(char* parsedLine);
+
+bool isSymbole(char parsedLine[0]);
+
+char getInstructionType(char* parsedLine);
+
 
 
 #endif //MAABADA-MMN14_FIRSTRUNOVER_H
