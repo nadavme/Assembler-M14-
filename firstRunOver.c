@@ -4,15 +4,19 @@
 
 #include "firstRunOver.h"
 
+int ARGS_NUM = 0;
+
 
 void runFirst(const char *file)
 {
     {
         int IC, DC;
         FILE *fp;
-        char line[82];
+        char* line;
         bool isThereExceptions = false;
         bool isThereSymbolDeclaration = false;
+        char lineWithNoCommas[120];
+
 
         IC = 0;
         DC = 0;
@@ -23,11 +27,13 @@ void runFirst(const char *file)
             exit(EXIT_FAILURE);
         }
 
-        while((fgets(line, sizeof(line)), fp) != EOF)
+        while((fgets(line, 82, fp) != EOF))
         {
             char* parsedLine;
             char instructionType;
-            parsedLine = lineParser(line);
+            if(!doubleCommasChecker(line)) break;
+            strcpy(lineWithNoCommas, commasReplacer(line));
+            parsedLine = lineParser(lineWithNoCommas);
             if (!isLineValid(parsedLine)) isThereExceptions = true;
             if(!isThereExceptions)
             {
@@ -38,7 +44,8 @@ void runFirst(const char *file)
                     if((instructionType == ".data") || (instructionType == ".string"))
                     {
                         addSymbolToTable(parsedLine, instructionType, DC);
-                        analyzeData
+                        analyzeData(parsedLine, instructionType);
+
                     }
                 }
 
@@ -53,4 +60,57 @@ void runFirst(const char *file)
 
 
     }
+}
+
+char* commasReplacer(char* line)
+{
+    int i= 0;
+    while(line[i] != '\0')
+    {
+        if (line[i] == ',')
+        {
+            line[i] = ' ';
+        }
+        i++;
+    }
+    return line;
+}
+
+bool doubleCommasChecker(char* line)
+{
+    char *token;
+    token = strtok(line, " \t");
+    int i = strlen(token) -1;
+    int j;
+    int counter=0 , first = 0, commasCounter =0;
+    for (j = i; j < strlen(line) -1; j++)
+    {
+        if(line[j] == 'S') counter++;
+        if ((line[i] == 's')&& (counter = 1)) first = i;
+        if((line[j] == 'S')&& (counter>2)) break;
+    }
+    i= first;
+    while(i < j)
+    {
+        if (line[i] ==',') commasCounter++;
+        i++;
+    }
+    if (commasCounter > 2) return true;
+    return false;
+}
+
+char* lineParser(char* line)
+{
+    static char parsedLineLocal[40][10];
+    int i =0;
+    char *token;
+    token = strtok(line, " \t");
+    while(token != NULL)
+    {
+        strcpy(parsedLineLocal[i], token);
+        ARGS_NUM ++;
+        token = strtok(NULL, " \t");
+        i++;
+    }
+    return *parsedLineLocal;
 }
