@@ -134,3 +134,13 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
         return 0;     
     }
 
+    int addSymbolToTable(char* parsedLine, linkedListPtr list,char  instructionType, int dc)/*if the symbol is already in the table return -1*/
+    {
+        if (searchSymbolNameInList(parsedLine, list) == NULL)
+            return -1;
+        
+        
+        
+
+    }
+
