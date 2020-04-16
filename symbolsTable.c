@@ -65,7 +65,7 @@ void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int attach
         
 }
 
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1) /*can I discard this function??????????*/
+void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1) 
     {
         nodePtr new = newNode(symbolName, address1, attachedToGuidance, isExternal1);
         new->next = list->head;
@@ -134,10 +134,20 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
         return 0;     
     }
 
-    int addSymbolToTable(char* parsedLine, linkedListPtr list,char  instructionType, int dc)/*if the symbol is already in the table return -1*/
+    int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int attachedToGuidance, int isExternal)/*if the symbol is already in the table - 
+    return -1. else if the insertion went well and the list is empty - return 1. else if the insertion went well and the list is not empty - return 2.*/
     {
-        if (searchSymbolNameInList(parsedLine, list) == NULL)
+        if (searchSymbolNameInList(parsedLine, list) != NULL)
             return -1;
+        if (listIsEmpty(list)==1)
+        {
+            addNodeToStart(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
+            return 1;
+        }
+        
+        addNodeToEnd(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
+        return 2;
+
         
         
         

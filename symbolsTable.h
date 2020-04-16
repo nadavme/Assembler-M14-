@@ -41,6 +41,6 @@ int listIsEmpty(linkedListPtr listPtr);
 
 int strToInt(char c[]);
 
-int addSymbolToTable(char* parsedLine, linkedListPtr list,char  instructionType, int dc);
+int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int attachedToGuidance, int isExternal);
 
 #endif //MAABADA_MMN14_SYMBOLSTABLE_H
