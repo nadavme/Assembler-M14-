@@ -114,3 +114,8 @@ char* lineParser(char* line)
     }
     return *parsedLineLocal;
 }
+
+int sanityCheck(char* parsedLine)
+{
+    
+}
