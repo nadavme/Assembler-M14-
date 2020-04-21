@@ -115,7 +115,26 @@ char* lineParser(char* line)
     return *parsedLineLocal;
 }
 
-int sanityCheck(char* parsedLine)
+bool sanityCheck(char* parsedLine)
+/*a basic Validation function. checking if the line is one of the follow -
+1. תווית.
+2. entry
+3. extern
+4. שורה ריקה\ הערה
+7. הוראה
+
+(דאטה וסטרינג לא צריך לבדוק כי הם תחת תווית??)
+
+return true if the line is at list one of the above
+ */
 {
+    if ((strcmp(parsedLine,'\n') == 0) || (strncmp(parsedLine,';',1) == 0) || (strncpy(parsedLine,".entry",6) == 0) 
+        || (strncpy(parsedLine,".extern",7) == 0) || (strncpy(parsedLine,""))) /* צריך להכניס פה גם את כל אחת מההוראות , וגם מחוץ לאיף הזה לבדוק תווית*/
+        return true;
+
+    while (parsedLine!=)
+    {
+        
+    }
     
 }
