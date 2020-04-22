@@ -71,6 +71,8 @@ char getInstructionType(char* parsedLine);
 
 bool doubleCommasChecker(char* line);
 
+bool sanityCheck(char* parsedLine);/* a basic validation function to make sure that a line in the input file is o.k.*/
+
 
 
 

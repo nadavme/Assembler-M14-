@@ -128,13 +128,19 @@ bool sanityCheck(char* parsedLine)
 return true if the line is at list one of the above
  */
 {
-    if ((strcmp(parsedLine,'\n') == 0) || (strncmp(parsedLine,';',1) == 0) || (strncpy(parsedLine,".entry",6) == 0) 
-        || (strncpy(parsedLine,".extern",7) == 0) || (strncpy(parsedLine,""))) /* צריך להכניס פה גם את כל אחת מההוראות , וגם מחוץ לאיף הזה לבדוק תווית*/
+    if ((parsedLine[0] == '\n') || (parsedLine[0] == ';') || (strncmp(parsedLine,".entry",6) == 0) 
+        || (strncmp(parsedLine,".extern",7) == 0) || (strncmp(parsedLine,"mov",3) == 0) ||
+         (strncmp(parsedLine,"cmp",3) == 0) || (strncmp(parsedLine,"add",3) == 0) || (strncmp(parsedLine,"sub",3) == 0) ||
+          (strncmp(parsedLine,"lea",3) == 0)  || (strncmp(parsedLine,"clr",3) == 0) || (strncmp(parsedLine,"not",3) == 0)
+           || (strncmp(parsedLine,"inc",3) == 0) || (strncmp(parsedLine,"dec",3) == 0) || (strncmp(parsedLine,"jmp",3) == 0)
+         || (strncmp(parsedLine,"bne",3) == 0) || (strncmp(parsedLine,"red",3) == 0) || (strncmp(parsedLine,"prn",3) == 0)
+          || (strncmp(parsedLine,"jsr",3) == 0) || (strncmp(parsedLine,"rts",3) == 0) || (strncmp(parsedLine,"stop",4) == 0)
+          )
         return true;
 
-    while (parsedLine!=)
-    {
-        
-    }
+     return (parsedLine && *parsedLine && parsedLine[strlen(parsedLine) - 1] == ':') ? true : false;
+      /* this line ceck if the pointer doesnt points to null, and the string is not empty, and the last char in the string is ':' (and than
+      it means that the first word is a label).
+      if all of the above does happen we can retunr true...*/
     
 }
