@@ -135,18 +135,18 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
     }
 
     int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int attachedToGuidance, int isExternal)/*if the symbol is already in the table - 
-    return -1. else if the insertion went well and the list is empty - return 1. else if the insertion went well and the list is not empty - return 2.*/
+    return 1. else if the insertion went well - return 0. */
     {
         if (searchSymbolNameInList(parsedLine, list) != NULL)
-            return -1;
+            return 1;
         if (listIsEmpty(list)==1)
         {
             addNodeToStart(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
-            return 1;
+            return 0;
         }
         
         addNodeToEnd(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
-        return 2;
+        return 0;
 
         
         

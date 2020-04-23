@@ -128,13 +128,13 @@ bool sanityCheck(char* parsedLine)
 return true if the line is at list one of the above
  */
 {
-    if ((parsedLine[0] == '\n') || (parsedLine[0] == ';') || (strncmp(parsedLine,".entry",6) == 0) 
-        || (strncmp(parsedLine,".extern",7) == 0) || (strncmp(parsedLine,"mov",3) == 0) ||
-         (strncmp(parsedLine,"cmp",3) == 0) || (strncmp(parsedLine,"add",3) == 0) || (strncmp(parsedLine,"sub",3) == 0) ||
-          (strncmp(parsedLine,"lea",3) == 0)  || (strncmp(parsedLine,"clr",3) == 0) || (strncmp(parsedLine,"not",3) == 0)
-           || (strncmp(parsedLine,"inc",3) == 0) || (strncmp(parsedLine,"dec",3) == 0) || (strncmp(parsedLine,"jmp",3) == 0)
-         || (strncmp(parsedLine,"bne",3) == 0) || (strncmp(parsedLine,"red",3) == 0) || (strncmp(parsedLine,"prn",3) == 0)
-          || (strncmp(parsedLine,"jsr",3) == 0) || (strncmp(parsedLine,"rts",3) == 0) || (strncmp(parsedLine,"stop",4) == 0)
+    if ((parsedLine[0] == '\n') || (parsedLine[0] == ';') || (strncmp(parsedLine[0],".entry",6) == 0) 
+        || (strncmp(parsedLine[0],".extern",7) == 0) || (strncmp(parsedLine[0],"mov",3) == 0) ||
+         (strncmp(parsedLine[0],"cmp",3) == 0) || (strncmp(parsedLine[0],"add",3) == 0) || (strncmp(parsedLine[0],"sub",3) == 0) ||
+          (strncmp(parsedLine[0],"lea",3) == 0)  || (strncmp(parsedLine[0],"clr",3) == 0) || (strncmp(parsedLine[0],"not",3) == 0)
+           || (strncmp(parsedLine[0],"inc",3) == 0) || (strncmp(parsedLine[0],"dec",3) == 0) || (strncmp(parsedLine[0],"jmp",3) == 0)
+         || (strncmp(parsedLine[0],"bne",3) == 0) || (strncmp(parsedLine[0],"red",3) == 0) || (strncmp(parsedLine[0],"prn",3) == 0)
+          || (strncmp(parsedLine[0],"jsr",3) == 0) || (strncmp(parsedLine[0],"rts",3) == 0) || (strncmp(parsedLine[0],"stop",4) == 0)
           )
         return true;
 
