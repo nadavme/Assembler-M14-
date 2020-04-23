@@ -138,7 +138,10 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
     return 1. else if the insertion went well - return 0. */
     {
         if (searchSymbolNameInList(parsedLine, list) != NULL)
+        {
+            printf("Error!\n The symbol is already in the table.");
             return 1;
+        }
         if (listIsEmpty(list)==1)
         {
             addNodeToStart(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
