@@ -14,7 +14,7 @@
 
 
 
-typedef struct first_word /*we've choosed to define the machine language word with bit fields, lets see how it goes... Nadav The king, Matan the princess ;-) */
+typedef struct first_word /*we've choosed to define the machine language word with bit fields. */
 {
     unsigned short external : 1;/*E*/
     unsigned short relocatable : 1; /*R*/
