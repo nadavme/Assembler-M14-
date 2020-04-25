@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+#define MAX_DIGITS_BIN 100
+#define MAX_DIGITS_DEC 10
 #include "firstRunOver.h"
 
 
