@@ -30,7 +30,7 @@ int bin_to_octal(int binaryNum)/*this function converts a number from binary bas
 }
 
 
-int dec_to_bin(char dec[]) /*requested function*/
+int dec_to_bin(char dec[])
 {
 	char binNum[MAX_DIGITS_BIN]= {'0','\0'}; /*creating a char array (a string) which will express the binary 	       number.  the first cell in the array contains the char 0 representation, and all other cells in the 			array 	contain of the integer 0.*/
     int  string_length;

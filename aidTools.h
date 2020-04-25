@@ -26,6 +26,8 @@ typedef struct codeLinkedList {
 }*codeLinkedListPtr;
 
 
-int bin_to_octal(int binaryNum);
+int bin_to_octal(int binaryNum);/*converts from binary to octal, return the result.*/
+
+int dec_to_bin(char dec[]); /*converts from decimal to binary, prints the result.*/
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
