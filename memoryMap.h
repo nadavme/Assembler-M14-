@@ -3,12 +3,15 @@
 //
 
 #include "firstRunOver.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 typedef struct dataNode{ /*we've decided to implement the data table with a linked list, becuse we can't tell
 the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
     int address;
-    second_word data;
+    second_word word;
     struct dataNode *next;
 }*dataNodePtr, dataNode;
 
