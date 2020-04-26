@@ -10,7 +10,7 @@
 
 
 
-nodePtr newNode(char *symbolName, int address1, int isEntry, int isExternal1){
+nodePtr newNode(char *symbolName, int address1, int attachedToGuidance, int isExternal1){
     nodePtr new;
     int nameLen = 0;
     if(symbolName==NULL){
@@ -21,7 +21,7 @@ nodePtr newNode(char *symbolName, int address1, int isEntry, int isExternal1){
     new->symbolName = calloc(nameLen+1, sizeof(char));
     strncpy(new->symbolName, symbolName, nameLen);
     new->address = address1;
-    new->isEntry = isEntry;
+    new->isAttachedToGuidance = attachedToGuidance;
     new->isExternal = isExternal1;
     return new;
 }
@@ -42,13 +42,13 @@ linkedListPtr newList()
     return calloc(1, sizeof(struct linkedList));
 }
 
-void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isEntry, int isExternal1){
+void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1){
     nodePtr new, nodePtr1;
     if(list == NULL || symbolName == NULL)
     {
         return;
     }
-    new = newNode(symbolName, address1, isEntry, isExternal1);
+    new = newNode(symbolName, address1, attachedToGuidance, isExternal1);
     if(!list->size){
         list->head = new;
     }else{
@@ -63,9 +63,9 @@ void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isEntr
         
 }
 
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEntry, int isExternal1) 
+void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1) 
     {
-        nodePtr new = newNode(symbolName, address1, isEntry, isExternal1);
+        nodePtr new = newNode(symbolName, address1, attachedToGuidance, isExternal1);
         new->next = list->head;
         list->head = new;
         list->size = list->size +1;
@@ -115,8 +115,8 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEn
 
         else
             printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);   
-            if(node->isEntry == 1) printf("isEntry ? - YES. *** ");
-            else if (node->isEntry == 0) printf("isEntry? - NO. *** ");
+            if(node->isAttachedToGuidance == 1) printf("is Attached To Guidance? - YES. *** ");
+            else if (node->isAttachedToGuidance == 0) printf("is Attached To Guidance? - NO. *** ");
 
             if (node->isExternal == 1) printf("is EXTERNAL? - YES. *** ]");
 
@@ -132,7 +132,7 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEn
         return 0;     
     }
 
-    int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int isEntry, int isExternal)/*if the symbol is already in the table - 
+    int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int attachedToGuidance, int isExternal)/*if the symbol is already in the table - 
     return 1. else if the insertion went well - return 0. */
     {
         if (searchSymbolNameInList(parsedLine, list) != NULL)
@@ -142,11 +142,11 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEn
         }
         if (listIsEmpty(list)==1)
         {
-            addNodeToStart(list, parsedLine, dc + 100, isEntry, isExternal);
+            addNodeToStart(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
             return 0;
         }
         
-        addNodeToEnd(list, parsedLine, dc + 100, isEntry, isExternal);
+        addNodeToEnd(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
         return 0;
 
         
