@@ -10,7 +10,7 @@
 
 
 
-nodePtr newNode(char *symbolName, int address1, int attachedToGuidance, int isExternal1){
+nodePtr newNode(char *symbolName, int address1, int isEntry, int isExternal1){
     nodePtr new;
     int nameLen = 0;
     if(symbolName==NULL){
@@ -21,7 +21,7 @@ nodePtr newNode(char *symbolName, int address1, int attachedToGuidance, int isEx
     new->symbolName = calloc(nameLen+1, sizeof(char));
     strncpy(new->symbolName, symbolName, nameLen);
     new->address = address1;
-    new->isAttachedToGuidance = attachedToGuidance;
+    new->isEntry = isEntry;
     new->isExternal = isExternal1;
     return new;
 }
@@ -115,8 +115,8 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
 
         else
             printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);   
-            if(node->isAttachedToGuidance == 1) printf("is Attached To Guidance? - YES. *** ");
-            else if (node->isAttachedToGuidance == 0) printf("is Attached To Guidance? - NO. *** ");
+            if(node->isEntry == 1) printf("is Entry? - YES. *** ");
+            else if (node->isEntry == 0) printf("is Entry? - NO. *** ");
 
             if (node->isExternal == 1) printf("is EXTERNAL? - YES. *** ]");
 
