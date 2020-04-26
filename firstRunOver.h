@@ -35,7 +35,7 @@ typedef struct first_word /*we've choosed to define the machine language word wi
 
 typedef struct second_word /*word for methods 0,1 (mio'n methods)*/
 {
-
+    
 
     unsigned short op_is_external : 1; /*E*/
     unsigned short op_is_relocatable : 1; /*R*/

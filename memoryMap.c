@@ -4,83 +4,92 @@
 
 #include "memoryMap.h"
 
-dataNodePtr newNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
-dc with or without 100???*/
+#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c" /* this macro enabled us to print a binary representation of char or number*/
+#define BYTE_TO_BINARY(byte)  \
+  (byte & 0x80 ? '1' : '0'), \
+  (byte & 0x40 ? '1' : '0'), \
+  (byte & 0x20 ? '1' : '0'), \
+  (byte & 0x10 ? '1' : '0'), \
+  (byte & 0x08 ? '1' : '0'), \
+  (byte & 0x04 ? '1' : '0'), \
+  (byte & 0x02 ? '1' : '0'), \
+  (byte & 0x01 ? '1' : '0')
+
+dataNodePtr newDataNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
+dc with or without 100??? 
+return the new node*/
     dataNodePtr new;
     int nameLen = 0;
     if(ch==0 && isItString == true){
         return NULL;
     }
     new = calloc(1, sizeof(dataNode));
-    new->address = calloc(1, sizeof(int));
     new->address = dc;
 
-    if (isItString == false)
+    if (isItString == true)
     {
+        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble, maybe the cast, shouldnt be*/
+    }
 
-        new->word = calloc(1,sizeof(struct second_word));
-        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble*/
-
-         /* Ive stoped here!!! */
+    else if (isItString == false)
+    {
+        new->word.num_or_address = (unsigned short)x;/*maybe this line will cause trouble, maybe the cast, shouldnt be*/
     }
     
-   
-
     return new;
 }
 
-void freeNode(nodePtr toFree){/*a recursive function to free a node ana his next node and so on till last one.*/
+void freeDataNode(dataNodePtr toFree){/*a recursive function to free a node and his next node and so on till last one.
+to free the whole list just insert the head as a parameter*/
     if(toFree == NULL){
         return;
     }
-    if(toFree->symbolName != NULL){
-        free(toFree->symbolName);
-    }
-    freeNode(toFree->next);
+
+    freeDataNode(toFree->next);
     free(toFree);
 }
 
-linkedListPtr newList()
+dataLinkedListPtr newDataList()/*a funtion to create a new data table (linked list)*/
 {
-    return calloc(1, sizeof(struct linkedList));
+    return calloc(1, sizeof(struct dataLinkedList));
 }
 
-void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1){
-    nodePtr new, nodePtr1;
-    if(list == NULL || symbolName == NULL)
+void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, int dc, bool isItString){/*if the list is Null the function does nothing*/
+    dataNodePtr new, dataNodePtr1;
+    if(list == NULL)
     {
         return;
     }
-    new = newNode(symbolName, address1, attachedToGuidance, isExternal1);
+    new = newDataNode(ch, x, isItString,dc);
     if(!list->size){
         list->head = new;
     }else{
-        for(nodePtr1 = list->head ; nodePtr1->next; nodePtr1=nodePtr1->next)
+        for(dataNodePtr1 = list->head ; dataNodePtr1->next; dataNodePtr1=dataNodePtr1->next)
             ;
     
-        nodePtr1->next = new;
+        dataNodePtr1->next = new;
     }
     new->next = NULL;
-    new->counter = 1;
     list->size++;
 
         
 }
 
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int attachedToGuidance, int isExternal1) 
+void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, int dc, bool isItString) 
     {
-        nodePtr new = newNode(symbolName, address1, attachedToGuidance, isExternal1);
+        dataNodePtr new = newDataNode(ch, x, isItString, dc);
         new->next = list->head;
         list->head = new;
         list->size = list->size +1;
     }
 
-    nodePtr searchSymbolNameInList(char symbolName[], linkedListPtr list)
+    dataNodePtr searchDataInList(int address, linkedListPtr list)/*if the data with this address is in the list - the dataNode
+    is return*/
     {
-        nodePtr searchedNode = list->head;
+        dataNodePtr searchedNode = list->head;
         while (searchedNode!=NULL)
     {
-        if(strcmp(searchedNode->symbolName,symbolName) == 0)
+        if(address == searchedNode->address)
             return searchedNode;
         searchedNode = searchedNode->next;
     }
@@ -89,14 +98,14 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
 
 
 
-    void printList(linkedListPtr listPtr)
+    void printDataList(dataLinkedListPtr listPtr)
     {
         int i;
-        nodePtr node = listPtr->head;
+        dataNodePtr node = listPtr->head;
 
         for (i = 0; i < listPtr->size; i++)
         {
-            printNode(node);
+            printDataNode(node);
             printf("                            ||                        \n");
             printf("                            ||                        \n");
             node = node->next;
@@ -105,7 +114,7 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
         
     }
 
-    void printNode(nodePtr node)
+    void printDataNode(dataNodePtr node)
     {
         if(!node)
         {
@@ -118,44 +127,57 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
             printf("%s - %d times\n", node->symbolName,node->counter); */
 
         else
-            printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);   
-            if(node->isAttachedToGuidance == 1) printf("is Attached To Guidance? - YES. *** ");
-            else if (node->isAttachedToGuidance == 0) printf("is Attached To Guidance? - NO. *** ");
-
-            if (node->isExternal == 1) printf("is EXTERNAL? - YES. *** ]");
-
-            else if (node->isExternal == 0) printf("is EXTERNAL? - NO. *** \n");
+        {
+            printf("***  ADDRESS - %d\n" , node->address);
+            printf("***  VALUE(BINARY)- %hu\n", node->word);
+        }
+            return;
     }
 
-    int listIsEmpty(linkedListPtr listPtr)
+    bool dataTableIsEmpty(dataLinkedListPtr listPtr)
     {
         if (listPtr->head == NULL)
         {
-            return 1;
+            return true;
         }
-        return 0;     
+        return false;     
     }
 
-    int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int attachedToGuidance, int isExternal)/*if the symbol is already in the table - 
+    int addDataToTable(dataLinkedListPtr list, int x, int dc) /*if the address is already in the table - 
     return 1. else if the insertion went well - return 0. */
     {
-        if (searchSymbolNameInList(parsedLine, list) != NULL)
+        if (searchDataInList(dc, list) != NULL)
         {
-            printf("Error!\n The symbol is already in the table.");
+            printf("Error!\n The address is already in the table.");
             return 1;
         }
-        if (listIsEmpty(list)==1)
+        if (dataTableIsEmpty(list)==true)
         {
-            addNodeToStart(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
+            addDataNodeToStart(list,0, x, dc,false);
             return 0;
         }
         
-        addNodeToEnd(list, parsedLine, dc + 100, attachedToGuidance, isExternal);
+        addDataNodeToEnd( list, 0, x, dc, false);
         return 0;
+        
+}
 
 
-
-int addString(char *str)
+int addCharToTable(dataLinkedListPtr list,char ch, int dc)  /*if the address is already in the table - 
+    return 1. else if the insertion went well - return 0. */
 {
-
+    {
+        if (searchDataInList(dc, list) != NULL)
+        {
+            printf("Error!\n The address is already in the table.");
+            return 1;
+        }
+        if (dataTableIsEmpty(list)==true)
+        {
+            addDataNodeToStart(list,ch, 0, dc,true);
+            return 0;
+        }
+        
+        addDataNodeToEnd(list, ch, 0, dc, true);
+        return 0;
 }

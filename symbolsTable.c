@@ -20,7 +20,6 @@ nodePtr newNode(char *symbolName, int address1, int isEntry, int isExternal1){
     new = calloc(1, sizeof(node));
     new->symbolName = calloc(nameLen+1, sizeof(char));
     strncpy(new->symbolName, symbolName, nameLen);
-    new->counter = 0;
     new->address = address1;
     new->isEntry = isEntry;
     new->isExternal = isExternal1;
@@ -59,7 +58,6 @@ void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isEntr
         nodePtr1->next = new;
     }
     new->next = NULL;
-    new->counter = 1;
     list->size++;
 
         

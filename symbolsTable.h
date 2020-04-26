@@ -6,7 +6,6 @@
 #define MAABADA_MMN14_SYMBOLSTABLE_H
 
 typedef struct node{
-    int counter;/* can I delete this field????????????????? */
     char *symbolName;
     int address;/*I did the symbol table as Dani Kalfon instructs in his lecture about the project (at time 2:01 in the video you can see the table...)*/
     int isEntry;
