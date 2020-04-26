@@ -56,7 +56,7 @@ void runFirst(const char *file)
                     }
                 }
                 /*Here we know we are dealing with an instruction line*/
-                
+
 
 
             }
