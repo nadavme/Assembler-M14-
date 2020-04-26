@@ -17,6 +17,7 @@ void runFirst(const char *file)
         bool isThereSymbolDeclaration = false;
         char lineWithNoCommas[120];
         linkedListPtr fileSymbolTable;
+        int L, i;
 
 
         IC = 0;
@@ -42,7 +43,7 @@ void runFirst(const char *file)
                 const char* instructionType = getInstructionType(parsedLine);
                 if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
                 {
-                    addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
+                    if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
                     analyzeData(parsedLine, instructionType);
                     updateDC(DC);
                     continue;
@@ -56,16 +57,31 @@ void runFirst(const char *file)
                     }
                 }
                 /*Here we know we are dealing with an instruction line*/
+                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, IC, 1, 1)
+                if(!isOpCode(parsedLine[0]))
+                {
+                    printf("ERROR: Operation code is not valid. The program will continue to check the next line,"
+                           "but no output files will be made.");
+                    continue;
+                }
+                L = analizeNumOfOperands(parsedLine);
+                for (i = 0; i < L; i++)
+                {
+                    buildBinaryCode(opCode, wordNumber, data);
 
-
+                }
+                IC += L;
+                continue;
 
             }
 
         }
         if(isThereExceptions)
         {
-            printf("Exceptions were found in the file, therefore no output file will be created.");
+            printf("Exceptions were found in the file, therefore no output files will be created.");
+            exit(0);
         }
+        
 
 
     }
