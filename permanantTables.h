@@ -1,8 +1,15 @@
-/
+//
 // Created by nadav on 04/02/2020.
 //
 
-#ifndef MAABADA_MMN14_PERMANANTTABLES_H
-#define MAABADA_MMN14_PERMANANTTABLES_H
+#include "firstRunOver.h"
+#include <stdio.h>
 
-#endif //MAABADA_MMN14_PERMANANTTABLES_H
+typedef struct opTable
+{
+    char *codeName;
+    first_word word;
+}opTable;
+
+
+
