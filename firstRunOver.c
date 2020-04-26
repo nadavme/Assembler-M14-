@@ -16,6 +16,7 @@ void runFirst(const char *file)
         bool isThereExceptions = false;
         bool isThereSymbolDeclaration = false;
         char lineWithNoCommas[120];
+        linkedListPtr fileSymbolTable;
 
 
         IC = 0;
@@ -30,30 +31,38 @@ void runFirst(const char *file)
         while((fgets(line, 82, fp) != EOF))
         {
             char* parsedLine;
-            char instructionType;
+            const char* instructionType;
             if(!doubleCommasChecker(line)) break;
             strcpy(lineWithNoCommas, commasReplacer(line));
             parsedLine = lineParser(lineWithNoCommas);
-            if (!isLineValid(parsedLine)) isThereExceptions = true;
+            if (!sanityCheck(parsedLine)) isThereExceptions = true;
             if(!isThereExceptions)
             {
-                if (isSymbole(&parsedLine[0]))
+                if (isSymbole(&parsedLine[0])) isThereSymbolDeclaration = true;
+                const char* instructionType = getInstructionType(parsedLine);
+                if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
                 {
-                    isThereSymbolDeclaration = true;
-                    instructionType = getInstructionType(parsedLine);
-                    if((instructionType == ".data") || (instructionType == ".string"))
+                    addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
+                    analyzeData(parsedLine, instructionType);
+                    updateDC(DC);
+                    continue;
+                }
+                if((strcmp(instructionType, ".extern") == 0) || (strcmp(instructionType , ".entry") == 0))
+                {
+                    if(strcmp(instructionType, ".entry") == 0) continue;
+                    else
                     {
-                        addSymbolToTable(parsedLine, instructionType, DC);
-                        analyzeData(parsedLine, instructionType);
-
+                        addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 0);
                     }
                 }
+                /*Here we know we are dealing with an instruction line*/
+                
 
 
             }
 
         }
-        if(!isThereExceptions)
+        if(isThereExceptions)
         {
             printf("Exceptions were found in the file, therefore no output file will be created.");
         }

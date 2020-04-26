@@ -59,16 +59,47 @@ typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
                                                                             memory address of the value of the source operand. */
 }third_word;
 
+
+/*!
+ *
+ * @param line
+ * @return
+ */
 char* commasReplacer(char* line);
 
+/*!
+ *
+ * @param line
+ * @return
+ */
 char* lineParser(char* line);
 
+/*!
+ *
+ * @param parsedLine
+ * @return
+ */
 bool isLineValid(char* parsedLine);
 
+/*!
+ *
+ * @param parsedLine
+ * @return
+ */
 bool isSymbole(char parsedLine[0]);
 
-char getInstructionType(char* parsedLine);
+/*!
+ *
+ * @param parsedLine
+ * @return
+ */
+char* getInstructionType(char* parsedLine);
 
+/*!
+ *
+ * @param line
+ * @return
+ */
 bool doubleCommasChecker(char* line);
 
 bool sanityCheck(char* parsedLine);/* a basic validation function to make sure that a line in the input file is o.k.*/
