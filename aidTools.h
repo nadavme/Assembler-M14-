@@ -40,7 +40,7 @@ typedef struct codeLinkedList {
 /*!
  *
  */
-typedef enum opCodes { mov, cmp, add, sub, nnot, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCodes;
+typedef enum opCodes { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCodes;
 
 /*!
  *
@@ -68,11 +68,9 @@ typedef  enum isThatExtern {no, yes} isExtern;
 typedef struct lineStruct
 {
     char* originalLine;
-    char* symbol;
-    first_word* translatedWord;
-    unsigned char opRepeat;
+    char* parsedLine;
     unsigned int lineNumber;
-    char done;
+    bool isDone;
 } lineStruct;
 
 /*!

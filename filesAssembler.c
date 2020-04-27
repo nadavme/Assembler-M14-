@@ -4,7 +4,7 @@
 
 #include "filesAssembler.h"
 
-
+/*todo: adapt it to previous plan.*/
 int assembler(char** filesToInterpret, int numOfFiles) {
     FILE *fp;
     int filesCounter;
