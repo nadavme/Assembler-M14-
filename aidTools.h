@@ -25,6 +25,25 @@ typedef struct codeLinkedList {
     codeNodePtr head;
 }*codeLinkedListPtr;
 
+typedef enum opCode { mov, cmp, add, sub, nnot, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCode;
+
+typedef enum addressingMethod { immediate = 0, direct, reg } addrMethod;
+
+typedef enum ARE { absolute = 0, external, relocatable } ARE;
+
+typedef enum symbolType { tCode, tData, tString} symbolType;
+
+typedef  enum isExtern {no, yes} isExtern;
+
+typedef struct lineStruct
+{
+    char* originalLine;
+    char* symbol;
+    first_word* translatedWord;
+    unsigned char opRepeat;
+    unsigned int lineNumber;
+    char done;
+} *lineStruct;
 
 int bin_to_octal(int binaryNum);/*converts from binary to octal, return the result.*/
 
