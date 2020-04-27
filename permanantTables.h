@@ -8,7 +8,7 @@
 typedef struct opTable
 {
     char *codeName;
-    first_word word;
+    unsigned int word;
 }opTable;
 
 
