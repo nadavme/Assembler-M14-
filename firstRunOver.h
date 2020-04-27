@@ -34,6 +34,9 @@ typedef struct first_word /*we've choosed to define the machine language word wi
     unsigned int opCode : 4; /*this bits will contain the operation code*/
 }first_word;
 
+/*!
+ *
+ */
 typedef struct second_word /*word for methods 0,1 (mio'n methods)*/
 {
     
@@ -45,6 +48,9 @@ typedef struct second_word /*word for methods 0,1 (mio'n methods)*/
     unsigned short num_or_address : 12;/*in this 12 bits we'll store the actual value or the memory address.*/
 }second_word;
 
+/*!
+ *
+ */
 typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
 {
 
@@ -60,8 +66,13 @@ typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
                                                                             memory address of the value of the source operand. */
 }third_word;
 
-
-int runFirst();
+/*!
+ *
+ * @param linaStruct
+ * @param lineIdx
+ * @return
+ */
+int runFirst(lineStruct linaStruct, int lineIdx);
 
 /*!
  *
@@ -105,6 +116,11 @@ char* getInstructionType(char* parsedLine);
  */
 bool doubleCommasChecker(char* line);
 
+/*!
+ *
+ * @param parsedLine
+ * @return
+ */
 bool sanityCheck(char* parsedLine);/* a basic validation function to make sure that a line in the input file is o.k.*/
 
 

@@ -5,6 +5,9 @@
 #include "firstRunOver.h"
 #include <stdio.h>
 
+/*!
+ *
+ */
 typedef struct opTable
 {
     char *codeName;

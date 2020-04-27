@@ -8,7 +8,7 @@
 int assembler(char** filesToInterpret, int numOfFiles) {
     FILE *fp;
     int filesCounter;
-    char fileName[10];
+    char fileName[20];
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++) {
         int linesIdx, bufferCounter;
@@ -48,6 +48,9 @@ int assembler(char** filesToInterpret, int numOfFiles) {
     fclose(fp);
     return 0;
 }
+
+
+
 //            char* parsedLine;
 //            const char* instructionType;
 //            if(!doubleCommasChecker(line)) break;
@@ -84,7 +87,7 @@ int assembler(char** filesToInterpret, int numOfFiles) {
 //                L = analizeNumOfOperands(parsedLine);
 //                for (i = 0; i < L; i++)
 //                {
-//                    buildBinaryCode(opCode, wordNumber, data);
+//                    buildBinaryCode(opCodes, wordNumber, data);
 //
 //                }
 //                IC += L;

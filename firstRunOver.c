@@ -6,6 +6,13 @@
 
 int ARGS_NUM = 0;
 
+
+int runFirst(lineStruct linaStruct, int lineIdx)
+{
+
+    return 0;
+}
+
 //
 //int runFirst(const char *file)
 //{
@@ -60,7 +67,7 @@ int ARGS_NUM = 0;
 //                L = analizeNumOfOperands(parsedLine);
 //                for (i = 0; i < L; i++)
 //                {
-//                    buildBinaryCode(opCode, wordNumber, data);
+//                    buildBinaryCode(opCodes, wordNumber, data);
 //
 //                }
 //                IC += L;

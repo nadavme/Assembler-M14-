@@ -64,4 +64,130 @@ int dec_to_bin(char dec[])
 	return 0;
 }
 
+int isStringValid(char **array, int length, char* string)
+{
+    int i;
+    for(i=0;i<length;i++)
+    {
+        if(strcmp(array[i],string) == 0)
+            return 1;
+    }
+    return 0;
+}
+
+int isInstruction(char* string)
+{
+    return isStringValid(instructions, NUM_OF_INSTRUCTS, string);
+}
+
+int isData(char* string)
+{
+    if ((unsigned char)(*string) == '.')
+    {
+        string++;
+        return isStringValid(dataTypes, NUM_OF_DATA_TYPES, string);
+    }
+    else
+        return 0;
+}
+
+int isRegister(char* string)
+{
+    return isStringValid(registers, NUM_OF_REGISTERS, string);
+}
+
+int isExtern(char* string)
+{
+    if ((unsigned char)(*string) == '.')
+    {
+        string++;
+        return (strcmp(EXTERN,string) == 0);
+    }
+    else
+        return 0;
+}
+
+int isEntry(char* string)
+{
+    if ((unsigned char)(*string) == '.')
+    {
+        string++;
+        return (strcmp(ENTRY,string) == 0);
+    }
+    else
+        return 0;
+}
+
+int isWhitespace(char* line)
+{
+    while (*line != '\0') {
+        if (!isspace((unsigned char)(*line)))
+            return 0;
+        line++;
+    }
+    return 1;
+}
+
+int isInt(char* string)
+{
+    char *ptr;
+    long int result;
+    strtol(string, &ptr, 10);
+    result = strtol(string, &ptr, 10);
+    (void)result;
+    return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
+}
+
+int isValidSourceDest(OpCodes code,opType source, opType dest)
+{
+    int result = 0;
+    switch(code)
+    {
+        case mov:
+            result = dest != Immediate;
+            break;
+        case cmp:
+            result = 1;
+            break;
+        case add:
+        case sub:
+        case nnot:
+        case clr:
+            result = dest != Immediate;
+            break;
+        case lea:
+            result = (source == Direct || source == Struct) && dest != Immediate;
+            break;
+        case inc:
+        case dec:
+        case jmp:
+        case bne:
+        case red:
+            result = dest != Immediate;
+            break;
+        case prn:
+            result = 1;
+            break;
+        case jsr:
+            result = dest != Immediate;
+            break;
+        case rts:
+        case stop:
+            result = 1;
+            break;
+    }
+    return result;
+}
+
+/*The function trim the operand and checks if there's more then one operand*/
+StatusCode trimOperand(char* operand)
+{
+    char first[LINE_LENGTH];
+    char second[LINE_LENGTH];
+    if(sscanf(operand,"%s %s",first,second) != 1) /* Testing if there is more than 1 operand */
+        return wrong_number_of_operands;
+    else
+        strcpy(operand,first);
+    return success;
+}
 
