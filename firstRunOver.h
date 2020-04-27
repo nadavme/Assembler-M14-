@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbolsTable.h"
+#include "aidTools.h"
 
 
 
@@ -59,6 +60,8 @@ typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
                                                                             memory address of the value of the source operand. */
 }third_word;
 
+
+int runFirst();
 
 /*!
  *

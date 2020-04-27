@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include "firstRunOver.h"
-#include "aidTools.h"
-#include "symbolsTable.h"
-#include "memoryMap.h"
+#include "filesAssembler.h"
 
-int main() {
-    printf("Hello, World!\n");
-    return 0;
+
+
+
+int main(int argc, char **argv )
+{
+    int numOfFiles;
+    char** filesToInterpret;
+
+    return assembler(filesToInterpret = argv, numOfFiles = argc);
 }

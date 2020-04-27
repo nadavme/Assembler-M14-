@@ -6,86 +6,79 @@
 
 int ARGS_NUM = 0;
 
-
-void runFirst(const char *file)
-{
-    {
-        int IC, DC;
-        FILE *fp;
-        char* line;
-        bool isThereExceptions = false;
-        bool isThereSymbolDeclaration = false;
-        char lineWithNoCommas[120];
-        linkedListPtr fileSymbolTable;
-        int L, i;
-
-
-        IC = 0;
-        DC = 0;
-        fp = fopen(file, "r");
-        if (fp == NULL)
-        {
-            fprintf(stderr, "File error.");
-            exit(EXIT_FAILURE);
-        }
-
-        while((fgets(line, 82, fp) != EOF))
-        {
-            char* parsedLine;
-            const char* instructionType;
-            if(!doubleCommasChecker(line)) break;
-            strcpy(lineWithNoCommas, commasReplacer(line));
-            parsedLine = lineParser(lineWithNoCommas);
-            if (!sanityCheck(parsedLine)) isThereExceptions = true;
-            if(!isThereExceptions)
-            {
-                if (isSymbole(&parsedLine[0])) isThereSymbolDeclaration = true;
-                const char* instructionType = getInstructionType(parsedLine);
-                if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
-                {
-                    if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
-                    analyzeData(parsedLine, instructionType);
-                    updateDC(DC);
-                    continue;
-                }
-                if((strcmp(instructionType, ".extern") == 0) || (strcmp(instructionType , ".entry") == 0))
-                {
-                    if(strcmp(instructionType, ".entry") == 0) continue;
-                    else
-                    {
-                        addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 0);
-                    }
-                }
-                /*Here we know we are dealing with an instruction line*/
-                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, IC, 1, 1)
-                if(!isOpCode(parsedLine[0]))
-                {
-                    printf("ERROR: Operation code is not valid. The program will continue to check the next line,"
-                           "but no output files will be made.");
-                    continue;
-                }
-                L = analizeNumOfOperands(parsedLine);
-                for (i = 0; i < L; i++)
-                {
-                    buildBinaryCode(opCode, wordNumber, data);
-
-                }
-                IC += L;
-                continue;
-
-            }
-
-        }
-        if(isThereExceptions)
-        {
-            printf("Exceptions were found in the file, therefore no output files will be created.");
-            exit(0);
-        }
-        
-
-
-    }
-}
+//
+//int runFirst(const char *file)
+//{
+//    {
+//        int IC, DC;
+//        bool isThereExceptions = false;
+//        bool isThereSymbolDeclaration = false;
+//        char lineWithNoCommas[120];
+//        linkedListPtr fileSymbolTable;
+//        int L, i;
+//
+//
+//        IC = 0;
+//        DC = 0;
+//
+//
+//        while((fgets(line, 82, fp) != EOF))
+//        {
+//            char* parsedLine;
+//            const char* instructionType;
+//            if(!doubleCommasChecker(line)) break;
+//            strcpy(lineWithNoCommas, commasReplacer(line));
+//            parsedLine = lineParser(lineWithNoCommas);
+//            if (!sanityCheck(parsedLine)) isThereExceptions = true;
+//            if(!isThereExceptions)
+//            {
+//                if (isSymbole(&parsedLine[0])) isThereSymbolDeclaration = true;
+//                const char* instructionType = getInstructionType(parsedLine);
+//                if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
+//                {
+//                    if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
+//                    analyzeData(parsedLine, instructionType);
+//                    updateDC(DC);
+//                    continue;
+//                }
+//                if((strcmp(instructionType, ".extern") == 0) || (strcmp(instructionType , ".entry") == 0))
+//                {
+//                    if(strcmp(instructionType, ".entry") == 0) continue;
+//                    else
+//                    {
+//                        addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 0);
+//                    }
+//                }
+//                /*Here we know we are dealing with an instruction line*/
+//                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, IC, 1, 1)
+//                if(!isOpCode(parsedLine[0]))
+//                {
+//                    printf("ERROR: Operation code is not valid. The program will continue to check the next line,"
+//                           "but no output files will be made.");
+//                    continue;
+//                }
+//                L = analizeNumOfOperands(parsedLine);
+//                for (i = 0; i < L; i++)
+//                {
+//                    buildBinaryCode(opCode, wordNumber, data);
+//
+//                }
+//                IC += L;
+//                continue;
+//
+//            }
+//
+//        }
+//        if(isThereExceptions)
+//        {
+//            printf("Exceptions were found in the file, therefore no output files will be created.");
+//            exit(0);
+//        }
+//
+//
+//
+//    }
+//}
 
 char* commasReplacer(char* line)
 {
