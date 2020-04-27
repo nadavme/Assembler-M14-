@@ -55,4 +55,8 @@
     matrix[15]->codeName = "stop";\
     matrix[15]->word = (unsigned short)30720; \
     \
-}\
+}
+
+char validInstructions[16][4] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red",
+                                     "prn", "jsr", "rts", "stop"};
+
