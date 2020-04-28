@@ -64,6 +64,24 @@ int dec_to_bin(char dec[])
 	return 0;
 }
 
+void printBits(size_t const size, void const * const ptr)/*the function prints the binary representation of any type.
+size is the number of bytes. an example can be seen in tester_for_matrix.c */
+{
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i=size-1;i>=0;i--)
+    {
+        for (j=7;j>=0;j--)
+        {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
+}
+
 int isStringValid(char **array, int length, char* string)
 {
     int i;

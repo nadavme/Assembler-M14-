@@ -89,6 +89,15 @@ int dec_to_bin(char dec[]); /*converts from decimal to binary, prints the result
 
 /*!
  *
+ * @param size
+ * @param ptr
+ * @return
+ */
+void printBits(size_t const size, void const * const ptr);/*the function prints the binary representation of any type.
+size is the number of bytes. an example can be seen in tester_for_matrix.c */
+
+/*!
+ *
  * @param array
  * @param length
  * @param string
@@ -101,49 +110,49 @@ int isStringValid(char **array, int length, char* string);
  * @param string
  * @return
  */
-int isInstruction(char* string)
+int isInstruction(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isData(char* string)
+int isData(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isRegister(char* string)
+int isRegister(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isExtern(char* string)
+int isExtern(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isEntry(char* string)
+int isEntry(char* string);
 
 /*!
  *
  * @param line
  * @return
  */
-int isWhitespace(char* line)
+int isWhitespace(char* line);
 
 /*!
  *
  * @param string
  * @return
  */
-int isInt(char* string)
+int isInt(char* string);
 
 /*!
  *
@@ -152,7 +161,7 @@ int isInt(char* string)
  * @param dest
  * @return
  */
-int isValidSourceDest(OpCodes code,opType source, opType dest)
+int isValidSourceDest(OpCodes code,opType source, opType dest);
 
 
 /*!
@@ -160,6 +169,6 @@ int isValidSourceDest(OpCodes code,opType source, opType dest)
  * @param operand
  * @return
  */
-StatusCode trimOperand(char* operand)
+StatusCode trimOperand(char* operand);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
