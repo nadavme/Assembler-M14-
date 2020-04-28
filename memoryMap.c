@@ -4,17 +4,6 @@
 
 #include "memoryMap.h"
 
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c" /* this macro enabled us to print a binary representation of char or number*/
-#define BYTE_TO_BINARY(byte)  \
-  (byte & 0x80 ? '1' : '0'), \
-  (byte & 0x40 ? '1' : '0'), \
-  (byte & 0x20 ? '1' : '0'), \
-  (byte & 0x10 ? '1' : '0'), \
-  (byte & 0x08 ? '1' : '0'), \
-  (byte & 0x04 ? '1' : '0'), \
-  (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0')
-
 dataNodePtr newDataNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
 dc with or without 100??? 
 return the new node*/

@@ -26,6 +26,7 @@ typedef struct codeNode{ /*we've decided to implement the code table with a link
 the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
     int address;
     second_word data;/*this is not the right word, I need to find the right one*/
+    bool isNextBelongToMe;
     struct codeNode *next;
 }*codeNodePtr, codeNode;
 
