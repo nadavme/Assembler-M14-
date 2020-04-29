@@ -3,6 +3,7 @@
 //
 
 #include "aidTools.h" 
+#include "main.c"
 
 int bin_to_octal(int binaryNum)/*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
 {
@@ -82,172 +83,97 @@ size is the number of bytes. an example can be seen in tester_for_matrix.c */
     puts("");
 }
 
-dataNodePtr newDataNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
-dc with or without 100??? 
-return the new node*/
-    dataNodePtr new;
-    int nameLen = 0;
-    if(ch==0 && isItString == true){
-        return NULL;
-    }
-    new = calloc(1, sizeof(dataNode));
-    new->address = dc;
-
-    if (isItString == true)
-    {
-        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble, maybe the cast, shouldnt be*/
-    }
-
-    else if (isItString == false)
-    {
-        new->word.num_or_address = (unsigned short)x;/*maybe this line will cause trouble, maybe the cast, shouldnt be*/
-    }
-    
-    return new;
-}
-
-void freeDataNode(dataNodePtr toFree){/*a recursive function to free a node and his next node and so on till last one.
-to free the whole list just insert the head as a parameter*/
-    if(toFree == NULL){
-        return;
-    }
-
-    freeDataNode(toFree->next);
-    free(toFree);
-}
-
-dataLinkedListPtr newDataList()/*a funtion to create a new data table (linked list)*/
+/* this function adds a number to the instruction array.
+ toShift is the number of bits that is required to set the number in it's place.
+example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
+void add_to_arr(int num_to_add, int toShift,int ic)
 {
-    return calloc(1, sizeof(struct dataLinkedList));
+	instructions_array[ic] |= (num_to_add << toShift);
 }
 
-void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, int dc, bool isItString){/*if the list is Null the function does nothing*/
-    dataNodePtr new, dataNodePtr1;
-    if(list == NULL)
-    {
-        return;
-    }
-    new = newDataNode(ch, x, isItString,dc);
-    if(!list->size){
-        list->head = new;
-    }else{
-        for(dataNodePtr1 = list->head ; dataNodePtr1->next; dataNodePtr1=dataNodePtr1->next)
-            ;
-    
-        dataNodePtr1->next = new;
-    }
-    new->next = NULL;
-    list->size++;
-
-        
-}
-
-void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, int dc, bool isItString) 
-    {
-        dataNodePtr new = newDataNode(ch, x, isItString, dc);
-        new->next = list->head;
-        list->head = new;
-        list->size = list->size +1;
-    }
-
-    dataNodePtr searchDataInList(int address, linkedListPtr list)/*if the data with this address is in the list - the dataNode
-    is return*/
-    {
-        dataNodePtr searchedNode = list->head;
-        while (searchedNode!=NULL)
-    {
-        if(address == searchedNode->address)
-            return searchedNode;
-        searchedNode = searchedNode->next;
-    }
-    return searchedNode;
-    }
-
-
-
-    void printDataList(dataLinkedListPtr listPtr)
-    {
-        int i;
-        dataNodePtr node = listPtr->head;
-
-        for (i = 0; i < listPtr->size; i++)
-        {
-            printDataNode(node);
-            printf("                            ||                        \n");
-            printf("                            ||                        \n");
-            node = node->next;
-
-        }
-        
-    }
-
-    void printDataNode(dataNodePtr node)
-    {
-        if(!node)
-        {
-            return;
-        }
-        /*if ((node->next == NULL) && node->counter == 1)
-            printf("%s - 1 time\n", node->symbolName);
-
-        else if (node->next == NULL)
-            printf("%s - %d times\n", node->symbolName,node->counter); */
-
-        else
-        {
-            printf("***  ADDRESS - %d\n" , node->address);
-            printf("***  VALUE(BINARY)- %hu\n", node->word);
-        }
-            return;
-    }
-
-    bool dataTableIsEmpty(dataLinkedListPtr listPtr)
-    {
-        if (listPtr->head == NULL)
-        {
-            return true;
-        }
-        return false;     
-    }
-
-    int addDataToTable(dataLinkedListPtr list, int x, int dc) /*if the address is already in the table - 
-    return 1. else if the insertion went well - return 0. */
-    {
-        if (searchDataInList(dc, list) != NULL)
-        {
-            printf("Error!\n The address is already in the table.");
-            return 1;
-        }
-        if (dataTableIsEmpty(list)==true)
-        {
-            addDataNodeToStart(list,0, x, dc,false);
-            return 0;
-        }
-        
-        addDataNodeToEnd( list, 0, x, dc, false);
-        return 0;
-        
-}
-
-
-int addCharToTable(dataLinkedListPtr list,char ch, int dc)  /*if the address is already in the table - 
-    return 1. else if the insertion went well - return 0. */
+void turn_On_bit_num(int place,int ic)/*this function turn on the bit at'place' of the instruction array[ic].*/
 {
-    {
-        if (searchDataInList(dc, list) != NULL)
-        {
-            printf("Error!\n The address is already in the table.");
-            return 1;
-        }
-        if (dataTableIsEmpty(list)==true)
-        {
-            addDataNodeToStart(list,ch, 0, dc,true);
-            return 0;
-        }
-        
-        addDataNodeToEnd(list, ch, 0, dc, true);
-        return 0;
-}/*עד לפה צריך לערוך*/
+    instructions_array[ic] = (instructions_array[ic] | (int)pow(2,place));
+}
+
+/*this function and documenation is from Alon, need to change!!!!!!! 
+this function gets a token, and returns it's addressing mode:
+instant_addressing,
+direct_addressing,
+or register_addressing.
+if it's not one of the above - the function returns -1 */
+int get_addressing_mode(instruction operand)
+{
+	if (operand.type == number_tok) return instant_addressing;
+	else if (operand.type == lable_tok) return direct_addressing;
+	else if (operand.type == register_tok) return register_addressing;
+	else
+	{
+		return -1;
+	}
+}
+
+/*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
+this function get called only after all checks for valid input are o.k.*/
+void add_to_instructions_array(instruction *command, instruction operands[], int operands_cnt,int ic)
+{
+	int i;
+	/* adding the command word now.*/
+	add_to_arr(command->opCode, 11, ic);/*the opCode in the word is at bit number 11*/
+	if (operands_cnt == 0) /* no operadnds to add */
+	{
+        turn_On_bit_num(2,ic);
+		return;
+	}
+	else if (operands_cnt == 1)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 2)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), SRC_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 3)/*didnt understood this if. a potentialli bug...*/
+	{
+		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
+		add_to_arr(get_addressing_mode(operands[2]), PARAM_2,ic);
+	}
+
+	/* adding the other memory words */
+	
+	for (i = 0; i<operands_cnt; i++)
+	{
+		if (operands[i].type == lable_tok)
+		{
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added */
+		}
+		else if (operands[i].type == number_tok)
+		{
+			add_to_mem(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
+		}
+		else if (operands[i].type == register_tok)
+		{
+			if (operands_cnt>1)
+			{
+				if (i<operands_cnt - 1) /* the source register */
+				{
+					add_to_mem(operands[i].data.reg, SRC_REG); /* adds after the E,A,R part of the memory word */
+				}
+				else /* the destination register */
+				{
+					if (operands[i - 1].type == register_tok) /* if there are two registers, they add to the same memory word */
+					{
+						IC--; /* adds the register in the same memory word */
+					}
+					add_to_mem(operands[i].data.reg, DEST_REG);
+				}
+			}
+		}
+	}
+}
+
 
 int isStringValid(char **array, int length, char* string)
 {
