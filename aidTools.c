@@ -101,15 +101,65 @@ instant_addressing,
 direct_addressing,
 or register_addressing.
 if it's not one of the above - the function returns -1 */
-int get_addressing_mode(lineStruct operand)
+int get_addressing_mode(lineStruct operand,int destOrSrc,int ic)
 {
-	if (operand.theLinePurpose == number_tok) return instant_addressing;
-	else if (operand.theLinePurpose == lable_tok) return direct_addressing;
-	else if (operand.theLinePurpose == register_tok) return register_addressing;
-	else
+	if (destOrSrc == DEST_ADDRESS)
 	{
-		return -1;
+		if (operand.theLinePurpose == number_tok)
+		{
+			turn_On_bit_num(absolute,ic);
+			 return (instant_addressing + DEST_ADDRESS);
+		}
+		else if (operand.theLinePurpose == lable_tok) 
+		{
+			turn_On_bit_num(external, ic);
+			return (direct_addressing + DEST_ADDRESS);
+		}
+		else if (operand.theLinePurpose == bypass_register_tok)
+		{
+			turn_On_bit_num(absolute, ic);
+			return (DEST_ADDRESS + register_bypass);
+		}
+		
+		else if (operand.theLinePurpose == register_tok)
+		{ 
+			turn_On_bit_num(absolute,ic);
+			 return (DEST_ADDRESS + register_direct);
+		}
+		else
+		{
+			return -1;
+		}
 	}
+	else if (destOrSrc == SRC_ADDRESS)
+	{
+		if (operand.theLinePurpose == number_tok)
+		{
+			turn_On_bit_num(absolute,ic);
+			 return (instant_addressing + SRC_ADDRESS);
+		}
+		else if (operand.theLinePurpose == lable_tok) 
+		{
+			turn_On_bit_num(external, ic);
+			return (direct_addressing + SRC_ADDRESS);
+		}
+		else if (operand.theLinePurpose == bypass_register_tok)
+		{
+			turn_On_bit_num(absolute, ic);
+			return (SRC_ADDRESS + register_bypass);
+		}
+		
+		else if (operand.theLinePurpose == register_tok)
+		{ 
+			turn_On_bit_num(absolute,ic);
+			 return (SRC_ADDRESS + register_direct);
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	
 }
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
@@ -118,7 +168,8 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 {
 	int i;
 	/* adding the command word now.*/
-	add_to_arr(command->data.command, 11, ic);/*the opCode in the word is at bit number 11*/
+	add_to_arr(command->data.command, COMMAND_OPCODE, ic);/*the opCode in the word is at bit number 11*/
+	turn_On_bit_num(absolute, ic);
 	if (operands_cnt == 0) /* no operadnds to add */
 	{
         turn_On_bit_num(absolute,ic);
@@ -126,14 +177,14 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 	}
 	else if (operands_cnt == 1)
 	{
-		add_to_arr(get_addressing_mode(operands[0]), DEST_ADDRESS,ic);
+		turn_On_bit_num(get_addressing_mode(operands[0], DEST_ADDRESS,ic),ic);
 	}
 	else if (operands_cnt == 2)
 	{
-		add_to_arr(get_addressing_mode(operands[0]), SRC_ADDRESS, ic);
-		add_to_arr(get_addressing_mode(operands[1]), DEST_ADDRESS,ic);
+		turn_On_bit_num(get_addressing_mode(operands[0],DEST_ADDRESS,ic), ic);/*Entering destination operand to the word*/
+		turn_On_bit_num(get_addressing_mode(operands[1], SRC_ADDRESS, ic), ic);/*Entering source operand to the word*/
 	}
-	else if (operands_cnt == 3)/*didnt understood this if... a potentialli bug...*/
+	else if (operands_cnt == 3)/*didnt understood this if... a potentialli bug... Do I need to delete?????*/
 	{
 		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
 		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
@@ -142,16 +193,17 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 
 	/* adding the other memory words */
 	
-	for (i = 0; i<operands_cnt; i++)
+	for (i = 0; i<operands_cnt; i++)/* why does i starts at value 0?????????*/
 	{
-		/*if we deal with symbols here, let this code free (after edit)
+		/*if we are dealing with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
 		{
 			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
 		}
-		else*/ if (operands[i].type == number_tok)/*in case were dealing with a direct mio'n*/
+		else*/ if (operands[i].theLinePurpose == number_tok)/*in case were dealing with a direct mio'n*/
 		{
-			add_to_arr(operands[i].number, NUM,ic + 1); /* adds after the E,A,R part of the memory word */
+
+			add_to_arr(operands[i].data.number, NUM,ic + 1); /* adds after the E,A,R part of the memory word */
 		}
 		else if (operands[i].type == register_tok)
 		{

@@ -22,12 +22,12 @@
 #define MAX_LINE 80
 
 
-/* types of addressing modes of the command operands, from Alon, need to check if needed */
+/* types of addressing modes of the command operands */
 enum addressing_modes {
 	instant_addressing,
 	direct_addressing,
-	jump_addressing,
-	register_addressing
+	register_bypass,
+	register_direct
 };
 
 /* This one is from Alon, need to edit!!!!
@@ -39,9 +39,10 @@ enum tokens {
 	instruction_tok = -3,
 	string_tok = -4,
 	command_tok = -5,
-	register_tok = -6,
-	new_line_tok = -7,
-	error_tok = -8
+	bypass_register_tok = -6,
+    register_tok = -7,
+	new_line_tok = -8,
+	error_tok = -9
 };
 
 
