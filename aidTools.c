@@ -108,12 +108,17 @@ int get_addressing_mode(lineStruct operand,int destOrSrc,int ic)
 	{
 		if (operand.theLinePurpose == number_tok)
 		{
-			turn_On_bit_num(absolute,ic);
+			turn_On_bit_num(absolute,ic + 1);
 			 return (instant_addressing + DEST_ADDRESS);
 		}
-		else if (operand.theLinePurpose == lable_tok) 
+		else if (operand.theLinePurpose == lable_tok) /*in this case were dealing with the direct addresing method.*/
 		{
 			turn_On_bit_num(external, ic);
+			if (operand.data.instruction == EXTERN)
+			{
+				turn_On_bit_num(external,ic + 1)
+			}
+			
 			return (direct_addressing + DEST_ADDRESS);
 		}
 		else if (operand.theLinePurpose == bypass_register_tok)
@@ -204,15 +209,23 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 		else*/ if (operands[i].theLinePurpose == number_tok)/*in case were dealing with a direct mio'n*/
 		{
 
-			add_to_arr(operands[i].data.number, NUM,ic + 1); /* adds after the E,A,R part of the memory word */
+			add_to_arr(operands[i].data.number, NUM,ic); /* adds after the E,A,R part of the memory word */
+			turn_On_bit_num(absolute,ic);
 		}
-		else if (operands[i].type == register_tok)
+
+		
+		
+		else if ((operands[i].theLinePurpose == register_tok) || (operands[i] == bypass_register_tok))
 		{
 			if (operands_cnt>1)
 			{
-				if (i<operands_cnt - 1) /* the source register */
+				if (isBothOperandsRegs(operands[i],operands[i+1]) == 1)
 				{
-					add_to_mem(operands[i].data.reg, SRC_REG); /* adds after the E,A,R part of the memory word */
+					/*Ive stopped here, NEED to check if this case is not already in the next if's*/
+				}
+				else if (i<operands_cnt - 1) /* the source register */
+				{
+					add_to_arr(operands[i].data.reg  , SRC_REG, ic); /* adds after the E,A,R part of the memory word */
 				}
 				else /* the destination register */
 				{
@@ -220,14 +233,25 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 					{
 						IC--; /* adds the register in the same memory word */
 					}
-					add_to_mem(operands[i].data.reg, DEST_REG);
+					add_to_arr(operands[i].data.reg, DEST_REG);
 				}
 			}
 		}
 	}
 }
 
+int isBothOperandsRegs(lineStruct x,lineStruct y)
+{
+	if ((x.data.reg == bypass_register_tok && y.data.reg == bypass_register_tok)
+	||   (x.data.reg == bypass_register_tok && y.data.reg == register_tok)
+	||   (x.data.reg == register_tok && y.data.reg == bypass_register_tok)
+	||   (x.data.reg == register_tok && y.data.reg == register_tok))
+	{
+		return 1;
+	}
+	return 0;
 
+}
 
 int isStringValid(char array[], int length, char* string)
 {

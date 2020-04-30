@@ -155,9 +155,11 @@ enum memory_word_toShift { /*from Alon need to change a bit*/
 	PARAM_1 = 12,
 
 	NUM = 3,
-	SRC_REG = 8,
-	DEST_REG = 2
+	SRC_REG = 6,
+	DEST_REG = 3
 };
+
+int isBothOperandsRegs(lineStruct x,lineStruct y);/*this function check if both operands X and Y are using registers.*/
 
 /*!
  *
