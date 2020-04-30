@@ -18,6 +18,6 @@
  * @param numOfFiles
  * @return
  */
-int assembler(char** filesToInterpret, int numOfFiles);
+int assembler(char const* filesToInterpret[], int numOfFiles);
 
 #endif //MAABADA_MMN14_FILESASSEMBLER_H

@@ -4,10 +4,13 @@
 
 
 
-int main(int argc, char **argv )
+int main(int argc, char const *argv[] )
 {
-    int numOfFiles;
-    char** filesToInterpret;
 
-    return assembler(filesToInterpret = argv, numOfFiles = argc);
+    if (argc < 2)
+    {
+        printf("No files error");
+        return 1;
+    }
+    return assembler(argv, argc);
 }

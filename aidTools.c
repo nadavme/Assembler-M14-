@@ -64,21 +64,52 @@ int dec_to_bin(char dec[])
 	return 0;
 }
 
-int isStringValid(char **array, int length, char* string)
+int isStringValid(char array[], int length, char* string)
 {
+    /*The function allows validation of any string(operation, register, etc.)*/
     int i;
     for(i=0;i<length;i++)
     {
         if(strcmp(array[i],string) == 0)
-            return 1;
+            return 0;
     }
-    return 0;
+    return -1;
 }
 
-//int isInstruction(char* string)
-//{
-//    return isStringValid(instructions, NUM_OF_INSTRUCTS, string);
-//}
+int isInstruction(char* string)
+{
+    return isStringValid(validInstructions, strlen(string), string);
+}
+
+int isCommand(char* string)
+{
+    int i;
+    /*register prefix*/
+    if (string[0] != 'r')
+    {
+        for (i = 0; matrix[i].codeName ; i++)
+        {
+            if (strcmp(string, matrix[i].codeName) ==0) return i;
+        }
+    }
+    return -1;/*in case it's not a command*/
+}
+
+int isRegister(char* string)
+{
+    int i;
+    /*register prefix*/
+    if (string[0] != 'r')
+    {
+        for (i = 0; matrix[i].codeName ; i++)
+        {
+            if (strcmp(string, matrix[i].codeName) ==0) return i;
+        }
+    }
+    return -1;/*in case it's not a command*/
+}
+
+
 
 //int isData(char* string)
 //{
@@ -91,17 +122,14 @@ int isStringValid(char **array, int length, char* string)
 //        return 0;
 //}
 
-//int isRegister(char* string)
-//{
-//    return isStringValid(registers, NUM_OF_REGISTERS, string);
-//}
+
 
 int isExtern(char* string)
 {
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(EXTERN,string) == 0);
+        return (strcmp(EXTERN_MACRO,string) == 0);
     }
     else
         return 0;
@@ -112,7 +140,7 @@ int isEntry(char* string)
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(ENTRY,string) == 0);
+        return (strcmp(ENTRY_MACRO,string) == 0);
     }
     else
         return 0;
@@ -190,4 +218,81 @@ int isInt(char* string)
 //        strcpy(operand,first);
 //    return success;
 //}
+
+void errorHandler(bool mentionLine, int lineIdx, char* errorMsg)
+{
+    if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
+    else fprintf(stderr, "%s\n", errorMsg);
+}
+
+char* parseIntoLineStruct(struct LineStruct* currLine)
+{
+
+    char token[30];
+    int idx;
+
+    idx = 0;
+
+    /*Skip all white spaces at the the beginning of the line*/
+    while (isWhitespace(currLine->data.line)) currLine->data.line++;
+
+    /*Check for a number*/
+    if ((isdigit(*currLine->data.line)) || (*currLine->data.line == '-'))
+    {
+       do
+           {
+           token[idx++] = *currLine->data.line;
+           currLine->data.line++;
+           }
+       while (isdigit(*currLine->data.line));
+       token[idx] = '\0';
+        currLine->theLinePurpose = Tnumber;
+        currLine->data.number = atoi(token);
+    }
+    else if (*currLine->data.line == '.')/*Check for instruction prefix*/
+    {
+        do
+        {
+            token[idx] = *currLine->data.line;
+            currLine->data.line++;
+        }
+        while (!isspace(*currLine->data.line));
+        token[idx++] = '\0';
+
+        /*Check for instruction*/
+        if ((currLine->data.instruction = isInstruction(token)) >= 0)
+        {
+            currLine->theLinePurpose = Tinstruction;
+        }
+        /*We figure out its not an instruction thus its not valid*/
+        else currLine->theLinePurpose = Terror;
+    }
+
+    else if (*currLine->data.line == '\n')
+    {
+        currLine->theLinePurpose = TnewLine;
+        currLine->data.line++;
+    }
+
+    /*Check if the line is a symbol, command or a register*/
+    else if (isalnum(*currLine->data.line))
+    {
+        do
+        {
+            token[idx] = *currLine->data.line;
+            currLine->data.line++;
+        }
+        while (isalnum(*currLine->data.line));
+        token[idx] = '\0';
+
+        /*Check for command*/
+        if ((currLine->data.command = isCommand(token)) >= 0)
+        {
+            currLine->theLinePurpose = Tcommand;
+            if (!isspace(*currLine->data.line)) currLine->theLinePurpose = Terror;
+        }
+        else if((currLine->data.reg = isRegister(token)) >= 0) currLine->theLinePurpose = Tregister;
+
+    }
+}
 

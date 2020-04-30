@@ -9,13 +9,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <stdbool.h>
 #include "firstRunOver.h"
 #include <ctype.h>
+#include "permanantTables.h"
 
 #define MAX_DIGITS_BIN 100
 #define MAX_DIGITS_DEC 10
-#define EXTERN "extern"
-#define ENTRY "entry"
+#define EXTERN_MACRO "extern"
+#define ENTRY_MACRO "entry"
 
 
 
@@ -37,6 +39,10 @@ typedef struct codeLinkedList {
     codeNodePtr head;
 }*codeLinkedListPtr;
 
+typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
+                           Tstring = -4, Tcommand = -5, Tregister = -6,
+                           TnewLine = -7, Terror = -8} ;
+
 /*!
  *
  */
@@ -45,7 +51,13 @@ typedef enum opCodes { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, re
 /*!
  *
  */
-typedef enum addressingMethod { immediate = 0, direct, reg } addrMethod;
+typedef enum addressingMethod { immediate = 0, direct, regIndirect, regDirect } addrMethod;
+
+
+
+
+
+
 
 /*!
  *
@@ -60,17 +72,28 @@ typedef enum symbolType { tCode, tData, tString} symbolType;
 /*!
  *
  */
-typedef  enum isThatExtern {no, yes} isExtern;
+typedef  enum isThatExtern {no, yes} isThatExtern;
 
 /*!
  *
  */
-typedef struct lineStruct
+typedef struct LineStruct
 {
-    char* originalLine;
-    char* parsedLine;
-    unsigned int lineNumber;
-    bool isDone;
+    int theLinePurpose;
+    union
+    {
+        char* line;
+        char* symbolName;
+        char* string;
+        int number;
+        unsigned int lineNumber;
+        bool isTranslated;
+        int command;
+        int reg;
+        int instruction;
+        int L = 1;
+    }data;
+
 } lineStruct;
 
 /*!
@@ -94,7 +117,7 @@ int dec_to_bin(char dec[]); /*converts from decimal to binary, prints the result
  * @param string
  * @return
  */
-int isStringValid(char **array, int length, char* string);
+int isStringValid(char array[], int length, char* string);
 
 /*!
  *
@@ -160,6 +183,10 @@ int isValidSourceDest(OpCodes code,opType source, opType dest)
  * @param operand
  * @return
  */
-StatusCode trimOperand(char* operand)
+StatusCode trimOperand(char* operand);
+
+void errorHandler(bool mentionLine, int lineIdx, char* errorMsg);
+
+char* parseIntoLineStruct(struct LineStruct* currLine);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
