@@ -3,6 +3,7 @@
 //
 
 #include "aidTools.h" 
+#include "main.c"
 
 int bin_to_octal(int binaryNum)/*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
 {
@@ -64,52 +65,131 @@ int dec_to_bin(char dec[])
 	return 0;
 }
 
-int isStringValid(char array[], int length, char* string)
+void printBits(size_t const size, void const * const ptr)/*the function prints the binary representation of any type.
+size is the number of bytes. an example can be seen in tester_for_matrix.c */
 {
-    /*The function allows validation of any string(operation, register, etc.)*/
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i=size-1;i>=0;i--)
+    {
+        for (j=7;j>=0;j--)
+        {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
+}
+
+/* this function adds a number to the instruction array.
+ toShift is the number of bits that is required to set the number in it's place.
+example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
+void add_to_arr(int num_to_add, int toShift,int ic)
+{
+	instructions_array[ic] |= (num_to_add << toShift);
+}
+
+void turn_On_bit_num(int place,int ic)/*this function turn on the bit at'place' of the instruction array[ic].*/
+{
+    instructions_array[ic] = (instructions_array[ic] | (int)pow(2,place));
+}
+
+/*this function and documenation is from Alon, need to change!!!!!!! 
+this function gets a token, and returns it's addressing mode:
+instant_addressing,
+direct_addressing,
+or register_addressing.
+if it's not one of the above - the function returns -1 */
+int get_addressing_mode(instruction operand)
+{
+	if (operand.type == number_tok) return instant_addressing;
+	else if (operand.type == lable_tok) return direct_addressing;
+	else if (operand.type == register_tok) return register_addressing;
+	else
+	{
+		return -1;
+	}
+}
+
+/*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
+this function get called only after all checks for valid input are o.k.*/
+void add_to_instructions_array(instruction *command, instruction operands[], int operands_cnt,int ic)
+{
+	int i;
+	/* adding the command word now.*/
+	add_to_arr(command->opCode, 11, ic);/*the opCode in the word is at bit number 11*/
+	if (operands_cnt == 0) /* no operadnds to add */
+	{
+        turn_On_bit_num(2,ic);
+		return;
+	}
+	else if (operands_cnt == 1)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 2)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), SRC_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 3)/*didnt understood this if. a potentialli bug...*/
+	{
+		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
+		add_to_arr(get_addressing_mode(operands[2]), PARAM_2,ic);
+	}
+
+	/* adding the other memory words */
+	
+	for (i = 0; i<operands_cnt; i++)
+	{
+		if (operands[i].type == lable_tok)
+		{
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added */
+		}
+		else if (operands[i].type == number_tok)
+		{
+			add_to_mem(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
+		}
+		else if (operands[i].type == register_tok)
+		{
+			if (operands_cnt>1)
+			{
+				if (i<operands_cnt - 1) /* the source register */
+				{
+					add_to_mem(operands[i].data.reg, SRC_REG); /* adds after the E,A,R part of the memory word */
+				}
+				else /* the destination register */
+				{
+					if (operands[i - 1].type == register_tok) /* if there are two registers, they add to the same memory word */
+					{
+						IC--; /* adds the register in the same memory word */
+					}
+					add_to_mem(operands[i].data.reg, DEST_REG);
+				}
+			}
+		}
+	}
+}
+
+
+int isStringValid(char **array, int length, char* string)
+{
     int i;
     for(i=0;i<length;i++)
     {
         if(strcmp(array[i],string) == 0)
-            return 0;
+            return 1;
     }
-    return -1;
+    return 0;
 }
 
-int isInstruction(char* string)
-{
-    return isStringValid(validInstructions, strlen(string), string);
-}
-
-int isCommand(char* string)
-{
-    int i;
-    /*register prefix*/
-    if (string[0] != 'r')
-    {
-        for (i = 0; matrix[i].codeName ; i++)
-        {
-            if (strcmp(string, matrix[i].codeName) ==0) return i;
-        }
-    }
-    return -1;/*in case it's not a command*/
-}
-
-int isRegister(char* string)
-{
-    int i;
-    /*register prefix*/
-    if (string[0] != 'r')
-    {
-        for (i = 0; matrix[i].codeName ; i++)
-        {
-            if (strcmp(string, matrix[i].codeName) ==0) return i;
-        }
-    }
-    return -1;/*in case it's not a command*/
-}
-
-
+//int isInstruction(char* string)
+//{
+//    return isStringValid(instructions, NUM_OF_INSTRUCTS, string);
+//}
 
 //int isData(char* string)
 //{
@@ -122,14 +202,17 @@ int isRegister(char* string)
 //        return 0;
 //}
 
-
+//int isRegister(char* string)
+//{
+//    return isStringValid(registers, NUM_OF_REGISTERS, string);
+//}
 
 int isExtern(char* string)
 {
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(EXTERN_MACRO,string) == 0);
+        return (strcmp(EXTERN,string) == 0);
     }
     else
         return 0;
@@ -140,7 +223,7 @@ int isEntry(char* string)
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(ENTRY_MACRO,string) == 0);
+        return (strcmp(ENTRY,string) == 0);
     }
     else
         return 0;
@@ -218,81 +301,4 @@ int isInt(char* string)
 //        strcpy(operand,first);
 //    return success;
 //}
-
-void errorHandler(bool mentionLine, int lineIdx, char* errorMsg)
-{
-    if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
-    else fprintf(stderr, "%s\n", errorMsg);
-}
-
-char* parseIntoLineStruct(struct LineStruct* currLine)
-{
-
-    char token[30];
-    int idx;
-
-    idx = 0;
-
-    /*Skip all white spaces at the the beginning of the line*/
-    while (isWhitespace(currLine->data.line)) currLine->data.line++;
-
-    /*Check for a number*/
-    if ((isdigit(*currLine->data.line)) || (*currLine->data.line == '-'))
-    {
-       do
-           {
-           token[idx++] = *currLine->data.line;
-           currLine->data.line++;
-           }
-       while (isdigit(*currLine->data.line));
-       token[idx] = '\0';
-        currLine->theLinePurpose = Tnumber;
-        currLine->data.number = atoi(token);
-    }
-    else if (*currLine->data.line == '.')/*Check for instruction prefix*/
-    {
-        do
-        {
-            token[idx] = *currLine->data.line;
-            currLine->data.line++;
-        }
-        while (!isspace(*currLine->data.line));
-        token[idx++] = '\0';
-
-        /*Check for instruction*/
-        if ((currLine->data.instruction = isInstruction(token)) >= 0)
-        {
-            currLine->theLinePurpose = Tinstruction;
-        }
-        /*We figure out its not an instruction thus its not valid*/
-        else currLine->theLinePurpose = Terror;
-    }
-
-    else if (*currLine->data.line == '\n')
-    {
-        currLine->theLinePurpose = TnewLine;
-        currLine->data.line++;
-    }
-
-    /*Check if the line is a symbol, command or a register*/
-    else if (isalnum(*currLine->data.line))
-    {
-        do
-        {
-            token[idx] = *currLine->data.line;
-            currLine->data.line++;
-        }
-        while (isalnum(*currLine->data.line));
-        token[idx] = '\0';
-
-        /*Check for command*/
-        if ((currLine->data.command = isCommand(token)) >= 0)
-        {
-            currLine->theLinePurpose = Tcommand;
-            if (!isspace(*currLine->data.line)) currLine->theLinePurpose = Terror;
-        }
-        else if((currLine->data.reg = isRegister(token)) >= 0) currLine->theLinePurpose = Tregister;
-
-    }
-}
 
