@@ -22,19 +22,6 @@
 #define MAX_LINE 80
 
 
-/* this is a token in the file. the token can be one of these following types, or a character.
-each token has it's type, and some data (according to it's type) */
-typedef struct instruction {
-        int type;
-		char string[MAX_LINE];/*I have to delete the fields that I dont use here.*/
-		int number;
-		char ch;
-		int opCode;
-		int reg;
-		int instruction;
-	
-}instruction;
-
 /* types of addressing modes of the command operands, from Alon, need to check if needed */
 enum addressing_modes {
 	instant_addressing,
@@ -82,10 +69,6 @@ typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
                            Tstring = -4, Tcommand = -5, Tregister = -6,
                            TnewLine = -7, Terror = -8} ;
 
-/*!
- *
- */
-typedef enum opCodes { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCodes;
 
 /*!
  *
@@ -101,7 +84,7 @@ typedef enum addressingMethod { immediate = 0, direct, regIndirect, regDirect } 
 /*!
  *
  */
-typedef enum ARE { absolute = 0, external, relocatable } ARE;
+typedef enum ARE { relocatable = 0, external, absolute } ARE;
 
 /*!
  *
@@ -112,6 +95,20 @@ typedef enum symbolType { tCode, tData, tString} symbolType;
  *
  */
 typedef  enum isThatExtern {no, yes} isThatExtern;
+
+/* this is a token in the file. the token can be one of these following types, or a character.
+each token has it's type, and some data (according to it's type) */
+typedef struct instruction {
+        int type;
+		char string[MAX_LINE];/*I have to delete the fields that I dont use here.*/
+		int number;
+		char ch;
+		int opCode;
+		int reg;
+		int instruction;
+	
+}instruction;
+
 
 /*!
  *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine

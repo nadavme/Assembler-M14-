@@ -87,12 +87,12 @@ size is the number of bytes. an example can be seen in tester_for_matrix.c */
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
 void add_to_arr(int num_to_add, int toShift,int ic)
 {
-	instructions_array[ic] |= (num_to_add << toShift);
+	commands_array[ic] |= (num_to_add << toShift);
 }
 
-void turn_On_bit_num(int place,int ic)/*this function turn on the bit at'place' of the instruction array[ic].*/
+void turn_On_bit_num(int place,int ic)/*this function turn on the bit at 'place' of the instruction array[ic].*/
 {
-    instructions_array[ic] = (instructions_array[ic] | (int)pow(2,place));
+    commands_array[ic] = (commands_array[ic] | (int)pow(2,place));
 }
 
 /*this function and documenation is from Alon, need to change!!!!!!! 
@@ -101,11 +101,11 @@ instant_addressing,
 direct_addressing,
 or register_addressing.
 if it's not one of the above - the function returns -1 */
-int get_addressing_mode(instruction operand)
+int get_addressing_mode(lineStruct operand)
 {
-	if (operand.type == number_tok) return instant_addressing;
-	else if (operand.type == lable_tok) return direct_addressing;
-	else if (operand.type == register_tok) return register_addressing;
+	if (operand.theLinePurpose == number_tok) return instant_addressing;
+	else if (operand.theLinePurpose == lable_tok) return direct_addressing;
+	else if (operand.theLinePurpose == register_tok) return register_addressing;
 	else
 	{
 		return -1;
@@ -114,14 +114,14 @@ int get_addressing_mode(instruction operand)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void add_to_instructions_array(instruction *command, instruction operands[], int operands_cnt,int ic)
+void add_to_comands_array(lineStruct *command, lineStruct operands[], int operands_cnt,int ic)
 {
 	int i;
 	/* adding the command word now.*/
-	add_to_arr(command->opCode, 11, ic);/*the opCode in the word is at bit number 11*/
+	add_to_arr(command->data.command, 11, ic);/*the opCode in the word is at bit number 11*/
 	if (operands_cnt == 0) /* no operadnds to add */
 	{
-        turn_On_bit_num(2,ic);
+        turn_On_bit_num(absolute,ic);
 		return;
 	}
 	else if (operands_cnt == 1)

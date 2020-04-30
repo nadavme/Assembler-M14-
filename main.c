@@ -3,7 +3,7 @@
 #define MAX_ARRAY 600 /*just a random length value*/
 #define MAX_LINE 80
 
-short int instructions_array[MAX_ARRAY]; /* this array is the instructions table, declared globally. */
+short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
 
 
