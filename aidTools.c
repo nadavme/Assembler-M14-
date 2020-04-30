@@ -149,9 +149,9 @@ void add_to_instructions_array(instruction *command, instruction operands[], int
 		{
 			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
 		}
-		else*/ if (operands[i].type == number_tok)/*in case were dealing with a */
+		else*/ if (operands[i].type == number_tok)/*in case were dealing with a direct mio'n*/
 		{
-			add_to_arr(operands[i].number, NUM); /* adds after the E,A,R part of the memory word */
+			add_to_arr(operands[i].number, NUM,ic + 1); /* adds after the E,A,R part of the memory word */
 		}
 		else if (operands[i].type == register_tok)
 		{
