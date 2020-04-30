@@ -133,7 +133,7 @@ void add_to_instructions_array(instruction *command, instruction operands[], int
 		add_to_arr(get_addressing_mode(operands[0]), SRC_ADDRESS, ic);
 		add_to_arr(get_addressing_mode(operands[1]), DEST_ADDRESS,ic);
 	}
-	else if (operands_cnt == 3)/*didnt understood this if. a potentialli bug...*/
+	else if (operands_cnt == 3)/*didnt understood this if... a potentialli bug...*/
 	{
 		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
 		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
@@ -144,13 +144,14 @@ void add_to_instructions_array(instruction *command, instruction operands[], int
 	
 	for (i = 0; i<operands_cnt; i++)
 	{
+		/*if we deal with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
 		{
-			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added */
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
 		}
-		else if (operands[i].type == number_tok)
+		else*/ if (operands[i].type == number_tok)/*in case were dealing with a */
 		{
-			add_to_mem(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
+			add_to_arr(operands[i].number, NUM); /* adds after the E,A,R part of the memory word */
 		}
 		else if (operands[i].type == register_tok)
 		{

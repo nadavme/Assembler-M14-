@@ -26,7 +26,7 @@
 each token has it's type, and some data (according to it's type) */
 typedef struct instruction {
         int type;
-		char string[maxLine];/*I have to delete the fields that I dont use here.*/
+		char string[MAX_LINE];/*I have to delete the fields that I dont use here.*/
 		int number;
 		char ch;
 		int opCode;
@@ -143,7 +143,7 @@ enum memory_word_toShift { /*from Alon need to change a bit*/
 	PARAM_2 = 10,/*do I need to delete this one and next one??????*/
 	PARAM_1 = 12,
 
-	NUM = 2,
+	NUM = 3,
 	SRC_REG = 8,
 	DEST_REG = 2
 };
