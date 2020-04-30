@@ -12,6 +12,7 @@
 #include <stdbool.h>
 #include "firstRunOver.h"
 #include <ctype.h>
+#include <stdarg.h>
 #include "permanantTables.h"
 #include "main.c"
 
@@ -254,7 +255,7 @@ int isValidSourceDest(OpCodes code,opType source, opType dest)
  */
 StatusCode trimOperand(char* operand);
 
-void errorHandler(bool mentionLine, int lineIdx, char* errorMsg);
+void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
 
 char* parseIntoLineStruct(struct LineStruct* currLine);
 

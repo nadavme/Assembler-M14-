@@ -397,10 +397,15 @@ int isInt(char* string)
 //    return success;
 //}
 
-void errorHandler(bool mentionLine, int lineIdx, char* errorMsg)
+void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...)
 {
+    va_list parameters_to_print;
+    va_start(parameters_to_print, errorMsg);
     if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
     else fprintf(stderr, "%s\n", errorMsg);
+    vfprintf(stderr, errorMsg, parameters_to_print);
+    fprintf(stderr, "\n");
+    va_end(parameters_to_print);
 }
 
 char* parseIntoLineStruct(struct LineStruct* currLine)
@@ -469,10 +474,25 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
             currLine->theLinePurpose = Tcommand;
             if (!isspace(*currLine->data.line)) currLine->theLinePurpose = Terror;
         }
+
         /*In case we found a match to a valid register.*/
         else if((currLine->data.reg = isRegister(token)) >= 0) currLine->theLinePurpose = Tregister;
-        else if()
 
+        /*If all is false, we understand it's a symbol.*/
+        else if(isSymbol(token))
+        {
+            /*This symbol needs to be added to the symbol table.*/
+            currLine->theLinePurpose = Tsymbol;
+            strcpy(currLine->data.symbolName, token);
+        }
+        else currLine->theLinePurpose = Terror;
+    }
+    else
+
+    /*We understand that the line is a special character. returns the ascii value of the character.*/
+    {
+        currLine->theLinePurpose = currLine->data.line;
+        currLine->data.line++;
     }
 }
 
