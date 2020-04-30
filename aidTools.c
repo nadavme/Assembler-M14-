@@ -95,11 +95,12 @@ void turn_On_bit_num(int place,int ic)/*this function turn on the bit at 'place'
     commands_array[ic] = (commands_array[ic] | (int)pow(2,place));
 }
 
-/*this function and documenation is from Alon, need to change!!!!!!! 
-this function gets a token, and returns it's addressing mode:
+/*
+this function gets a lineStruct, and returns it's addressing mode:
 instant_addressing,
 direct_addressing,
-or register_addressing.
+register_bypass
+or register_direct.
 if it's not one of the above - the function returns -1 */
 int get_addressing_mode(lineStruct operand,int destOrSrc,int ic)
 {
