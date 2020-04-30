@@ -64,6 +64,117 @@ int dec_to_bin(char dec[])
 	return 0;
 }
 
+void printBits(size_t const size, void const * const ptr)/*the function prints the binary representation of any type.
+size is the number of bytes. an example can be seen in tester_for_matrix.c */
+{
+    unsigned char *b = (unsigned char*) ptr;
+    unsigned char byte;
+    int i, j;
+
+    for (i=size-1;i>=0;i--)
+    {
+        for (j=7;j>=0;j--)
+        {
+            byte = (b[i] >> j) & 1;
+            printf("%u", byte);
+        }
+    }
+    puts("");
+}
+
+/* this function adds a number to the instruction array.
+ toShift is the number of bits that is required to set the number in it's place.
+example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
+void add_to_arr(int num_to_add, int toShift,int ic)
+{
+	instructions_array[ic] |= (num_to_add << toShift);
+}
+
+void turn_On_bit_num(int place,int ic)/*this function turn on the bit at'place' of the instruction array[ic].*/
+{
+    instructions_array[ic] = (instructions_array[ic] | (int)pow(2,place));
+}
+
+/*this function and documenation is from Alon, need to change!!!!!!! 
+this function gets a token, and returns it's addressing mode:
+instant_addressing,
+direct_addressing,
+or register_addressing.
+if it's not one of the above - the function returns -1 */
+int get_addressing_mode(instruction operand)
+{
+	if (operand.type == number_tok) return instant_addressing;
+	else if (operand.type == lable_tok) return direct_addressing;
+	else if (operand.type == register_tok) return register_addressing;
+	else
+	{
+		return -1;
+	}
+}
+
+/*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
+this function get called only after all checks for valid input are o.k.*/
+void add_to_instructions_array(instruction *command, instruction operands[], int operands_cnt,int ic)
+{
+	int i;
+	/* adding the command word now.*/
+	add_to_arr(command->opCode, 11, ic);/*the opCode in the word is at bit number 11*/
+	if (operands_cnt == 0) /* no operadnds to add */
+	{
+        turn_On_bit_num(2,ic);
+		return;
+	}
+	else if (operands_cnt == 1)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 2)
+	{
+		add_to_arr(get_addressing_mode(operands[0]), SRC_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), DEST_ADDRESS,ic);
+	}
+	else if (operands_cnt == 3)/*didnt understood this if. a potentialli bug...*/
+	{
+		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
+		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
+		add_to_arr(get_addressing_mode(operands[2]), PARAM_2,ic);
+	}
+
+	/* adding the other memory words */
+	
+	for (i = 0; i<operands_cnt; i++)
+	{
+		if (operands[i].type == lable_tok)
+		{
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added */
+		}
+		else if (operands[i].type == number_tok)
+		{
+			add_to_mem(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
+		}
+		else if (operands[i].type == register_tok)
+		{
+			if (operands_cnt>1)
+			{
+				if (i<operands_cnt - 1) /* the source register */
+				{
+					add_to_mem(operands[i].data.reg, SRC_REG); /* adds after the E,A,R part of the memory word */
+				}
+				else /* the destination register */
+				{
+					if (operands[i - 1].type == register_tok) /* if there are two registers, they add to the same memory word */
+					{
+						IC--; /* adds the register in the same memory word */
+					}
+					add_to_mem(operands[i].data.reg, DEST_REG);
+				}
+			}
+		}
+	}
+}
+
+
+
 int isStringValid(char array[], int length, char* string)
 {
     /*The function allows validation of any string(operation, register, etc.)*/
