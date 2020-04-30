@@ -114,23 +114,35 @@ typedef enum symbolType { tCode, tData, tString} symbolType;
 typedef  enum isThatExtern {no, yes} isThatExtern;
 
 /*!
- *
+ *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine
+ * language code.
  */
 typedef struct LineStruct
 {
-    int theLinePurpose;
+    int theLinePurpose; /*the line type/ purpose out of LinePurposes that declared above.*/
+    
     union
     {
-        char* line;
-        char* symbolName;
-        char* string;
-        int number;
-        unsigned int lineNumber;
-        bool isTranslated;
-        int command;
-        int reg;
-        int instruction;
-        int L = 1;
+        char* line; /*This is the genuine line from the input, and we run over her*/
+
+        char* symbolName; /*This is where the symbol name parsed and stored, if found.*/
+
+        char* string; /*This is where the data of type string is parsed and stored, if found.*/
+
+        int number; /*This is where the data of type number is parsed and stored, if found*/
+
+        unsigned int lineNumber; /*This is the genuine line number from the input.*/
+
+        bool isTranslated; /*This is a flag, helps us to understand if there is more job on this line.*/
+
+        int command; /*This is where the command name parsed and stored, if found.*/
+
+        int reg; /*This is where the register name parsed and stored, if found.*/
+
+        int instruction; /*This is where the instruction type name parsed and stored, if found.*/
+
+        /*todo: optional*/
+        int L = 1; /*num of machine words needed.*/
     }data;
 
 } lineStruct;
@@ -191,6 +203,13 @@ int isData(char* string)
  * @return
  */
 int isRegister(char* string)
+
+/*!
+ *
+ * @param string
+ * @return
+ */
+int isSymbol(char* string)
 
 /*!
  *

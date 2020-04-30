@@ -222,6 +222,20 @@ int isRegister(char* string)
 }
 
 
+int isSymbol(char* string)
+{
+    int i;
+
+    /*validate every char on symbol*/
+    /*make sure all are letters or digits*/
+    for (i = 0; i < strlen(string); i++) if (!isalnum(string[i])) return 0;
+
+    /*symbol name must starts with a letter*/
+    if (!isalpha(string[0])) return 0;
+
+    return 1;
+}
+
 
 //int isData(char* string)
 //{
@@ -403,7 +417,9 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
             currLine->theLinePurpose = Tcommand;
             if (!isspace(*currLine->data.line)) currLine->theLinePurpose = Terror;
         }
+        /*In case we found a match to a valid register.*/
         else if((currLine->data.reg = isRegister(token)) >= 0) currLine->theLinePurpose = Tregister;
+        else if()
 
     }
 }
