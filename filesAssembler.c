@@ -51,6 +51,14 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
             /*Validations on input*/
 
                 /*Length of line validation*/
+                if (!strchr(line, '\n'))
+                {
+                    errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
+                    
+                    /*To "cut" the rest  of the line.*/
+                    while((temp = fgetc(fp)) != '\n');
+                    continue;
+                }
 
 
 
