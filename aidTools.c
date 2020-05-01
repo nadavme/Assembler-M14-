@@ -215,13 +215,15 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 
 		
 		
-		else if ((operands[i].theLinePurpose == register_tok) || (operands[i] == bypass_register_tok))
+		else if ((operands[i].theLinePurpose == register_tok) || (operands[i].theLinePurpose == bypass_register_tok))
 		{
 			if (operands_cnt>1)
 			{
-				if (isBothOperandsRegs(operands[i],operands[i+1]) == 1)
+				if ((isBothOperandsRegs(operands[i],operands[i+1]) == 1) && (operands[i+1] != NULL))/*might check null, possible bug!!*/
 				{
-					/*Ive stopped here, NEED to check if this case is not already in the next if's*/
+                    /*this is the case when both operands share one memory word*/
+                    weShare(operands[i],operands[i+1]);
+                    
 				}
 				else if (i<operands_cnt - 1) /* the source register */
 				{
@@ -240,7 +242,7 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 	}
 }
 
-int isBothOperandsRegs(lineStruct x,lineStruct y)
+int isBothOperandsRegs(lineStruct x,lineStruct y)/*this function is checking if both operands use registers mio'n method.*/
 {
 	if ((x.data.reg == bypass_register_tok && y.data.reg == bypass_register_tok)
 	||   (x.data.reg == bypass_register_tok && y.data.reg == register_tok)
@@ -250,7 +252,11 @@ int isBothOperandsRegs(lineStruct x,lineStruct y)
 		return 1;
 	}
 	return 0;
+}
 
+void weShare(lineStruct i, lineStruct j)/*this function inserts 2 operands that use registers to 1 memory word.*/
+{
+    if (i.data.)
 }
 
 int isStringValid(char array[], int length, char* string)
