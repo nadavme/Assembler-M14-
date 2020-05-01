@@ -53,7 +53,7 @@ void turn_On_bit_num(int place,int ic);/*this function turn on the bit at'place'
 /*!
  *
  */
-void add_to_arr(int num_to_add, int toShift,int ic);
+void add_to_arr(int num_to_add, int toShift);/*this function is adding a number to the commands array.*/
 
 /*!
  *
@@ -68,8 +68,9 @@ typedef enum addressingMethod { immediate = 0, direct, reg } addrMethod;
 
 
 typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
-                           Tstring = -4, Tcommand = -5, Tregister = -6,
+                           Tstring = -4, Tcommand = -5, Tregister = -6, 
                            TnewLine = -7, Terror = -8} ;
+						   
 
 
 /*!
@@ -138,9 +139,9 @@ typedef struct LineStruct
 
         int reg; /*This is where the register name parsed and stored, if found.*/
 
-        int opernad1;
+        int opernad1;/*if theres at least 1 operand than one of the values of enum 'linePurposes' will be stored here.*/
 
-        int operand2;
+        int operand2;/*if theres 2 operands than one of the values of enum 'linePurposes' will be stored here.*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 

@@ -85,7 +85,7 @@ size is the number of bytes. an example can be seen in tester_for_matrix.c */
 /* this function adds a number to the instruction array.
  toShift is the number of bits that is required to set the number in it's place.
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
-void add_to_arr(int num_to_add, int toShift,int ic)
+void add_to_arr(int num_to_add, int toShift)
 {
 	commands_array[ic] |= (num_to_add << toShift);
 }
@@ -102,11 +102,11 @@ direct_addressing,
 register_bypass
 or register_direct.
 if it's not one of the above - the function returns -1 */
-int get_addressing_mode(lineStruct operand,int destOrSrc,int ic)
+int get_addressing_mode(int operand,int destOrSrc)
 {
 	if (destOrSrc == DEST_ADDRESS)
 	{
-		if (operand.theLinePurpose == number_tok)
+		if (operand == instant_addressing)
 		{
 			turn_On_bit_num(absolute,ic + 1);
 			 return (instant_addressing + DEST_ADDRESS);
@@ -170,11 +170,11 @@ int get_addressing_mode(lineStruct operand,int destOrSrc,int ic)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void add_to_comands_array(lineStruct *command, lineStruct operands[], int operands_cnt,int ic)
+void add_to_comands_array(lineStruct *command, int operands_cnt,int ic)
 {
 	int i;
 	/* adding the command word now.*/
-	add_to_arr(command->data.command, COMMAND_OPCODE, ic);/*the opCode in the word is at bit number 11*/
+	add_to_arr(command->data.command, COMMAND_OPCODE);/*the opCode in the word is at bit number 11*/
 	turn_On_bit_num(absolute, ic);
 	if (operands_cnt == 0) /* no operadnds to add */
 	{
@@ -183,7 +183,7 @@ void add_to_comands_array(lineStruct *command, lineStruct operands[], int operan
 	}
 	else if (operands_cnt == 1)
 	{
-		turn_On_bit_num(get_addressing_mode(operands[0], DEST_ADDRESS,ic),ic);
+		turn_On_bit_num(get_addressing_mode(command, DEST_ADDRESS));
 	}
 	else if (operands_cnt == 2)
 	{
