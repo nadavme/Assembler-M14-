@@ -138,6 +138,10 @@ typedef struct LineStruct
 
         int reg; /*This is where the register name parsed and stored, if found.*/
 
+        int opernad1;
+
+        int operand2;
+
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 
         /*todo: optional*/
