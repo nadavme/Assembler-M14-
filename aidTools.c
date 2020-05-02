@@ -2,78 +2,75 @@
 // Created by nadav on 04/02/2020.
 //
 
-#include "aidTools.h" 
+#include "aidTools.h"
 
-int bin_to_octal(int binaryNum)/*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
+int bin_to_octal(int binaryNum) /*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
 {
-    int i = 0,j = 0;
+    int i = 0, j = 0;
     int sum = 0;
     int midSum = 0;
 
-    while(binaryNum!=0)
+    while (binaryNum != 0)
     {
-		midSum = 0;
-        for (j = 0; j < 3; j++)/*the function basically looks at the 3 most right bits, and check for each bit from right to left - if it's on we add 1 
+        midSum = 0;
+        for (j = 0; j < 3; j++) /*the function basically looks at the 3 most right bits, and check for each bit from right to left - if it's on we add 1 
 		multyplied by 2 to the power of the place of the bit (0/1/2) to midSum.*/
         {
-            if( binaryNum&1 == 1)
-             {
-                midSum =midSum + (int)pow(2,j);
-             }
-        binaryNum = binaryNum>>1;
+            if (binaryNum & 1 == 1)
+            {
+                midSum = midSum + (int)pow(2, j);
+            }
+            binaryNum = binaryNum >> 1;
         }
-        sum = sum+ (int)midSum*pow(10,i);/*we add midSum that fit the right digit*/
+        sum = sum + (int)midSum * pow(10, i); /*we add midSum that fit the right digit*/
         i++;
-
     }
     return sum;
 }
 
-
 int dec_to_bin(char dec[])
 {
-	char binNum[MAX_DIGITS_BIN]= {'0','\0'}; /*creating a char array (a string) which will express the binary 	       number.  the first cell in the array contains the char 0 representation, and all other cells in the 			array 	contain of the integer 0.*/
-    int  string_length;
-	int i;
-	char tmp; 
+    char binNum[MAX_DIGITS_BIN] = {'0', '\0'}; /*creating a char array (a string) which will express the binary 	       number.  the first cell in the array contains the char 0 representation, and all other cells in the 			array 	contain of the integer 0.*/
+    int string_length;
+    int i;
+    char tmp;
 
-	unsigned int decInt = strtoul(dec,NULL,10);/*converting the decimal number (string) to int*/
-	i = 0;
-	while (decInt != 0)
-	{
-		binNum[i] ='0' + decInt%2; /*collecting the remainders from devision by 2 at the array*/
-		decInt = decInt/2; /*deviding by 2 (basically cutting out the fractions)*/
-		i++;		
-	}
+    unsigned int decInt = strtoul(dec, NULL, 10); /*converting the decimal number (string) to int*/
+    i = 0;
+    while (decInt != 0)
+    {
+        binNum[i] = '0' + decInt % 2; /*collecting the remainders from devision by 2 at the array*/
+        decInt = decInt / 2;          /*deviding by 2 (basically cutting out the fractions)*/
+        i++;
+    }
 
-     /* step 2: reverse string */
-	 string_length = 0;
-	 while  (binNum[string_length]  !=  '\0')
-		 string_length = string_length + 1 ;
-		  
-	for(i=0;i<string_length/2; i++) 
-	{
-		tmp=binNum[i];
-		binNum[i]=binNum[string_length-i-1];
-		binNum[string_length-i-1]=tmp ;
-	}
-    
-		printf("%s\n",binNum);/*printing the binary number*/
-	
-	
-	return 0;
+    /* step 2: reverse string */
+    string_length = 0;
+    while (binNum[string_length] != '\0')
+        string_length = string_length + 1;
+
+    for (i = 0; i < string_length / 2; i++)
+    {
+        tmp = binNum[i];
+        binNum[i] = binNum[string_length - i - 1];
+        binNum[string_length - i - 1] = tmp;
+    }
+
+    printf("%s\n", binNum); /*printing the binary number*/
+
+    return 0;
 }
 
-void printBits(size_t const size, void const * const ptr)/*the function prints the binary representation of any type.
+void printBits(size_t const size, void const *const ptr) /*the function prints the binary representation of any type.
 size is the number of bytes. an example can be seen in tester_for_matrix.c */
 {
-    unsigned char *b = (unsigned char*) ptr;
+    unsigned char *b = (unsigned char *)ptr;
     unsigned char byte;
     int i, j;
 
-    for (i=size-1;i>=0;i--)
+    for (i = size - 1; i >= 0; i--)
     {
-        for (j=7;j>=0;j--)
+        for (j = 7; j >= 0; j--)
         {
             byte = (b[i] >> j) & 1;
             printf("%u", byte);
@@ -87,12 +84,12 @@ size is the number of bytes. an example can be seen in tester_for_matrix.c */
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
 void add_to_arr(int num_to_add, int toShift)
 {
-	commands_array[ic] |= (num_to_add << toShift);
+    commands_array[ic] |= (num_to_add << toShift);
 }
 
-void turn_On_bit_num(int place)/*this function turn on the bit at 'place' of the instruction array[ic].*/
+void turn_On_bit_num(int place) /*this function turn on the bit at 'place' of the instruction array[ic].*/
 {
-    commands_array[ic] = (commands_array[ic] | (int)pow(2,place));
+    commands_array[ic] = (commands_array[ic] | (int)pow(2, place));
 }
 
 /*
@@ -102,209 +99,238 @@ direct_addressing,
 register_bypass
 or register_direct.
 if it's not one of the above - the function returns -1 */
-int get_addressing_mode(int operandMethod,int destOrSrc)
+int get_addressing_mode(int operandMethod, int destOrSrc)
 {
-	if (destOrSrc == DEST_ADDRESS)
-	{
-		if (operandMethod == instant_addressing)
-		{
-			 return (instant_addressing + DEST_ADDRESS);
-		}
-		else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
-		{	
-			return (direct_addressing + DEST_ADDRESS);
-		}
-		else if (operandMethod == register_bypass)
-		{
-			return (DEST_ADDRESS + register_bypass);
-		}
-		
-		else if (operandMethod == register_direct)
-		{ 
-			 return (DEST_ADDRESS + register_direct);
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	else if (destOrSrc == SRC_ADDRESS)
-	{
-		if (operandMethod == instant_addressing)
-		{
-			 return (instant_addressing + SRC_ADDRESS);
-		}
-		else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
-		{	
-			return (direct_addressing + SRC_ADDRESS);
-		}
-		else if (operandMethod == register_bypass)
-		{
-			return (SRC_ADDRESS + register_bypass);
-		}
-		
-		else if (operandMethod == register_direct)
-		{ 
-			 return (SRC_ADDRESS + register_direct);
-		}
-		else
-		{
-			return -1;
-		}
-	}
-	
+    if (destOrSrc == DEST_ADDRESS)
+    {
+        if (operandMethod == instant_addressing)
+        {
+            return (instant_addressing + DEST_ADDRESS);
+        }
+        else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+        {
+            return (direct_addressing + DEST_ADDRESS);
+        }
+        else if (operandMethod == register_bypass)
+        {
+            return (DEST_ADDRESS + register_bypass);
+        }
+
+        else if (operandMethod == register_direct)
+        {
+            return (DEST_ADDRESS + register_direct);
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    else if (destOrSrc == SRC_ADDRESS)
+    {
+        if (operandMethod == instant_addressing)
+        {
+            return (instant_addressing + SRC_ADDRESS);
+        }
+        else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+        {
+            return (direct_addressing + SRC_ADDRESS);
+        }
+        else if (operandMethod == register_bypass)
+        {
+            return (SRC_ADDRESS + register_bypass);
+        }
+
+        else if (operandMethod == register_direct)
+        {
+            return (SRC_ADDRESS + register_direct);
+        }
+        else
+        {
+            return -1;
+        }
+    }
 }
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
 void add_to_comands_array(lineStruct *command, int operands_cnt)
 {
-	int i;
-	/* adding the command word now.*/
-	add_to_arr(command->data.command, COMMAND_OPCODE);/*the opCode in the word is at bit number 11*/
-	turn_On_bit_num(absolute);
-	if (operands_cnt == 0) /* no operadnds to add */
-	{
-		return;
-	}
-	else if (operands_cnt == 1)
-	{
-		turn_On_bit_num(get_addressing_mode(command->data.opernad1, DEST_ADDRESS));
-	}
-	else if (operands_cnt == 2)
-	{
-		turn_On_bit_num(get_addressing_mode(operands[0],DEST_ADDRESS));/*Entering destination operand to the word*/
-		turn_On_bit_num(get_addressing_mode(operands[1], SRC_ADDRESS));/*Entering source operand to the word*/
-	}
-	else if (operands_cnt == 3)/*didnt understood this if... a potentialli bug... Do I need to delete?????*/
-	{
-		add_to_arr(jump_addressing, DEST_ADDRESS);
-		add_to_arr(get_addressing_mode(operands[1]), PARAM_1);
-		add_to_arr(get_addressing_mode(operands[2]), PARAM_2);
-	}
+    int i;
+    /* adding the command word now.*/
+    add_to_arr(command->data.command, COMMAND_OPCODE); /*the opCode in the word is at bit number 11*/
+    turn_On_bit_num(absolute);
+    if (operands_cnt == 0) /* no operadnds to add */
+    {
+        return;
+    }
+    else if (operands_cnt == 1)
+    {
+        turn_On_bit_num(get_addressing_mode(command->data.opernad1, DEST_ADDRESS));
+    }
+    else if (operands_cnt == 2)
+    {
+        turn_On_bit_num(get_addressing_mode(command->data.operand2, DEST_ADDRESS)); /*turning on bit that represent the correct addressing method for destination operand*/
+        turn_On_bit_num(get_addressing_mode(command->data.operand1, SRC_ADDRESS));  /*turning on bit that represent the correct addressing method for source operand*/
+    }
+    ic++;
 
-	/* adding the other memory words */
-	
-	for (i = 0; i<operands_cnt; i++)/* why does i starts at value 0?????????*/
-	{
-		/*if we are dealing with symbols here, let this code free (after edit)
+    /* adding the other memory words */
+    {
+        /*if we are dealing with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
 		{
 			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
 		}
-		else*/ if (operands[i].theLinePurpose == number_tok)/*in case were dealing with a direct mio'n*/
-		{
+		else*/
+        if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
+        {
+            if (isBothOperandsRegs(command->data.operand1, command->data.operand2) == 1)
+            {
+                /*this is the case when both operands share one memory word*/
+                weShare(*command, *command);
+                return;
+            }
+        }
+        if (command->data.operand1 != -1)
+        {
+            if (command->data.operand1 == instant_addressing) /*in case were dealing with instant mio'n*/
+            {
+                add_to_arr(command->data.number1, NUM); /* adds after the E,A,R part of the memory word */
+                turn_On_bit_num(absolute);
+                ic++;
+            }
 
-			add_to_arr(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
-			turn_On_bit_num(absolute);
-		}
+            else if (command->data.operand1 == direct_addressing) /*in case were dealing with a direct mio'n*/
+            {
+                wordsWithoutARE[ic] = 1;
+                ic++;
+            }
 
-		
-		
-		else if ((operands[i].theLinePurpose == register_tok) || (operands[i].theLinePurpose == bypass_register_tok))
-		{
-			if (operands_cnt>1)
-			{
-				if ((isBothOperandsRegs(operands[i],operands[i+1]) == 1) && (operands[i+1] != NULL))/*might check null, possible bug!!*/
-				{
-                    /*this is the case when both operands share one memory word*/
-                    weShare(operands[i],operands[i+1]);
-                    
-				}
-				else if (i<operands_cnt - 1) /* the source register */
-				{
-					add_to_arr(operands[i].data.reg  , SRC_REG); /* adds after the E,A,R part of the memory word */
-				}
-				else /* the destination register */
-				{
-					if (operands[i - 1].type == register_tok) /* if there are two registers, they add to the same memory word */
-					{
-						ic--; /* adds the register in the same memory word */
-					}
-					add_to_arr(operands[i].data.reg, DEST_REG);
-				}
-			}
-		}
-	}
+            else if (command->data.operand1 == register_bypass) /*in case were dealing with instant mio'n*/
+            {
+                if (operands_cnt == 1)
+                {
+                    add_to_arr(command->data.reg_op1, DEST_ADDRESS); /*adding the number of register to the right bits.*/
+                    turn_On_bit_num(absolute);
+                    ic++;
+                    return;
+                }
+                else
+                {
+                    add_to_arr(command->data.operand1, 6);/*adding the number of register to the right bits.*/
+                    turn_On_bit_num(absolute);
+                    ic++;
+                }
+            }
+
+            else if (command->data.operand1 == register_direct) 
+            {
+                if (operands_cnt == 1)
+                {
+                    add_to_arr(command->data.reg_op1, DEST_ADDRESS);/*adding the number of register to the right bits.*/
+                    turn_On_bit_num(absolute);
+                    ic++;
+                    return;
+                }
+                else
+                {
+                    add_to_arr(command->data.operand1, 6);
+                    turn_On_bit_num(absolute);
+                    ic++;
+                }
+            }
+
+            if (command->data.operand2 != -1) /* a possible bug - this next block should be outside the previous if...*/
+            {
+                if (command->data.operand2 == instant_addressing)
+                {
+                    add_to_arr(command->data.number2, NUM); /* adds after the E,A,R part of the memory word */
+                    turn_On_bit_num(absolute);
+                    ic++;
+                }
+            }
+        }
+        ic++;
+    }
 }
 
-int isBothOperandsRegs(lineStruct x,lineStruct y)/*this function is checking if both operands use registers mio'n method.*/
+int isBothOperandsRegs(int x, int y) /*this function is checking if both operands use registers mio'n method.*/
 {
-	if ((x.data.reg == bypass_register_tok && y.data.reg == bypass_register_tok)
-	||   (x.data.reg == bypass_register_tok && y.data.reg == register_tok)
-	||   (x.data.reg == register_tok && y.data.reg == bypass_register_tok)
-	||   (x.data.reg == register_tok && y.data.reg == register_tok))
-	{
-		return 1;
-	}
-	return 0;
+    if ((x == register_bypass && y == register_bypass) || (x == register_bypass && y == register_direct) || (x == register_direct && y == register_bypass) || (x == register_direct && y == register_direct))
+    {
+        return 1;
+    }
+    return 0;
 }
 
-void weShare(lineStruct i, lineStruct j)/*this function inserts 2 operands that use registers to 1 memory word.*/
+void weShare(lineStruct i, lineStruct j) /*this function inserts 2 operands that use registers to 1 memory word.*/
 {
     if (i.data.)
 }
 
-int isStringValid(char array[], int length, char* string)
+int isStringValid(char array[], int length, char *string)
 {
     /*The function allows validation of any string(operation, register, etc.)*/
     int i;
-    for(i=0;i<length;i++)
+    for (i = 0; i < length; i++)
     {
-        if(strcmp(array[i],string) == 0)
+        if (strcmp(array[i], string) == 0)
             return 0;
     }
     return -1;
 }
 
-int isInstruction(char* string)
+int isInstruction(char *string)
 {
     return isStringValid(validInstructions, strlen(string), string);
 }
 
-int isCommand(char* string)
+int isCommand(char *string)
 {
     int i;
     /*register prefix*/
     if (string[0] != 'r')
     {
-        for (i = 0; commandTable[i].codeName ; i++)
+        for (i = 0; commandTable[i].codeName; i++)
         {
-            if (strcmp(string, commandTable[i].codeName) ==0) return i;
+            if (strcmp(string, commandTable[i].codeName) == 0)
+                return i;
         }
     }
-    return -1;/*in case it's not a command*/
+    return -1; /*in case it's not a command*/
 }
 
-int isRegister(char* string)
+int isRegister(char *string)
 {
     int i;
     /*register prefix*/
     if (string[0] != 'r')
     {
-        for (i = 0; validRegisters[i].regName ; i++)
+        for (i = 0; validRegisters[i].regName; i++)
         {
-            if (strcmp(string, validRegisters[i].regName) ==0) return i;
+            if (strcmp(string, validRegisters[i].regName) == 0)
+                return i;
         }
     }
-    return -1;/*in case it's not a command*/
+    return -1; /*in case it's not a command*/
 }
 
-
-int isSymbol(char* string)
+int isSymbol(char *string)
 {
     int i;
 
     /*validate every char on symbol*/
     /*make sure all are letters or digits*/
-    for (i = 0; i < strlen(string); i++) if (!isalnum(string[i])) return 0;
+    for (i = 0; i < strlen(string); i++)
+        if (!isalnum(string[i]))
+            return 0;
 
     /*symbol name must starts with a letter*/
-    if (!isalpha(string[0])) return 0;
+    if (!isalpha(string[0]))
+        return 0;
 
     return 1;
 }
-
 
 //int isData(char* string)
 //{
@@ -317,33 +343,32 @@ int isSymbol(char* string)
 //        return 0;
 //}
 
-
-
-int isExtern(char* string)
+int isExtern(char *string)
 {
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(EXTERN_MACRO,string) == 0);
+        return (strcmp(EXTERN_MACRO, string) == 0);
     }
     else
         return 0;
 }
 
-int isEntry(char* string)
+int isEntry(char *string)
 {
     if ((unsigned char)(*string) == '.')
     {
         string++;
-        return (strcmp(ENTRY_MACRO,string) == 0);
+        return (strcmp(ENTRY_MACRO, string) == 0);
     }
     else
         return 0;
 }
 
-int isWhitespace(char* line)
+int isWhitespace(char *line)
 {
-    while (*line != '\0') {
+    while (*line != '\0')
+    {
         if (!isspace((unsigned char)(*line)))
             return 0;
         line++;
@@ -351,7 +376,7 @@ int isWhitespace(char* line)
     return 1;
 }
 
-int isInt(char* string)
+int isInt(char *string)
 {
     char *ptr;
     long int result;
@@ -414,18 +439,20 @@ int isInt(char* string)
 //    return success;
 //}
 
-void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...)
+void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
     va_list parameters_to_print;
     va_start(parameters_to_print, errorMsg);
-    if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
-    else fprintf(stderr, "%s\n", errorMsg);
+    if (mentionLine == 0)
+        fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
+    else
+        fprintf(stderr, "%s\n", errorMsg);
     vfprintf(stderr, errorMsg, parameters_to_print);
     fprintf(stderr, "\n");
     va_end(parameters_to_print);
 }
 
-char* parseIntoLineStruct(struct LineStruct* currLine)
+char *parseIntoLineStruct(struct LineStruct *currLine)
 {
 
     char token[30];
@@ -434,29 +461,28 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
     idx = 0;
 
     /*Skip all white spaces at the the beginning of the line*/
-    while (isWhitespace(currLine->data.line)) currLine->data.line++;
+    while (isWhitespace(currLine->data.line))
+        currLine->data.line++;
 
     /*Check for a number*/
     if ((isdigit(*currLine->data.line)) || (*currLine->data.line == '-'))
     {
-       do
-           {
-           token[idx++] = *currLine->data.line;
-           currLine->data.line++;
-           }
-       while (isdigit(*currLine->data.line));
-       token[idx] = '\0';
+        do
+        {
+            token[idx++] = *currLine->data.line;
+            currLine->data.line++;
+        } while (isdigit(*currLine->data.line));
+        token[idx] = '\0';
         currLine->theLinePurpose = Tnumber;
         currLine->data.number = atoi(token);
     }
-    else if (*currLine->data.line == '.')/*Check for instruction prefix*/
+    else if (*currLine->data.line == '.') /*Check for instruction prefix*/
     {
         do
         {
             token[idx] = *currLine->data.line;
             currLine->data.line++;
-        }
-        while (!isspace(*currLine->data.line));
+        } while (!isspace(*currLine->data.line));
         token[idx++] = '\0';
 
         /*Check for instruction*/
@@ -465,7 +491,8 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
             currLine->theLinePurpose = Tinstruction;
         }
         /*We figure out its not an instruction thus its not valid*/
-        else currLine->theLinePurpose = Terror;
+        else
+            currLine->theLinePurpose = Terror;
     }
 
     else if (*currLine->data.line == '\n')
@@ -481,28 +508,30 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
         {
             token[idx] = *currLine->data.line;
             currLine->data.line++;
-        }
-        while (isalnum(*currLine->data.line));
+        } while (isalnum(*currLine->data.line));
         token[idx] = '\0';
 
         /*Check for command*/
         if ((currLine->data.command = isCommand(token)) >= 0)
         {
             currLine->theLinePurpose = Tcommand;
-            if (!isspace(*currLine->data.line)) currLine->theLinePurpose = Terror;
+            if (!isspace(*currLine->data.line))
+                currLine->theLinePurpose = Terror;
         }
 
         /*In case we found a match to a valid register.*/
-        else if((currLine->data.reg = isRegister(token)) >= 0) currLine->theLinePurpose = Tregister;
+        else if ((currLine->data.reg = isRegister(token)) >= 0)
+            currLine->theLinePurpose = Tregister;
 
         /*If all is false, we understand it's a symbol.*/
-        else if(isSymbol(token))
+        else if (isSymbol(token))
         {
             /*This symbol needs to be added to the symbol table.*/
             currLine->theLinePurpose = Tsymbol;
             strcpy(currLine->data.symbolName, token);
         }
-        else currLine->theLinePurpose = Terror;
+        else
+            currLine->theLinePurpose = Terror;
     }
     else
 
@@ -512,4 +541,3 @@ char* parseIntoLineStruct(struct LineStruct* currLine)
         currLine->data.line++;
     }
 }
-

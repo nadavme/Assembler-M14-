@@ -117,7 +117,9 @@ typedef struct LineStruct
 
         char* string; /*This is where the data of type string is parsed and stored, if found.*/
 
-        int number; /*This is where the data of type number is parsed and stored, if found*/
+        int number1; /*This is where the data of type number is parsed and stored, if found */
+
+		int number2; /*This is where the data of type number is parsed and stored, if found */
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
@@ -125,11 +127,18 @@ typedef struct LineStruct
 
         int command; /*This is where the command name parsed and stored, if found.*/
 
-        int reg; /*This is where the register name parsed and stored, if found.*/
+        int reg_op1; /*This is where the register number parsed and stored, if found */
 
-        int opernad1;/*if theres at least 1 operand than one of the values of enum 'linePurposes' will be stored here.*/
+		int reg_op2;/*This is where the register number parsed and stored, if found */
 
-        int operand2;/*if theres 2 operands than one of the values of enum 'linePurposes' will be stored here.*/
+        int operand1;/*if theres at least 1 operand than one of the values of enum 'linePurposes' will be stored here. if theres only 1 operand
+							it will contain the destination operand.*/
+
+        int operand2;/*if theres 2 operands than one of the values of enum 'linePurposes' will be stored here. this is for destination operand*/
+
+		int isOp1Lable;/*if the first operand is represented in a label this field will contain 1*/
+
+		int isOp2Lable;/*if the second operand is represented in a label this field will contain 1*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 
