@@ -102,34 +102,25 @@ direct_addressing,
 register_bypass
 or register_direct.
 if it's not one of the above - the function returns -1 */
-int get_addressing_mode(int operand,int destOrSrc)
+int get_addressing_mode(int operandMethod,int destOrSrc)
 {
 	if (destOrSrc == DEST_ADDRESS)
 	{
-		if (operand == instant_addressing)
+		if (operandMethod == instant_addressing)
 		{
-			turn_On_bit_num(absolute);
 			 return (instant_addressing + DEST_ADDRESS);
 		}
-		else if (operand.theLinePurpose == lable_tok) /*in this case were dealing with the direct addresing method.*/
-		{
-			turn_On_bit_num(external);
-			if (operand.data.instruction == EXTERN)
-			{
-				turn_On_bit_num(external)
-			}
-			
+		else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+		{	
 			return (direct_addressing + DEST_ADDRESS);
 		}
-		else if (operand.theLinePurpose == bypass_register_tok)
+		else if (operandMethod == register_bypass)
 		{
-			turn_On_bit_num(absolute);
 			return (DEST_ADDRESS + register_bypass);
 		}
 		
-		else if (operand.theLinePurpose == register_tok)
+		else if (operandMethod == register_direct)
 		{ 
-			turn_On_bit_num(absolute);
 			 return (DEST_ADDRESS + register_direct);
 		}
 		else
@@ -139,25 +130,21 @@ int get_addressing_mode(int operand,int destOrSrc)
 	}
 	else if (destOrSrc == SRC_ADDRESS)
 	{
-		if (operand.theLinePurpose == number_tok)
+		if (operandMethod == instant_addressing)
 		{
-			turn_On_bit_num(absolute);
 			 return (instant_addressing + SRC_ADDRESS);
 		}
-		else if (operand.theLinePurpose == lable_tok) 
-		{
-			turn_On_bit_num(external);
+		else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+		{	
 			return (direct_addressing + SRC_ADDRESS);
 		}
-		else if (operand.theLinePurpose == bypass_register_tok)
+		else if (operandMethod == register_bypass)
 		{
-			turn_On_bit_num(absolute);
 			return (SRC_ADDRESS + register_bypass);
 		}
 		
-		else if (operand.theLinePurpose == register_tok)
+		else if (operandMethod == register_direct)
 		{ 
-			turn_On_bit_num(absolute);
 			 return (SRC_ADDRESS + register_direct);
 		}
 		else
@@ -178,12 +165,11 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
 	turn_On_bit_num(absolute);
 	if (operands_cnt == 0) /* no operadnds to add */
 	{
-        turn_On_bit_num(absolute);
 		return;
 	}
 	else if (operands_cnt == 1)
 	{
-		turn_On_bit_num(get_addressing_mode(command, DEST_ADDRESS));
+		turn_On_bit_num(get_addressing_mode(command->data.opernad1, DEST_ADDRESS));
 	}
 	else if (operands_cnt == 2)
 	{

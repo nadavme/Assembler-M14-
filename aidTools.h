@@ -48,7 +48,7 @@ enum tokens {
 
 
 
-void turn_On_bit_num(int place,int ic);/*this function turn on the bit at'place' of the instruction array[ic].*/
+void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the instruction array[ic].*/
 
 /*!
  *
@@ -75,8 +75,9 @@ typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
 
 /*!
  *
- */
-typedef enum addressingMethod { immediate = 0, direct, regIndirect, regDirect } addrMethod;
+ 
+typedef enum addressingMethod { immediate = 0, direct, regBypass, regDirect } addrMethod;
+we already have this enum in a different name*/
 
 
 
@@ -98,19 +99,6 @@ typedef enum symbolType { tCode, tData, tString} symbolType;
  *
  */
 typedef  enum isThatExtern {no, yes} isThatExtern;
-
-/* this is a token in the file. the token can be one of these following types, or a character.
-each token has it's type, and some data (according to it's type) */
-typedef struct instruction {
-        int type;
-		char string[MAX_LINE];/*I have to delete the fields that I dont use here.*/
-		int number;
-		char ch;
-		int opCode;
-		int reg;
-		int instruction;
-	
-}instruction;
 
 
 /*!
