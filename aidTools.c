@@ -174,7 +174,8 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
     }
     ic++;
 
-    /* adding the other memory words */
+    /* adding the other memory words: */
+
     {
         /*if we are dealing with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
@@ -206,7 +207,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 ic++;
             }
 
-            else if (command->data.operand1 == register_bypass) /*in case were dealing with instant mio'n*/
+            else if (command->data.operand1 == register_bypass) /*in case were dealing with bypass register mio'n*/
             {
                 if (operands_cnt == 1)
                 {
@@ -217,17 +218,17 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 }
                 else
                 {
-                    add_to_arr(command->data.operand1, 6);/*adding the number of register to the right bits.*/
+                    add_to_arr(command->data.reg_op1, 6); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
                     ic++;
                 }
             }
 
-            else if (command->data.operand1 == register_direct) 
+            else if (command->data.operand1 == register_direct)
             {
                 if (operands_cnt == 1)
                 {
-                    add_to_arr(command->data.reg_op1, DEST_ADDRESS);/*adding the number of register to the right bits.*/
+                    add_to_arr(command->data.reg_op1, DEST_ADDRESS); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
                     ic++;
                     return;
@@ -240,17 +241,37 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 }
             }
 
-            if (command->data.operand2 != -1) /* a possible bug - this next block should be outside the previous if...*/
+            if (command->data.operand2 != -1) /*if we have 2 operands...
+             a possible bug - this next block should be outside the previous if...*/
             {
-                if (command->data.operand2 == instant_addressing)
+                if (command->data.operand2 == instant_addressing) /*in case were dealing with instant mio'n*/
                 {
                     add_to_arr(command->data.number2, NUM); /* adds after the E,A,R part of the memory word */
                     turn_On_bit_num(absolute);
                     ic++;
                 }
+
+                else if (command->data.operand2 == direct_addressing) /*in case were dealing with a direct mio'n*/
+                {
+                    wordsWithoutARE[ic] = 1;
+                    ic++;
+                }
+
+                else if (command->data.operand2 == register_bypass) /*in case were dealing with bypass register mio'n*/
+                {
+                    add_to_arr(command->data.reg_op2, DEST_ADDRESS); /*adding the number of register to the right bits.*/
+                    turn_On_bit_num(absolute);
+                    ic++;
+                }
+
+                else if (command->data.operand2 == register_direct) /*in case were dealing with direct register mio'n*/
+                {
+                    add_to_arr(command->data.reg_op2, DEST_ADDRESS);
+                    turn_On_bit_num(absolute);
+                    ic++;
+                }
             }
         }
-        ic++;
     }
 }
 
