@@ -90,7 +90,7 @@ void add_to_arr(int num_to_add, int toShift)
 	commands_array[ic] |= (num_to_add << toShift);
 }
 
-void turn_On_bit_num(int place,int ic)/*this function turn on the bit at 'place' of the instruction array[ic].*/
+void turn_On_bit_num(int place)/*this function turn on the bit at 'place' of the instruction array[ic].*/
 {
     commands_array[ic] = (commands_array[ic] | (int)pow(2,place));
 }
@@ -108,28 +108,28 @@ int get_addressing_mode(int operand,int destOrSrc)
 	{
 		if (operand == instant_addressing)
 		{
-			turn_On_bit_num(absolute,ic + 1);
+			turn_On_bit_num(absolute);
 			 return (instant_addressing + DEST_ADDRESS);
 		}
 		else if (operand.theLinePurpose == lable_tok) /*in this case were dealing with the direct addresing method.*/
 		{
-			turn_On_bit_num(external, ic);
+			turn_On_bit_num(external);
 			if (operand.data.instruction == EXTERN)
 			{
-				turn_On_bit_num(external,ic + 1)
+				turn_On_bit_num(external)
 			}
 			
 			return (direct_addressing + DEST_ADDRESS);
 		}
 		else if (operand.theLinePurpose == bypass_register_tok)
 		{
-			turn_On_bit_num(absolute, ic);
+			turn_On_bit_num(absolute);
 			return (DEST_ADDRESS + register_bypass);
 		}
 		
 		else if (operand.theLinePurpose == register_tok)
 		{ 
-			turn_On_bit_num(absolute,ic);
+			turn_On_bit_num(absolute);
 			 return (DEST_ADDRESS + register_direct);
 		}
 		else
@@ -141,23 +141,23 @@ int get_addressing_mode(int operand,int destOrSrc)
 	{
 		if (operand.theLinePurpose == number_tok)
 		{
-			turn_On_bit_num(absolute,ic);
+			turn_On_bit_num(absolute);
 			 return (instant_addressing + SRC_ADDRESS);
 		}
 		else if (operand.theLinePurpose == lable_tok) 
 		{
-			turn_On_bit_num(external, ic);
+			turn_On_bit_num(external);
 			return (direct_addressing + SRC_ADDRESS);
 		}
 		else if (operand.theLinePurpose == bypass_register_tok)
 		{
-			turn_On_bit_num(absolute, ic);
+			turn_On_bit_num(absolute);
 			return (SRC_ADDRESS + register_bypass);
 		}
 		
 		else if (operand.theLinePurpose == register_tok)
 		{ 
-			turn_On_bit_num(absolute,ic);
+			turn_On_bit_num(absolute);
 			 return (SRC_ADDRESS + register_direct);
 		}
 		else
@@ -170,15 +170,15 @@ int get_addressing_mode(int operand,int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void add_to_comands_array(lineStruct *command, int operands_cnt,int ic)
+void add_to_comands_array(lineStruct *command, int operands_cnt)
 {
 	int i;
 	/* adding the command word now.*/
 	add_to_arr(command->data.command, COMMAND_OPCODE);/*the opCode in the word is at bit number 11*/
-	turn_On_bit_num(absolute, ic);
+	turn_On_bit_num(absolute);
 	if (operands_cnt == 0) /* no operadnds to add */
 	{
-        turn_On_bit_num(absolute,ic);
+        turn_On_bit_num(absolute);
 		return;
 	}
 	else if (operands_cnt == 1)
@@ -187,14 +187,14 @@ void add_to_comands_array(lineStruct *command, int operands_cnt,int ic)
 	}
 	else if (operands_cnt == 2)
 	{
-		turn_On_bit_num(get_addressing_mode(operands[0],DEST_ADDRESS,ic), ic);/*Entering destination operand to the word*/
-		turn_On_bit_num(get_addressing_mode(operands[1], SRC_ADDRESS, ic), ic);/*Entering source operand to the word*/
+		turn_On_bit_num(get_addressing_mode(operands[0],DEST_ADDRESS));/*Entering destination operand to the word*/
+		turn_On_bit_num(get_addressing_mode(operands[1], SRC_ADDRESS));/*Entering source operand to the word*/
 	}
 	else if (operands_cnt == 3)/*didnt understood this if... a potentialli bug... Do I need to delete?????*/
 	{
-		add_to_arr(jump_addressing, DEST_ADDRESS, ic);
-		add_to_arr(get_addressing_mode(operands[1]), PARAM_1,ic);
-		add_to_arr(get_addressing_mode(operands[2]), PARAM_2,ic);
+		add_to_arr(jump_addressing, DEST_ADDRESS);
+		add_to_arr(get_addressing_mode(operands[1]), PARAM_1);
+		add_to_arr(get_addressing_mode(operands[2]), PARAM_2);
 	}
 
 	/* adding the other memory words */
@@ -209,8 +209,8 @@ void add_to_comands_array(lineStruct *command, int operands_cnt,int ic)
 		else*/ if (operands[i].theLinePurpose == number_tok)/*in case were dealing with a direct mio'n*/
 		{
 
-			add_to_arr(operands[i].data.number, NUM,ic); /* adds after the E,A,R part of the memory word */
-			turn_On_bit_num(absolute,ic);
+			add_to_arr(operands[i].data.number, NUM); /* adds after the E,A,R part of the memory word */
+			turn_On_bit_num(absolute);
 		}
 
 		
@@ -227,13 +227,13 @@ void add_to_comands_array(lineStruct *command, int operands_cnt,int ic)
 				}
 				else if (i<operands_cnt - 1) /* the source register */
 				{
-					add_to_arr(operands[i].data.reg  , SRC_REG, ic); /* adds after the E,A,R part of the memory word */
+					add_to_arr(operands[i].data.reg  , SRC_REG); /* adds after the E,A,R part of the memory word */
 				}
 				else /* the destination register */
 				{
 					if (operands[i - 1].type == register_tok) /* if there are two registers, they add to the same memory word */
 					{
-						IC--; /* adds the register in the same memory word */
+						ic--; /* adds the register in the same memory word */
 					}
 					add_to_arr(operands[i].data.reg, DEST_REG);
 				}
