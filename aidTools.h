@@ -31,23 +31,6 @@ enum addressing_modes {
 	register_direct
 };
 
-/* This one is from Alon, need to edit!!!!
-types of tokens in the assembly program.
-the token types are negative, so they will not conflict with the ASCII of a character */
-enum tokens {
-	lable_tok = -1,
-	number_tok = -2,
-	instruction_tok = -3,
-	string_tok = -4,
-	command_tok = -5,
-	bypass_register_tok = -6,
-    register_tok = -7,
-	new_line_tok = -8,
-	error_tok = -9
-};
-
-
-
 void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the instruction array[ic].*/
 
 /*!
@@ -70,14 +53,6 @@ typedef enum addressingMethod { immediate = 0, direct, reg } addrMethod;
 typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
                            Tstring = -4, Tcommand = -5, Tregister = -6, 
                            TnewLine = -7, Terror = -8} ;
-						   
-
-
-/*!
- *
- 
-typedef enum addressingMethod { immediate = 0, direct, regBypass, regDirect } addrMethod;
-we already have this enum in a different name*/
 
 
 
@@ -117,9 +92,9 @@ typedef struct LineStruct
 
         char* string; /*This is where the data of type string is parsed and stored, if found.*/
 
-        int number1; /*This is where the data of type number is parsed and stored, if found */
+        int number1; /*This is where the data of type number for parameter 1 is parsed and stored, if found */
 
-		int number2; /*This is where the data of type number is parsed and stored, if found */
+		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
@@ -131,30 +106,23 @@ typedef struct LineStruct
 
 		int reg_op2;/*This is where the register number parsed and stored, if found */
 
-        int operand1;/*if theres at least 1 operand than one of the values of enum 'linePurposes' will be stored here. if theres only 1 operand
+        int operand1;/*if theres at least 1 operand than one of the values of enum 'addressing_modes' will be stored here. if theres only 1 operand
 							it will contain the destination operand.*/
 
-        int operand2;/*if theres 2 operands than one of the values of enum 'linePurposes' will be stored here. this is for destination operand*/
-
-		int isOp1Lable;/*if the first operand is represented in a label this field will contain 1*/
-
-		int isOp2Lable;/*if the second operand is represented in a label this field will contain 1*/
+        int operand2;/*if theres 2 operands than one of the values of enum 'addressing_modes' will be stored here. this is for destination operand*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 
-        /*todo: optional*/
-        int L = 1; /*num of machine words needed.*/
     }data;
 
 } lineStruct;
 
-enum memory_word_toShift { /*from Alon need to change a bit*/
+enum memory_word_toShift
+{ 
 	ERA = 0,
 	DEST_ADDRESS = 3,
 	SRC_ADDRESS = 7,
 	COMMAND_OPCODE = 11,
-	PARAM_2 = 10,/*do I need to delete this one and next one??????*/
-	PARAM_1 = 12,
 
 	NUM = 3,
 	SRC_REG = 6,

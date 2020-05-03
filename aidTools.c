@@ -165,7 +165,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
     }
     else if (operands_cnt == 1)
     {
-        turn_On_bit_num(get_addressing_mode(command->data.opernad1, DEST_ADDRESS));
+        turn_On_bit_num(get_addressing_mode(command->data.operand1, DEST_ADDRESS));
     }
     else if (operands_cnt == 2)
     {
