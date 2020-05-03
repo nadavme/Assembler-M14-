@@ -25,7 +25,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
     {
 
         /*Open file for reading*/
-
+        fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
 
         /*Initiate variables*/
         IC = 0;

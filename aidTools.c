@@ -519,7 +519,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
 {
     FILE* fp;
     char* fullFileName = (char*) malloc(strlen(file) + strlen(suffix) +1);
-    
+
     if (fullFileName == NULL)
     {
         errorHandler(1, -1, "\n Error: memory allocation has failed"
