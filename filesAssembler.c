@@ -11,7 +11,6 @@
 #define MAX_LINE 82
 
 
-int IC, DC, errorFlag, lineCounter;
 
 
 
@@ -20,6 +19,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
     int filesCounter;
+    int IC, DC, errorFlag, lineCounter;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
@@ -264,12 +264,6 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                 }
         }
 
-
-        /*=========================================End of first run over==================================*/
-
-        /*Running over the symbol table(second run over)*/
-        secondRunOver(); /*This one will run over the symbol table*/
-
         /*Free all dynamic memory allocation.*/
         free(originalLine);
         free(currLine);
@@ -277,8 +271,34 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         free(currTok);
         free(symbolTok);
 
+        /*=========================================End of first run over==================================*/
 
+        /*Running over the symbol table(second run over)*/
+        secondRunOver(); /*This one will run over the symbol table*/
+
+        /*=========================================End of second run over==================================*/
+
+        if (errorFlag)
+        {
+            errorHandler(1, -1, "Error: Errors has found on file %s,"
+                                " no output files will be created.", filesToInterpret[filesCounter]);
+            continue;
+        }
+
+        /*=========================================Creating output files==================================*/
+
+        createOutputFiles(filesToInterpret[filesCounter]);
+        fprintf(stdout, "\n Assembling has finished for all valid input files, output files has "
+                        "been created for them\n");
+
+        /*free the symbolTable, dataTable, commandsTable etc.*/
+        free();
+        fclose(fp);
     }
+
+    return 0;
+
+
 }
 
 
