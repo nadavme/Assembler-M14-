@@ -15,6 +15,7 @@
 #include <stdarg.h>
 #include "permanantTables.h"
 #include "main.c"
+#include "filesAssembler.h"
 
 #define MAX_DIGITS_BIN 100
 #define MAX_DIGITS_DEC 10

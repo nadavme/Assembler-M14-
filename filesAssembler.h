@@ -5,7 +5,7 @@
 #ifndef MAABADA_MMN14_FILESASSEMBLER_H
 #define MAABADA_MMN14_FILESASSEMBLER_H
 
-#include "filesAssembler.h"
+#include "filesAssembler.c"
 #include "aidTools.h"
 #include "firstRunOver.h"
 #include <stdio.h>

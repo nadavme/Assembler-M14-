@@ -84,12 +84,12 @@ size is the number of bytes. an example can be seen in tester_for_matrix.c */
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
 void add_to_arr(int num_to_add, int toShift)
 {
-    commands_array[ic] |= (num_to_add << toShift);
+    commands_array[IC] |= (num_to_add << toShift);
 }
 
 void turn_On_bit_num(int place) /*this function turn on the bit at 'place' of the instruction array[ic].*/
 {
-    commands_array[ic] = (commands_array[ic] | (int)pow(2, place));
+    commands_array[IC] = (commands_array[IC] | (int)pow(2, place));
 }
 
 /*
@@ -172,7 +172,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
         turn_On_bit_num(get_addressing_mode(command->data.operand2, DEST_ADDRESS)); /*turning on bit that represent the correct addressing method for destination operand*/
         turn_On_bit_num(get_addressing_mode(command->data.operand1, SRC_ADDRESS));  /*turning on bit that represent the correct addressing method for source operand*/
     }
-    ic++;
+    IC++;
 
     /* adding the other memory words: */
 
@@ -198,13 +198,13 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
             {
                 add_to_arr(command->data.number1, NUM); /* adds after the E,A,R part of the memory word */
                 turn_On_bit_num(absolute);
-                ic++;
+                IC++;
             }
 
             else if (command->data.operand1 == direct_addressing) /*in case were dealing with a direct mio'n*/
             {
-                wordsWithoutARE[ic] = 1;
-                ic++;
+                wordsWithoutARE[IC] = 1;
+                IC++;
             }
 
             else if (command->data.operand1 == register_bypass) /*in case were dealing with bypass register mio'n*/
@@ -213,14 +213,14 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 {
                     add_to_arr(command->data.reg_op1, DEST_ADDRESS); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                     return;
                 }
                 else
                 {
                     add_to_arr(command->data.reg_op1, 6); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                 }
             }
 
@@ -230,14 +230,14 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 {
                     add_to_arr(command->data.reg_op1, DEST_ADDRESS); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                     return;
                 }
                 else
                 {
                     add_to_arr(command->data.operand1, 6);
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                 }
             }
 
@@ -248,27 +248,27 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 {
                     add_to_arr(command->data.number2, NUM); /* adds after the E,A,R part of the memory word */
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                 }
 
                 else if (command->data.operand2 == direct_addressing) /*in case were dealing with a direct mio'n*/
                 {
-                    wordsWithoutARE[ic] = 1;
-                    ic++;
+                    wordsWithoutARE[IC] = 1;
+                    IC++;
                 }
 
                 else if (command->data.operand2 == register_bypass) /*in case were dealing with bypass register mio'n*/
                 {
                     add_to_arr(command->data.reg_op2, DEST_ADDRESS); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                 }
 
                 else if (command->data.operand2 == register_direct) /*in case were dealing with direct register mio'n*/
                 {
                     add_to_arr(command->data.reg_op2, DEST_ADDRESS);
                     turn_On_bit_num(absolute);
-                    ic++;
+                    IC++;
                 }
             }
         }
@@ -289,7 +289,7 @@ void weShare(lineStruct x) /*this function inserts 2 operands that use registers
     add_to_arr(x.data.reg_op1,SRC_REG);
     add_to_arr(x.data.reg_op2,DEST_REG);
     turn_On_bit_num(absolute);
-    ic++;
+    IC++;
 }
 
 int isStringValid(char array[], int length, char *string)
