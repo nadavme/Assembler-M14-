@@ -256,7 +256,9 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 
                 /*This is the core of the program- the translation.*/
             }
-            else if (currTok->type == Tcommand) line = translateCommands(currTok, line);/*todo: Put translation signature here.*/
+            else if (currTok->type == Tcommand) line = translateCommands(currTok, line);
+            add_to_comands_array(lineStruct *command, int operands_cnt);/* NADAV, IS IT OK THE PLACE I PLACED IT? also, please enter 
+            the parameters of the function (operands_cnt stands for the number of operands...) Thanks!*/
             else
                 {
                 errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter");

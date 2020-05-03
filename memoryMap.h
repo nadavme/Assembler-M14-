@@ -30,10 +30,9 @@ typedef struct dataLinkedList {
  * @param ch
  * @param x
  * @param isItString
- * @param dc
  * @return
  */
-dataNodePtr newDataNode(char ch, int x, bool isItString, int dc); /*is string = true if its .string, false if its .data,
+dataNodePtr newDataNode(char ch, int x, bool isItString); /*is string = true if its .string, false if its .data,
 dc with or without 100??? 
 return the new node*/
 
@@ -55,20 +54,18 @@ dataLinkedListPtr newDataList();/*a funtion to create a new data table (linked l
  * @param list
  * @param ch
  * @param x
- * @param dc
  * @param isItString
  */
-void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, int dc, bool isItString);/*if the list is Null the function does nothing*/
+void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, bool isItString);/*if the list is Null the function does nothing*/
 
 /*!
  *
  * @param list
  * @param ch
  * @param x
- * @param dc
  * @param isItString
  */
-void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, int dc, bool isItString);
+void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, bool isItString);
 
 /*!
  *
@@ -112,15 +109,14 @@ bool dataTableIsEmpty(dataLinkedListPtr listPtr);/*a function that check if the 
  * @param dc
  * @return
  */
-int addDataToTable(dataLinkedListPtr list, int x, int dc); /*if the data is already in the table - 
+int addDataToTable(dataLinkedListPtr list, int x); /*if the data is already in the table - 
     return 1. else if the insertion went well - return 0. */
 
 /*!
  *
  * @param list
  * @param ch
- * @param dc
  * @return
  */
-int addCharToTable(dataLinkedListPtr list,char ch, int dc);  /*if the address is already in the table - 
+int addCharToTable(dataLinkedListPtr list,char ch);  /*if the address is already in the table - 
     return 1. else if the insertion went well - return 0. */

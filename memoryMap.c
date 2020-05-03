@@ -3,6 +3,7 @@
 //
 
 #include "memoryMap.h"
+#include "filesAssembler.h"
 
 void translation(lineStruct *line, int param_cnt)
 {
@@ -15,8 +16,8 @@ void translation(lineStruct *line, int param_cnt)
 
 
 
-dataNodePtr newDataNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
-dc with or without 100??? 
+dataNodePtr newDataNode(char ch, int x, bool isItString){ /*is string = true if its .string, false if its .data,
+
 return the new node*/
     dataNodePtr new;
     int nameLen = 0;
@@ -24,16 +25,17 @@ return the new node*/
         return NULL;
     }
     new = calloc(1, sizeof(dataNode));
-    new->address = dc;
-
+    new->address = DC;
     if (isItString == true)
     {
-        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble, maybe the cast, shouldnt be*/
+        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble, maybe the cast, I can try Alon's function
+        to add numbers...*/
     }
 
     else if (isItString == false)
     {
-        new->word.num_or_address = (unsigned short)x;/*maybe this line will cause trouble, maybe the cast, shouldnt be*/
+        new->word.num_or_address = (unsigned short)x;/*maybe this line will cause trouble, maybe the cast, I can try Alon's function
+        to add numbers...*/
     }
     
     return new;
@@ -54,13 +56,13 @@ dataLinkedListPtr newDataList()/*a funtion to create a new data table (linked li
     return calloc(1, sizeof(struct dataLinkedList));
 }
 
-void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, int dc, bool isItString){/*if the list is Null the function does nothing*/
+void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, bool isItString){/*if the list is Null the function does nothing*/
     dataNodePtr new, dataNodePtr1;
     if(list == NULL)
     {
         return;
     }
-    new = newDataNode(ch, x, isItString,dc);
+    new = newDataNode(ch, x, isItString);
     if(!list->size){
         list->head = new;
     }else{
@@ -75,9 +77,9 @@ void addDataNodeToEnd(dataLinkedListPtr list,char ch, int x, int dc, bool isItSt
         
 }
 
-void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, int dc, bool isItString) 
+void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, bool isItString) 
     {
-        dataNodePtr new = newDataNode(ch, x, isItString, dc);
+        dataNodePtr new = newDataNode(ch, x, isItString);
         new->next = list->head;
         list->head = new;
         list->size = list->size +1;
@@ -143,41 +145,45 @@ void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, int dc, bool isIt
         return false;     
     }
 
-    int addDataToTable(dataLinkedListPtr list, int x, int dc) /*if the address is already in the table - 
+    int addDataToTable(dataLinkedListPtr list, int x) /*if the address is already in the table - 
     return 1. else if the insertion went well - return 0. */
     {
-        if (searchDataInList(dc, list) != NULL)
+        if (searchDataInList(DC, list) != NULL)
         {
             printf("Error!\n The address is already in the table.");
             return 1;
         }
         if (dataTableIsEmpty(list)==true)
         {
-            addDataNodeToStart(list,0, x, dc,false);
+            addDataNodeToStart(list,0, x,false);
+            DC++;
             return 0;
         }
         
-        addDataNodeToEnd( list, 0, x, dc, false);
+        addDataNodeToEnd( list, 0, x, false);
+        DC++;
         return 0;
         
 }
 
 
-int addCharToTable(dataLinkedListPtr list,char ch, int dc)  /*if the address is already in the table - 
+int addCharToTable(dataLinkedListPtr list,char ch)  /*if the address is already in the table - 
     return 1. else if the insertion went well - return 0. */
 {
     {
-        if (searchDataInList(dc, list) != NULL)
+        if (searchDataInList(DC, list) != NULL)
         {
             printf("Error!\n The address is already in the table.");
             return 1;
         }
         if (dataTableIsEmpty(list)==true)
         {
-            addDataNodeToStart(list,ch, 0, dc,true);
+            addDataNodeToStart(list,ch, 0,true);
+            DC++;
             return 0;
         }
         
-        addDataNodeToEnd(list, ch, 0, dc, true);
+        addDataNodeToEnd(list, ch, 0, true);
+        DC++;
         return 0;
 }
