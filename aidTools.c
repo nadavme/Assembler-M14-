@@ -424,7 +424,7 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
     va_end(parameters_to_print);
 }
 
-char *parseTokens(char* line, struct Token *currTok)
+char *parseByTokens(char* line, struct Token *currTok)
 {
 
     char token[30];
@@ -433,83 +433,84 @@ char *parseTokens(char* line, struct Token *currTok)
     idx = 0;
 
     /*Skip all white spaces at the the beginning of the line*/
-    while (isWhitespace(currLine->data.line))
-        currLine->data.line++;
+    while (isWhitespace(line))
+        line++;
 
     /*Check for a number*/
-    if ((isdigit(*currLine->data.line)) || (*currLine->data.line == '-'))
+    if ((isdigit(*line)) || (*line == '-'))
     {
         do
         {
-            token[idx++] = *currLine->data.line;
-            currLine->data.line++;
-        } while (isdigit(*currLine->data.line));
+            token[idx++] = *line;
+            line++;
+        } while (isdigit(*line));
         token[idx] = '\0';
-        currLine->theLinePurpose = Tnumber;
-        currLine->data.number = atoi(token);
+        currTok->type = Tnumber;
+        currTok->data.number = atoi(token);
     }
-    else if (*currLine->data.line == '.') /*Check for instruction prefix*/
+    else if (*line == '.') /*Check for instruction prefix*/
     {
         do
         {
-            token[idx] = *currLine->data.line;
-            currLine->data.line++;
-        } while (!isspace(*currLine->data.line));
+            token[idx] = *line;
+            line++;
+        } while (!isspace(*line));
         token[idx++] = '\0';
 
         /*Check for instruction*/
-        if ((currLine->data.instruction = isInstruction(token)) >= 0)
+        if ((currTok->data.instruction = isInstruction(token)) >= 0)
         {
-            currLine->theLinePurpose = Tinstruction;
+            currTok->type = Tinstruction;
         }
         /*We figure out its not an instruction thus its not valid*/
         else
-            currLine->theLinePurpose = Terror;
+            currTok->type = Terror;
     }
 
-    else if (*currLine->data.line == '\n')
+    else if (*line == '\n')
     {
-        currLine->theLinePurpose = TnewLine;
-        currLine->data.line++;
+        currTok->type = TnewLine;
+        line++;
     }
 
     /*Check if the line is a symbol, command or a register*/
-    else if (isalnum(*currLine->data.line))
+    else if (isalnum(*line))
     {
         do
         {
-            token[idx] = *currLine->data.line;
-            currLine->data.line++;
-        } while (isalnum(*currLine->data.line));
+            token[idx] = *line;
+            line++;
+        } while (isalnum(*line));
         token[idx] = '\0';
 
         /*Check for command*/
-        if ((currLine->data.command = isCommand(token)) >= 0)
+        if ((currTok->data.command = isCommand(token)) >= 0)
         {
-            currLine->theLinePurpose = Tcommand;
-            if (!isspace(*currLine->data.line))
-                currLine->theLinePurpose = Terror;
+            currTok->type = Tcommand;
+            if (!isspace(*line))
+                currTok->type = Terror;
         }
 
         /*In case we found a match to a valid register.*/
-        else if ((currLine->data.reg = isRegister(token)) >= 0)
-            currLine->theLinePurpose = Tregister;
+        else if ((currTok->data.reg = isRegister(token)) >= 0)
+            currTok->type = Tregister;
 
         /*If all is false, we understand it's a symbol.*/
         else if (isSymbol(token))
         {
             /*This symbol needs to be added to the symbol table.*/
-            currLine->theLinePurpose = Tsymbol;
-            strcpy(currLine->data.symbolName, token);
+            currTok->type = Tsymbol;
+            strcpy(currTok->data.symbolName, token);
         }
         else
-            currLine->theLinePurpose = Terror;
+            currTok->type = Terror;
     }
     else
 
     /*We understand that the line is a special character. returns the ascii value of the character.*/
     {
-        currLine->theLinePurpose = currLine->data.line;
-        currLine->data.line++;
+        currTok->theLinePurpose = currLine->data.line;
+        line++;
     }
+    return line;
 }

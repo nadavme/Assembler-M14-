@@ -261,6 +261,6 @@ StatusCode trimOperand(char* operand);
 
 void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
 
-char* parseTokens(char* line, struct Token* currTok);
+char* parseByTokens(char* line, struct Token* currTok);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
