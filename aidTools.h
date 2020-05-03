@@ -69,6 +69,20 @@ typedef enum symbolType { tCode, tData, tString} symbolType;
  */
 typedef  enum isThatExtern {no, yes} isThatExtern;
 
+typedef struct Token
+{
+    int type;
+    union
+    {
+        char symbol[31];
+        string[82];
+        int number;
+        char tempCh;
+        int command;
+        int reg;
+        int instruction
+    } data;
+} Token;
 
 /*!
  *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine
@@ -246,6 +260,6 @@ StatusCode trimOperand(char* operand);
 
 void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
 
-char* parseIntoLineStruct(struct LineStruct* currLine);
+char* parseTokens(char* line, struct Token* currTok);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
