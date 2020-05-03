@@ -25,11 +25,11 @@
 
 
 /* types of addressing modes of the command operands */
-enum addressing_modes {
-	instant_addressing,
-	direct_addressing,
-	register_bypass,
-	register_direct
+enum addressingMethods {
+	instantAddressing,
+	directAddressing,
+	registerBypass,
+	registerDirect
 };
 
 void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the instruction array[ic].*/
@@ -44,20 +44,13 @@ void add_to_arr(int num_to_add, int toShift);/*this function is adding a number 
  */
 typedef enum opCodes { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCodes;
 
+
 /*!
  *
  */
-typedef enum addressingMethod { immediate = 0, direct, reg } addrMethod;
-
-
-
 typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
                            Tstring = -4, Tcommand = -5, Tregister = -6, 
                            TnewLine = -7, Terror = -8} ;
-
-
-
-
 
 
 
@@ -107,10 +100,10 @@ typedef struct LineStruct
 
 		int reg_op2;/*This is where the register number parsed and stored, if found */
 
-        int operand1;/*if theres at least 1 operand than one of the values of enum 'addressing_modes' will be stored here. if theres only 1 operand
+        int operand1;/*if theres at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
 							it will contain the destination operand.*/
 
-        int operand2;/*if theres 2 operands than one of the values of enum 'addressing_modes' will be stored here. this is for destination operand*/
+        int operand2;/*if theres 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 

@@ -94,31 +94,31 @@ void turn_On_bit_num(int place) /*this function turn on the bit at 'place' of th
 
 /*
 this function gets a lineStruct, and returns it's addressing mode:
-instant_addressing,
-direct_addressing,
-register_bypass
-or register_direct.
+instantAddressing,
+directAddressing,
+registerBypass
+or registerDirect.
 if it's not one of the above - the function returns -1 */
 int get_addressing_mode(int operandMethod, int destOrSrc)
 {
     if (destOrSrc == DEST_ADDRESS)
     {
-        if (operandMethod == instant_addressing)
+        if (operandMethod == instantAddressing)
         {
-            return (instant_addressing + DEST_ADDRESS);
+            return (instantAddressing + DEST_ADDRESS);
         }
-        else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+        else if (operandMethod == directAddressing) /*in this case were dealing with the direct addresing method.*/
         {
-            return (direct_addressing + DEST_ADDRESS);
+            return (directAddressing + DEST_ADDRESS);
         }
-        else if (operandMethod == register_bypass)
+        else if (operandMethod == registerBypass)
         {
-            return (DEST_ADDRESS + register_bypass);
+            return (DEST_ADDRESS + registerBypass);
         }
 
-        else if (operandMethod == register_direct)
+        else if (operandMethod == registerDirect)
         {
-            return (DEST_ADDRESS + register_direct);
+            return (DEST_ADDRESS + registerDirect);
         }
         else
         {
@@ -127,22 +127,22 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
     }
     else if (destOrSrc == SRC_ADDRESS)
     {
-        if (operandMethod == instant_addressing)
+        if (operandMethod == instantAddressing)
         {
-            return (instant_addressing + SRC_ADDRESS);
+            return (instantAddressing + SRC_ADDRESS);
         }
-        else if (operandMethod == direct_addressing) /*in this case were dealing with the direct addresing method.*/
+        else if (operandMethod == directAddressing) /*in this case were dealing with the direct addresing method.*/
         {
-            return (direct_addressing + SRC_ADDRESS);
+            return (directAddressing + SRC_ADDRESS);
         }
-        else if (operandMethod == register_bypass)
+        else if (operandMethod == registerBypass)
         {
-            return (SRC_ADDRESS + register_bypass);
+            return (SRC_ADDRESS + registerBypass);
         }
 
-        else if (operandMethod == register_direct)
+        else if (operandMethod == registerDirect)
         {
-            return (SRC_ADDRESS + register_direct);
+            return (SRC_ADDRESS + registerDirect);
         }
         else
         {
@@ -194,20 +194,20 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
         }
         if (command->data.operand1 != -1)
         {
-            if (command->data.operand1 == instant_addressing) /*in case were dealing with instant mio'n*/
+            if (command->data.operand1 == instantAddressing) /*in case were dealing with instant mio'n*/
             {
                 add_to_arr(command->data.number1, NUM); /* adds after the E,A,R part of the memory word */
                 turn_On_bit_num(absolute);
                 IC++;
             }
 
-            else if (command->data.operand1 == direct_addressing) /*in case were dealing with a direct mio'n*/
+            else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
                 wordsWithoutARE[IC] = 1;
                 IC++;
             }
 
-            else if (command->data.operand1 == register_bypass) /*in case were dealing with bypass register mio'n*/
+            else if (command->data.operand1 == registerBypass) /*in case were dealing with bypass register mio'n*/
             {
                 if (operands_cnt == 1)
                 {
@@ -224,7 +224,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
                 }
             }
 
-            else if (command->data.operand1 == register_direct)
+            else if (command->data.operand1 == registerDirect)
             {
                 if (operands_cnt == 1)
                 {
@@ -244,27 +244,27 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
             if (command->data.operand2 != -1) /*if we have 2 operands...
              a possible bug - this next block should be outside the previous if...*/
             {
-                if (command->data.operand2 == instant_addressing) /*in case were dealing with instant mio'n*/
+                if (command->data.operand2 == instantAddressing) /*in case were dealing with instant mio'n*/
                 {
                     add_to_arr(command->data.number2, NUM); /* adds after the E,A,R part of the memory word */
                     turn_On_bit_num(absolute);
                     IC++;
                 }
 
-                else if (command->data.operand2 == direct_addressing) /*in case were dealing with a direct mio'n*/
+                else if (command->data.operand2 == directAddressing) /*in case were dealing with a direct mio'n*/
                 {
                     wordsWithoutARE[IC] = 1;
                     IC++;
                 }
 
-                else if (command->data.operand2 == register_bypass) /*in case were dealing with bypass register mio'n*/
+                else if (command->data.operand2 == registerBypass) /*in case were dealing with bypass register mio'n*/
                 {
                     add_to_arr(command->data.reg_op2, DEST_ADDRESS); /*adding the number of register to the right bits.*/
                     turn_On_bit_num(absolute);
                     IC++;
                 }
 
-                else if (command->data.operand2 == register_direct) /*in case were dealing with direct register mio'n*/
+                else if (command->data.operand2 == registerDirect) /*in case were dealing with direct register mio'n*/
                 {
                     add_to_arr(command->data.reg_op2, DEST_ADDRESS);
                     turn_On_bit_num(absolute);
@@ -277,7 +277,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
 
 int isBothOperandsRegs(int x, int y) /*this function is checking if both operands use registers mio'n method.*/
 {
-    if ((x == register_bypass && y == register_bypass) || (x == register_bypass && y == register_direct) || (x == register_direct && y == register_bypass) || (x == register_direct && y == register_direct))
+    if ((x == registerBypass && y == registerBypass) || (x == registerBypass && y == registerDirect) || (x == registerDirect && y == registerBypass) || (x == registerDirect && y == registerDirect))
     {
         return 1;
     }
@@ -410,58 +410,6 @@ int isInt(char *string)
     return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
-//int isValidSourceDest(OpCodes code,opType source, opType dest)
-//{
-//    int result = 0;
-//    switch(code)
-//    {
-//        case mov:
-//            result = dest != Immediate;
-//            break;
-//        case cmp:
-//            result = 1;
-//            break;
-//        case add:
-//        case sub:
-//        case nnot:
-//        case clr:
-//            result = dest != Immediate;
-//            break;
-//        case lea:
-//            result = (source == Direct || source == Struct) && dest != Immediate;
-//            break;
-//        case inc:
-//        case dec:
-//        case jmp:
-//        case bne:
-//        case red:
-//            result = dest != Immediate;
-//            break;
-//        case prn:
-//            result = 1;
-//            break;
-//        case jsr:
-//            result = dest != Immediate;
-//            break;
-//        case rts:
-//        case stop:
-//            result = 1;
-//            break;
-//    }
-//    return result;
-//}
-
-///*The function trim the operand and checks if there's more then one operand*/
-//StatusCode trimOperand(char* operand)
-//{
-//    char first[LINE_LENGTH];
-//    char second[LINE_LENGTH];
-//    if(sscanf(operand,"%s %s",first,second) != 1) /* Testing if there is more than 1 operand */
-//        return wrong_number_of_operands;
-//    else
-//        strcpy(operand,first);
-//    return success;
-//}
 
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {

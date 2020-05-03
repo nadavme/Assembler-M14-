@@ -40,6 +40,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
         if ((currLine == NULL) || (symbolLine == NULL))
         {
             errorHandler(1, 0, "ERROR: Memory allocation has failed.");
+            /*todo: update error flag?*/
             continue;/*Should i exit?*/
         }
 
@@ -47,6 +48,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
         {
             currLine->data.line = line;
             lineCounter++;
+            currLine->data.lineNumber = lineCounter;
 
             /*Validations on input*/
 
@@ -54,10 +56,65 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
                 if (!strchr(line, '\n'))
                 {
                     errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
+                    /*todo: update error flag?*/
                     
                     /*To "cut" the rest  of the line.*/
                     while((temp = fgetc(fp)) != '\n');
                     continue;
+                }
+
+                line = parseIntoLineStruct(currLine);
+
+                /*Skip a  comment line\ newline*/
+                if ((currLine->theLinePurpose == ';') || (currLine->theLinePurpose == TnewLine)) continue;
+
+                if (currLine->theLinePurpose == Tsymbol)
+                {
+                    memcpy(symbolLine, currLine, sizeof(lineStruct));/*Deal with the symbols later.*/
+                    currLine->data.line++;/*todo: possible one word approach.*/
+
+                    if (currLine->theLinePurpose == ':')/*The valid suffix of a symbol declaration.*/
+                    {
+                        errorHandler(0, (int)currLine->data.lineNumber, "A symbol declaration must "
+                                                                        "end with a colon.");/*todo: update error flag?*/
+                        continue;
+                    }
+
+                    currLine->data.line++;/*todo: possible one word approach.*/
+                    if (currLine->theLinePurpose == Tinstruction)/*todo: possible one word approach.*/
+                    {
+                        if ((currLine->data.instruction == EXTERN_MACRO) || (currLine->data.instruction == ENTRY_MACRO))
+                        {
+                            errorHandler(0, (int)currLine->data.lineNumber, "This instruction is not"
+                                                                       " valid after a symbol");
+                            continue;/*todo: update error flag?*/
+                        }
+                        addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
+                    }
+                    else if (currLine->theLinePurpose == Tcommand)
+                    {
+                        addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
+                    }
+                    else
+                    {
+                        errorHandler(0, (int)currLine->data.lineNumber, "Invalid parameter,"
+                                                                        " after a symbol declaration");
+                        continue;
+                    }
+                }
+                if (currLine->theLinePurpose == Tinstruction)
+                {
+                    if (currLine->data.instruction == DATA)
+                    {
+                        currLine->data.line++;/*todo: possible one word approach.*/
+                        if (currLine->theLinePurpose == TnewLine)/*todo: possible one word approach.*/
+                        {
+                            errorHandler(0, (int)currLine->data.lineNumber, "Expected data after"
+                                                                       " '.data' intruction");
+                            continue;
+                        }
+                    }
+                    while (currLine->theLinePurpose != TnewLine)
                 }
 
 
