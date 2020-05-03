@@ -259,8 +259,32 @@ int isValidSourceDest(OpCodes code,opType source, opType dest);
  */
 StatusCode trimOperand(char* operand);
 
+/*!
+ *
+ * @param mentionLine
+ * @param lineIdx
+ * @param errorMsg
+ * @param ...
+ */
 void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
 
+
+/*!
+ *
+ * @param line
+ * @param currTok
+ * @return
+ */
 char* parseByTokens(char* line, Token* currTok);
+
+
+/*!
+ *
+ * @param file
+ * @param suffix
+ * @param mode
+ * @return
+ */
+FILE* manageFiles(const char* file, char* suffix, char* mode);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H

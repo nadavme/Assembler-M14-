@@ -514,3 +514,28 @@ char *parseByTokens(char* line, Token *currTok)
     }
     return line;
 }
+
+FILE* manageFiles(const char* file, char* suffix, char* mode)
+{
+    FILE* fp;
+    char* fullFileName = (char*) malloc(strlen(file) + strlen(suffix) +1);
+    
+    if (fullFileName == NULL)
+    {
+        errorHandler(1, -1, "\n Error: memory allocation has failed"
+                            " during openning file %s", file);
+        return NULL;
+    }
+    strcpy(fullFileName, file);
+    strcat(fullFileName, suffix);
+    fp = fopen(fullFileName, mode);
+
+    /*Failure*/
+    if(fp == NULL)
+    {
+        errorHandler(1, -1, "\n Error: failed during openning file %s", fullFileName);
+        return NULL;
+    }
+    /*All good.*/
+    return fp;
+}
