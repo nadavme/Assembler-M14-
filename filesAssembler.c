@@ -192,7 +192,9 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
                     }
 
                 }
-            } else if (currTok->type == Tcommand) line = parseByTokens(line, currTok);
+
+                /*This is the core of the program- the translation.*/
+            } else if (currTok->type == Tcommand) line = translateCmmoand(currTok, line);/*todo: Put translation signature here.*/
             else {
                 errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter");
                 continue;

@@ -118,4 +118,9 @@ int strToInt(char c[]);
  */
 int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int isEntry, int isExternal);
 
+/*!
+ *
+ */
+void secondRunOver();
+
 #endif //MAABADA_MMN14_SYMBOLSTABLE_H
