@@ -11,7 +11,6 @@
 typedef struct node{
     char *symbolName;
     int address;/*I did the symbol table as Dani Kalfon instructs in his lecture about the project (at time 2:01 in the video you can see the table...)*/
-    int isEntry;
     int isExternal;
     struct node *next;
 }*nodePtr, node;
@@ -35,11 +34,10 @@ int parsStr(char *str);
  *
  * @param symbolName
  * @param address1
- * @param isEntry
  * @param isExternal1
  * @return
  */
-nodePtr newNode(char *symbolName, int address1, int isEntry, int isExternal1);
+nodePtr newNode(char *symbolName, int address1, int isExternal1);
 
 /*!
  *
@@ -58,20 +56,18 @@ linkedListPtr newList();
  * @param list
  * @param symbolName
  * @param address1
- * @param isEntry
  * @param isExternal1
  */
-void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isEntry, int isExternal1);
+void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isExternal1);
 
 /*!
  *
  * @param list
  * @param symbolName
  * @param address1
- * @param isEntry
  * @param isExternal1
  */
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEntry, int isExternal1);
+void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isExternal1);
 
 /*!
  *
@@ -112,10 +108,9 @@ int strToInt(char c[]);
  * @param parsedLine
  * @param list
  * @param dc
- * @param isEntry
  * @param isExternal
  * @return
  */
-int addSymbolToTable(char* parsedLine, linkedListPtr list, int dc, int isEntry, int isExternal);
+int addSymbolToTable(char *symbolName, linkedListPtr list, int isExternal);
 
 #endif //MAABADA_MMN14_SYMBOLSTABLE_H
