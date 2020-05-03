@@ -188,7 +188,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt)
             if (isBothOperandsRegs(command->data.operand1, command->data.operand2) == 1)
             {
                 /*this is the case when both operands share one memory word*/
-                weShare(*command, *command);
+                weShare(*command);
                 return;
             }
         }
@@ -284,9 +284,12 @@ int isBothOperandsRegs(int x, int y) /*this function is checking if both operand
     return 0;
 }
 
-void weShare(lineStruct i, lineStruct j) /*this function inserts 2 operands that use registers to 1 memory word.*/
+void weShare(lineStruct x) /*this function inserts 2 operands that use registers to 1 memory word.*/
 {
-    if (i.data.)
+    add_to_arr(x.data.reg_op1,SRC_REG);
+    add_to_arr(x.data.reg_op2,DEST_REG);
+    turn_On_bit_num(absolute);
+    ic++;
 }
 
 int isStringValid(char array[], int length, char *string)

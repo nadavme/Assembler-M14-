@@ -161,7 +161,30 @@ enum memory_word_toShift { /*from Alon need to change a bit*/
 	DEST_REG = 3
 };
 
+/*!
+ *
+ * @param command
+ * @param operands_cnt
+ * @return
+ */
+void add_to_comands_array(lineStruct *command, int operands_cnt);
+
+/*!
+ *
+ * @param x
+ * @param y
+ * @return
+ */
 int isBothOperandsRegs(lineStruct x,lineStruct y);/*this function check if both operands X and Y are using registers.*/
+
+/*!
+ *
+ * @param x
+ * 
+ * 
+ */
+void weShare(lineStruct x); /*this function inserts 2 operands that use registers to 1 memory word.*/
+
 
 /*!
  *
