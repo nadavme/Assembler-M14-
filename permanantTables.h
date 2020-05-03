@@ -102,4 +102,3 @@ struct Register
                 {"r7", R7},
                 {NULL}
         };
-

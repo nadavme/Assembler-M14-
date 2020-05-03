@@ -4,6 +4,17 @@
 
 #include "memoryMap.h"
 
+void translation(lineStruct *line, int param_cnt)
+{
+    if (line)
+    {
+        /* code */
+    }
+    
+}
+
+
+
 dataNodePtr newDataNode(char ch, int x, bool isItString, int dc){ /*is string = true if its .string, false if its .data,
 dc with or without 100??? 
 return the new node*/

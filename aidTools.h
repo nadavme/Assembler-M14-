@@ -16,6 +16,7 @@
 #include "permanantTables.h"
 #include "main.c"
 #include "filesAssembler.h"
+#include "aidTools.c"
 
 #define MAX_DIGITS_BIN 100
 #define MAX_DIGITS_DEC 10
@@ -151,7 +152,7 @@ void add_to_comands_array(lineStruct *command, int operands_cnt);
  * @param y
  * @return
  */
-int isBothOperandsRegs(lineStruct x,lineStruct y);/*this function check if both operands X and Y are using registers.*/
+int isBothOperandsRegs(int x,int y);/*this function check if both operands X and Y are using registers.*/
 
 /*!
  *
@@ -190,56 +191,56 @@ int isStringValid(char array[], int length, char* string);
  * @param string
  * @return
  */
-int isInstruction(char* string)
+int isInstruction(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isData(char* string)
+int isData(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isRegister(char* string)
+int isRegister(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isSymbol(char* string)
+int isSymbol(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isExtern(char* string)
+int isExtern(char* string);
 
 /*!
  *
  * @param string
  * @return
  */
-int isEntry(char* string)
+int isEntry(char* string);
 
 /*!
  *
  * @param line
  * @return
  */
-int isWhitespace(char* line)
+int isWhitespace(char* line);
 
 /*!
  *
  * @param string
  * @return
  */
-int isInt(char* string)
+int isInt(char* string);
 
 /*!
  *
@@ -248,7 +249,7 @@ int isInt(char* string)
  * @param dest
  * @return
  */
-int isValidSourceDest(OpCodes code,opType source, opType dest)
+int isValidSourceDest(OpCodes code,opType source, opType dest);
 
 
 /*!

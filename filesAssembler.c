@@ -11,7 +11,10 @@
 #define MAX_LINE 82
 
 
-int IC, DC, lineCounter, errorFlag;
+char fileName[20];
+int IC, DC;
+char* parsedLine;
+int lineCounter;
 
 
 
@@ -33,19 +36,17 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         lineStruct* currLine = (lineStruct*) malloc(sizeof(lineStruct));
         lineStruct* symbolLine = (lineStruct*) malloc(sizeof(lineStruct));
-        Token* currTok = (Token*) malloc(sizeof(Token));
-        Token* symbolTok = (Token*) malloc(sizeof(Token));
 
         if ((currLine == NULL) || (symbolLine == NULL))
         {
             errorHandler(1, 0, "ERROR: Memory allocation has failed.");
-            errorFlag = 0;
+            /*todo: update error flag?*/
             continue;/*Should i exit?*/
         }
 
-        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL)
+        while (fgets(line, MAX_LINE + 2, fp) != NULL)
         {
-            currLine->data.line = originalLine;
+            currLine->data.line = line;
             lineCounter++;
             currLine->data.lineNumber = lineCounter;
 
@@ -55,43 +56,42 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
                 if (!strchr(line, '\n'))
                 {
                     errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
-                    errorFlag = 0;
-
+                    /*todo: update error flag?*/
+                    
                     /*To "cut" the rest  of the line.*/
                     while((temp = fgetc(fp)) != '\n');
                     continue;
                 }
 
-                line = parseTokens(line, currTok);
+                line = parseIntoLineStruct(currLine);
 
                 /*Skip a  comment line\ newline*/
-                if ((currTok->type == ';') || (currTok->type == TnewLine)) continue;
+                if ((currLine->theLinePurpose == ';') || (currLine->theLinePurpose == TnewLine)) continue;
 
-                if (currTok->type == Tsymbol)
+                if (currLine->theLinePurpose == Tsymbol)
                 {
-                    memcpy(symbolTok, currTok, sizeof(lineStruct));/*Deal with the symbols later.*/
-                    line = parseTokens(line, currTok);
-                    if (currTok->type == ':')/*The valid suffix of a symbol declaration.*/
+                    memcpy(symbolLine, currLine, sizeof(lineStruct));/*Deal with the symbols later.*/
+                    currLine->data.line++;/*todo: possible one word approach.*/
+
+                    if (currLine->theLinePurpose == ':')/*The valid suffix of a symbol declaration.*/
                     {
                         errorHandler(0, (int)currLine->data.lineNumber, "A symbol declaration must "
-                                                                        "end with a colon.");
-                        errorFlag = 0;
+                                                                        "end with a colon.");/*todo: update error flag?*/
                         continue;
                     }
 
-                    line = parseTokens(line, currTok);
-                    if (currTok->type == Tinstruction)
+                    currLine->data.line++;/*todo: possible one word approach.*/
+                    if (currLine->theLinePurpose == Tinstruction)/*todo: possible one word approach.*/
                     {
-                        if ((currTok->data.instruction == EXTERN_MACRO) || (currTok->data.instruction == ENTRY_MACRO))
+                        if ((currLine->data.instruction == EXTERN_MACRO) || (currLine->data.instruction == ENTRY_MACRO))
                         {
                             errorHandler(0, (int)currLine->data.lineNumber, "This instruction is not"
                                                                        " valid after a symbol");
-                            errorFlag = 0;
-                            continue;
+                            continue;/*todo: update error flag?*/
                         }
                         addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
                     }
-                    else if (currTok->type == Tcommand)
+                    else if (currLine->theLinePurpose == Tcommand)
                     {
                         addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
                     }
@@ -99,77 +99,75 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
                     {
                         errorHandler(0, (int)currLine->data.lineNumber, "Invalid parameter,"
                                                                         " after a symbol declaration");
-                        errorFlag = 0;
                         continue;
                     }
                 }
-                if (currTok->type == Tinstruction)
+                if (currLine->theLinePurpose == Tinstruction)
                 {
-                    if (currTok->data.instruction == DATA)
+                    if (currLine->data.instruction == DATA)
                     {
-                        line = parseTokens(line, currTok);
-                        if (currTok->type == TnewLine)
+                        currLine->data.line++;/*todo: possible one word approach.*/
+                        if (currLine->theLinePurpose == TnewLine)/*todo: possible one word approach.*/
                         {
                             errorHandler(0, (int)currLine->data.lineNumber, "Expected data after"
                                                                        " '.data' intruction");
-                            errorFlag = 0;
                             continue;
                         }
                     }
-                    while (currTok->type != TnewLine)
+                    while (currLine->theLinePurpose != TnewLine)
                 }
 
 
 
-//
-//        char* parsedLine;
-//        const char* instructionType;
-//        if(!doubleCommasChecker(line)) break;
-//        strcpy(lineWithNoCommas, commasReplacer(line));
-//        parsedLine = lineParser(lineWithNoCommas);
-//        if (!sanityCheck(parsedLine)) isThereExceptions = true;
-//        if(!isThereExceptions)
-//        {
-//            if (isSymbole(&parsedLine[0])) isThereSymbolDeclaration = true;
-//            const char* instructionType = getInstructionType(parsedLine);
-//            if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
-//            {
-//                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
-//                analyzeData(parsedLine, instructionType);
-//                updateDC(DC);
-//                continue;
-//            }
-//            if((strcmp(instructionType, ".extern") == 0) || (strcmp(instructionType , ".entry") == 0))
-//                {
-//                if(strcmp(instructionType, ".entry") == 0) continue;
-//                else
-//                    {
-//                        addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 0);
-//                    }
-//                }
-//                /*Here we know we are dealing with an instruction line*/
-//                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, IC, 1, 1)
-//                if(!isOpCode(parsedLine[0]))
-//                {
-//                    printf("ERROR: Operation code is not valid. The program will continue to check the next line,"
-//                           "but no output files will be made.");
-//                    continue;
-//                }
-//                L = analizeNumOfOperands(parsedLine);
-//                for (i = 0; i < L; i++)
-//                {
-//                    buildBinaryCode(opCodes, wordNumber, data);
-//
-//                }
-//                IC += L;
-//                continue;
-//
-//            }
-//
-//        }
-//     }
-//
-//}
+
+        char* parsedLine;
+        const char* instructionType;
+        if(!doubleCommasChecker(line)) break;
+        strcpy(lineWithNoCommas, commasReplacer(line));
+        parsedLine = lineParser(lineWithNoCommas);
+        if (!sanityCheck(parsedLine)) isThereExceptions = true;
+        if(!isThereExceptions)
+        {
+            if (isSymbole(&parsedLine[0])) isThereSymbolDeclaration = true;
+            const char* instructionType = getInstructionType(parsedLine);
+            if((strcmp(instructionType , ".data") == 0) || (strcmp(instructionType , ".string") == 0))
+            {
+                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 1);
+                analyzeData(parsedLine, instructionType);
+                updateDC(DC);
+                continue;
+            }
+            if((strcmp(instructionType, ".extern") == 0) || (strcmp(instructionType , ".entry") == 0))
+                {
+                if(strcmp(instructionType, ".entry") == 0) continue;
+                else
+                    {
+                        addSymbolToTable(parsedLine, fileSymbolTable, DC, 1, 0);
+                    }
+                }
+                /*Here we know we are dealing with an instruction line*/
+                if(isThereSymbolDeclaration) addSymbolToTable(parsedLine, fileSymbolTable, IC, 1, 1)
+                if(!isOpCode(parsedLine[0]))
+                {
+                    printf("ERROR: Operation code is not valid. The program will continue to check the next line,"
+                           "but no output files will be made.");
+                    continue;
+                }
+                L = analizeNumOfOperands(parsedLine);
+                for (i = 0; i < L; i++)
+                {
+                    buildBinaryCode(opCodes, wordNumber, data);
+
+                }
+                IC += L;
+                continue;
+
+            }
+
+        }
+     }
+
+}
 
 //    int linesIdx, bufferCounter;
 //        lineStruct *lineStructMain, *lineStructTemp;
@@ -212,7 +210,6 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
 //    }
 //    fclose(fp);
 //    return 0;
-
 
 
 

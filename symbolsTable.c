@@ -154,4 +154,3 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int atta
         
 
     }
-
