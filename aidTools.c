@@ -424,7 +424,7 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
     va_end(parameters_to_print);
 }
 
-char *parseByTokens(char* line, struct Token *currTok)
+char *parseByTokens(char* line, Token *currTok)
 {
 
     char token[30];

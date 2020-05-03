@@ -12,16 +12,14 @@
 
 
 char fileName[20];
-int IC, DC;
-char* parsedLine;
-int lineCounter;
+int IC, DC, errorFlag, lineCounter;
 
 
 
 
 /*todo: adapt it to previous plan.*/
 int assembler(char const* filesToInterpret[], int numOfFiles) {
-    FILE *fp;
+    FILE* fp;
     int filesCounter;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
@@ -30,23 +28,27 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
         /*Initiate variables*/
         IC = 0;
         DC = 0;
+        errorFlag = 1;
         lineCounter = 0;
         char temp;
         char* line;
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         lineStruct* currLine = (lineStruct*) malloc(sizeof(lineStruct));
         lineStruct* symbolLine = (lineStruct*) malloc(sizeof(lineStruct));
+        Token* currTok = (Token *) malloc(sizeof(Token));
+        Token* symbolTok = (Token *) malloc(sizeof(Token));
 
-        if ((currLine == NULL) || (symbolLine == NULL))
+        if ((currTok == NULL) || (symbolTok == NULL))
         {
             errorHandler(1, 0, "ERROR: Memory allocation has failed.");
-            /*todo: update error flag?*/
+            errorFlag = 0;
             continue;/*Should i exit?*/
         }
 
-        while (fgets(line, MAX_LINE + 2, fp) != NULL)
+        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL)
         {
-            currLine->data.line = line;
+            currLine->data.line = originalLine;
+            line = originalLine;
             lineCounter++;
             currLine->data.lineNumber = lineCounter;
 
@@ -56,65 +58,75 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
                 if (!strchr(line, '\n'))
                 {
                     errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
-                    /*todo: update error flag?*/
-                    
+                    errorFlag = 0;
                     /*To "cut" the rest  of the line.*/
                     while((temp = fgetc(fp)) != '\n');
                     continue;
                 }
 
-                line = parseIntoLineStruct(currLine);
+                /*Parsing the first token on the input line.*/
+                line = parseByTokens(line, currTok);
 
                 /*Skip a  comment line\ newline*/
-                if ((currLine->theLinePurpose == ';') || (currLine->theLinePurpose == TnewLine)) continue;
+                if ((currTok->type == ';') || (currTok->type == TnewLine)) continue;
 
-                if (currLine->theLinePurpose == Tsymbol)
+                if (currTok->type == Tsymbol)
                 {
-                    memcpy(symbolLine, currLine, sizeof(lineStruct));/*Deal with the symbols later.*/
-                    currLine->data.line++;/*todo: possible one word approach.*/
+                    memcpy(symbolTok, currTok, sizeof(Token));/*Deal with the symbols later.*/
+                    line = parseByTokens(line, currTok);
 
-                    if (currLine->theLinePurpose == ':')/*The valid suffix of a symbol declaration.*/
+                    if (currTok->type == ':')/*The valid suffix of a symbol declaration.*/
                     {
                         errorHandler(0, (int)currLine->data.lineNumber, "A symbol declaration must "
-                                                                        "end with a colon.");/*todo: update error flag?*/
+                                                                        "end with a colon.");
+                        errorFlag = 0;
                         continue;
                     }
 
-                    currLine->data.line++;/*todo: possible one word approach.*/
-                    if (currLine->theLinePurpose == Tinstruction)/*todo: possible one word approach.*/
+                    line = parseByTokens(line, currTok);
+                    if (currTok->type == Tinstruction)
                     {
-                        if ((currLine->data.instruction == EXTERN_MACRO) || (currLine->data.instruction == ENTRY_MACRO))
+                        if ((currTok->data.instruction == EXTERN_MACRO) || (currTok->data.instruction == ENTRY_MACRO))
                         {
                             errorHandler(0, (int)currLine->data.lineNumber, "This instruction is not"
                                                                        " valid after a symbol");
-                            continue;/*todo: update error flag?*/
+                            errorFlag = 0;
+                            continue;
                         }
                         addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
                     }
-                    else if (currLine->theLinePurpose == Tcommand)
+                    else if (currTok->type == Tcommand)
                     {
                         addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
                     }
                     else
-                    {
+                    {/*In case that after a symbol appears something that is not valid.*/
                         errorHandler(0, (int)currLine->data.lineNumber, "Invalid parameter,"
                                                                         " after a symbol declaration");
+                        errorFlag = 0;
                         continue;
                     }
                 }
-                if (currLine->theLinePurpose == Tinstruction)
+                if (currTok->type == Tinstruction)
                 {
-                    if (currLine->data.instruction == DATA)
+                    if (currTok->data.instruction == DATA)
                     {
-                        currLine->data.line++;/*todo: possible one word approach.*/
-                        if (currLine->theLinePurpose == TnewLine)/*todo: possible one word approach.*/
+                        line = parseByTokens(line, currTok);
+                        if (currTok->type == TnewLine)
                         {
                             errorHandler(0, (int)currLine->data.lineNumber, "Expected data after"
-                                                                       " '.data' intruction");
+                                                                       " '.data' instruction. Got something else.");
+                            errorFlag = 0;
                             continue;
                         }
                     }
-                    while (currLine->theLinePurpose != TnewLine)
+                    while (currTok->type != TnewLine)
+                    {
+                        if(currTok->type == Tnumber)
+                        {
+                            
+                        }
+                    }
                 }
 
 
