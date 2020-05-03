@@ -12,9 +12,7 @@
 
 
 char fileName[20];
-int IC, DC;
-char* parsedLine;
-int lineCounter;
+int IC, DC, errorFlag, lineCounter;
 
 
 
@@ -24,98 +22,204 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
     FILE *fp;
     int filesCounter;
 
-    for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
-    {
+    for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++) {
 
         /*Initiate variables*/
         IC = 0;
         DC = 0;
+        errorFlag = 1;
         lineCounter = 0;
         char temp;
-        char* line;
+        char *line;
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
-        lineStruct* currLine = (lineStruct*) malloc(sizeof(lineStruct));
-        lineStruct* symbolLine = (lineStruct*) malloc(sizeof(lineStruct));
+        lineStruct *currLine = (lineStruct *) malloc(sizeof(lineStruct));
+        lineStruct *symbolLine = (lineStruct *) malloc(sizeof(lineStruct));
+        Token *currTok = (Token *) malloc(sizeof(Token));
+        Token *symbolTok = (Token *) malloc(sizeof(Token));
 
-        if ((currLine == NULL) || (symbolLine == NULL))
-        {
+        if ((currTok == NULL) || (symbolTok == NULL)) {
             errorHandler(1, 0, "ERROR: Memory allocation has failed.");
-            /*todo: update error flag?*/
+            errorFlag = 0;
             continue;/*Should i exit?*/
         }
 
-        while (fgets(line, MAX_LINE + 2, fp) != NULL)
-        {
-            currLine->data.line = line;
+        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL) {
+            currLine->data.line = originalLine;
+            line = originalLine;
             lineCounter++;
             currLine->data.lineNumber = lineCounter;
 
             /*Validations on input*/
 
-                /*Length of line validation*/
-                if (!strchr(line, '\n'))
+            /*Length of line validation*/
+            if (!strchr(line, '\n')) {
+                errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
+                errorFlag = 0;
+                /*To "cut" the rest  of the line.*/
+                while ((temp = fgetc(fp)) != '\n');
+                continue;
+            }
+
+            /*Parsing the first token on the input line.*/
+            line = parseByTokens(line, currTok);
+
+            /*Skip a  comment line\ newline*/
+            if ((currTok->type == ';') || (currTok->type == TnewLine)) continue;
+
+            if (currTok->type == Tsymbol) {
+                memcpy(symbolTok, currTok, sizeof(Token));/*Deal with the symbols later.*/
+                line = parseByTokens(line, currTok);
+
+                if (currTok->type == ':')/*The valid suffix of a symbol declaration.*/
                 {
-                    errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
-                    /*todo: update error flag?*/
-                    
-                    /*To "cut" the rest  of the line.*/
-                    while((temp = fgetc(fp)) != '\n');
+                    errorHandler(0, (int) currLine->data.lineNumber, "A symbol declaration must "
+                                                                     "end with a colon.");
+                    errorFlag = 0;
                     continue;
                 }
 
-                line = parseIntoLineStruct(currLine);
-
-                /*Skip a  comment line\ newline*/
-                if ((currLine->theLinePurpose == ';') || (currLine->theLinePurpose == TnewLine)) continue;
-
-                if (currLine->theLinePurpose == Tsymbol)
-                {
-                    memcpy(symbolLine, currLine, sizeof(lineStruct));/*Deal with the symbols later.*/
-                    currLine->data.line++;/*todo: possible one word approach.*/
-
-                    if (currLine->theLinePurpose == ':')/*The valid suffix of a symbol declaration.*/
-                    {
-                        errorHandler(0, (int)currLine->data.lineNumber, "A symbol declaration must "
-                                                                        "end with a colon.");/*todo: update error flag?*/
+                line = parseByTokens(line, currTok);
+                if (currTok->type == Tinstruction) {
+                    if ((currTok->data.instruction == EXTERN_MACRO) || (currTok->data.instruction == ENTRY_MACRO)) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "This instruction is not"
+                                                                         " valid after a symbol");
+                        errorFlag = 0;
                         continue;
                     }
-
-                    currLine->data.line++;/*todo: possible one word approach.*/
-                    if (currLine->theLinePurpose == Tinstruction)/*todo: possible one word approach.*/
-                    {
-                        if ((currLine->data.instruction == EXTERN_MACRO) || (currLine->data.instruction == ENTRY_MACRO))
-                        {
-                            errorHandler(0, (int)currLine->data.lineNumber, "This instruction is not"
-                                                                       " valid after a symbol");
-                            continue;/*todo: update error flag?*/
-                        }
-                        addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
-                    }
-                    else if (currLine->theLinePurpose == Tcommand)
-                    {
-                        addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
-                    }
-                    else
-                    {
-                        errorHandler(0, (int)currLine->data.lineNumber, "Invalid parameter,"
-                                                                        " after a symbol declaration");
-                        continue;
-                    }
+                    addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
+                } else if (currTok->type == Tcommand) {
+                    addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
+                } else {/*In case that after a symbol appears something that is not valid.*/
+                    errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
+                                                                     " after a symbol declaration");
+                    errorFlag = 0;
+                    continue;
                 }
-                if (currLine->theLinePurpose == Tinstruction)
-                {
-                    if (currLine->data.instruction == DATA)
+            }
+            if (currTok->type == Tinstruction) {
+                if (currTok->data.instruction == DATA) {
+                    line = parseByTokens(line, currTok);
+                    if (currTok->type == TnewLine) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "Expected data after"
+                                                                         " '.data' instruction. Got something else.");
+                        errorFlag = 0;
+                        continue;
+                    }
+                    while (currTok->type != TnewLine) {
+                        if (currTok->type == Tnumber) {
+                            addDataToArray(numberFromStruct);
+
+                            line = parseByTokens(line, currTok);
+
+                            /*Comma is a mandatory separator between values*/
+                            if (currTok->type == ',') {
+                                line = parseByTokens(line, currTok);
+                                if (currTok->type == TnewLine) {
+                                    errorHandler(0, (int) currLine->data.lineNumber, "The line ended"
+                                                                                     " with a comma.");
+                                    errorFlag = 0;
+                                }
+                            } else if (currTok->type == TnewLine) break; /*end of data.*/
+                            else {
+                                errorHandler(0, (int) currLine->data.lineNumber, "Expected a number on "
+                                                                                 ".data instruction. Got other variable.");
+                                errorFlag = 0;
+                                break;
+                            }
+
+                        } else {
+                            errorHandler(0, (int) currLine->data.lineNumber, "Expected a number on "
+                                                                             ".data instruction. Got other variable.");
+                            errorFlag = 0;
+                            break;
+                        }
+                    }
+                } else if (currTok->data.instruction == EXTERN_MACRO) {
+                    line = parseByTokens(line, currTok);/*A symbol is expected.*/
+                    if (currTok->type != Tsymbol) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "An .extern must be"
+                                                                         " followed by a symbol declaration.");
+                        errorFlag = 0;
+                        continue;
+                    }
+
+                    memcpy(symbolTok, currTok, sizeof(Token));/*Deal with the symbol later.*/
+                    line = parseByTokens(line, currTok);
+                    if (currTok->type != TnewLine) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "Invalid instruction to"
+                                                                         " follow a symbol");
+                        errorFlag = 0;
+                        continue;
+                    }
+                    addToSynmbolTable(, , ,);
+                } else if (currTok->data.instruction == ENTRY_MACRO) {
+                    line = parseByTokens(line, currTok);
+                    if (currTok->type != Tsymbol) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "A symbol must "
+                                                                         "only follow an .extern.");
+                        continue;
+                    }
+                    memcpy(symbolTok, currTok, sizeof(Token));/*Deal with the symbol later.*/
+                    line = parseByTokens(line, currTok);
+                    if (currTok->type != TnewLine) {
+                        errorHandler(0, (int) currLine->data.lineNumber, "Invalid instruction "
+                                                                         "to follow a symbol.");
+                        errorFlag = 0;
+                    }
+                    addToSynmbolTable(, , ,);
+                }
+
+                    /*In case of a string token.*/
+                else if (currTok->data.instruction == STRING) {
+                    line = parseByTokens(line, currTok);
+                    /*Check for an empty string*/
+                    if (currTok->data.string[0] == '/0') {
+                        errorHandler(0, (int) currLine->data.lineNumber, "Invalid string");
+                        errorFlag = 0;
+                        continue;
+                    } else/*In caes of a valid string*/
                     {
-                        currLine->data.line++;/*todo: possible one word approach.*/
-                        if (currLine->theLinePurpose == TnewLine)/*todo: possible one word approach.*/
-                        {
-                            errorHandler(0, (int)currLine->data.lineNumber, "Expected data after"
-                                                                       " '.data' intruction");
+                        addStringToDataArray(currTok->data.string);
+
+
+                        line = parseByTokens(line, currTok);
+                        if (currTok->type != TnewLine) {
+                            errorHandler(0, (int) currLine->data.lineNumber, "A string must "
+                                                                             "be followed by a new line character.");
+                            errorFlag = 0;
                             continue;
                         }
                     }
-                    while (currLine->theLinePurpose != TnewLine)
+
                 }
+
+                /*This is the core of the program- the translation.*/
+            } else if (currTok->type == Tcommand) line = translateCmmoand(currTok, line);/*todo: Put translation signature here.*/
+            else {
+                errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter");
+                continue;
+            }
+        }
+
+
+        /*=========================================End of first run over==================================*/
+
+        /*Running over the symbol table(second run over)*/
+        secondRunOver(); /*This one will run over the symbol table*/
+
+        /*Free all dynamic memory allocation.*/
+        free(originalLine);
+        free(currLine);
+        free(symbolLine);
+        free(currTok);
+        free(symbolTok);
+
+
+    }
+}
+
+
+
 
 
 
@@ -164,10 +268,10 @@ int assembler(char const* filesToInterpret[], int numOfFiles) {
 //
 //            }
 
-        }
-     }
 
-}
+
+
+
 
 //    int linesIdx, bufferCounter;
 //        lineStruct *lineStructMain, *lineStructTemp;
