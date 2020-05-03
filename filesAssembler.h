@@ -20,4 +20,7 @@
  */
 int assembler(char const* filesToInterpret[], int numOfFiles);
 
+/*A symbol table instance, coded by a linked list.*/
+extern linkedListPtr symbolTable;
+
 #endif //MAABADA_MMN14_FILESASSEMBLER_H
