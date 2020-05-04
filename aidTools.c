@@ -539,3 +539,4 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     /*All good.*/
     return fp;
 }
+
