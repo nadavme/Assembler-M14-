@@ -3,6 +3,8 @@
 //
 
 #include "filesAssembler.h"
+#include "aidTools.h"
+#include "memoryMap.h"
 
 
 #define INPUT_SUFFIX ".as"
@@ -135,7 +137,8 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                     {
                         if (currTok->type == Tnumber)
                         {
-                            addDataToArray(numberFromStruct);
+                            /*The data will be added if not in the table already.*/
+                            addDataToTable(dataTable, currTok->data.number);
 
                             /*Parsing the first token on the input line.*/
                             line = parseByTokens(line, currTok);
@@ -240,6 +243,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                     }
                     else/*In caes of a valid string*/
                     {
+                        /*todo: fix*/
                         addStringToDataArray(currTok->data.string);
 
                         /*Parsing the first token on the input line.*/

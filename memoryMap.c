@@ -90,11 +90,11 @@ void addDataNodeToStart(dataLinkedListPtr list,char ch, int x, bool isItString)
     {
         dataNodePtr searchedNode = list->head;
         while (searchedNode!=NULL)
-    {
+        {
         if(address == searchedNode->address)
             return searchedNode;
         searchedNode = searchedNode->next;
-    }
+        }
     return searchedNode;
     }
 
