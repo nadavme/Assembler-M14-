@@ -121,3 +121,5 @@ int addDataToTable(dataLinkedListPtr list, int x); /*if the data is already in t
  */
 int addCharToTable(dataLinkedListPtr list,char ch);  /*if the address is already in the table - 
     return 1. else if the insertion went well - return 0. */
+
+void addStringToDataTable(dataLinkedListPtr list, char *str);/*adding a string to the data table.*/
