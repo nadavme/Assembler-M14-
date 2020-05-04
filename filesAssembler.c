@@ -4,6 +4,7 @@
 
 #include "filesAssembler.h"
 
+
 #define INPUT_SUFFIX ".as"
 #define OUTPUT_SUFFIX ".ob"
 #define EXTERN_OUTPUT_SUFFIX ".ent"
@@ -40,6 +41,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         Token *currTok = (Token *) malloc(sizeof(Token));
         Token *symbolTok = (Token *) malloc(sizeof(Token));
         symbolTable = NULL;
+        dataTable = NULL;
 
 
         if ((currTok == NULL) || (symbolTok == NULL))

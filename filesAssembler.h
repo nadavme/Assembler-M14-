@@ -22,7 +22,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles);
 
 /*A symbol table instance, coded by a linked list.*/
 extern linkedListPtr symbolTable;
-
-dataLinkedListPtr newDataList();/*a funtion to create a new data table (linked list)*/
+/*A symbol table instance, coded by a linked list.*/
+extern dataLinkedListPtr dataTable;/*a funtion to create a new data table (linked list)*/
 
 #endif //MAABADA_MMN14_FILESASSEMBLER_H

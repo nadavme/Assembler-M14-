@@ -3,6 +3,7 @@
 //
 
 #include "firstRunOver.h"
+#include "filesAssembler.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
