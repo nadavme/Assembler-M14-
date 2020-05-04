@@ -46,6 +46,12 @@ nodePtr newNode(char *symbolName, int address1, int isExternal1);
 void freeNode(nodePtr toFree);
 
 /*!
+*
+*@param toFree
+*/
+void freeSymbolsTable(linkedListPtr toFree);/* a function to free the memory of symbols table*/
+
+/*!
  *
  * @return
  */

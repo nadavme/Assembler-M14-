@@ -33,10 +33,16 @@ void freeNode(nodePtr toFree)
     }
     if (toFree->symbolName != NULL)
     {
-        free(toFree->symbolName);
+        free(toFree->symbolName);/* maybe I need to free anything else from struct????*/
     }
     freeNode(toFree->next);
     free(toFree);
+}
+
+void freeSymbolsTable(linkedListPtr toFree)
+{
+    freeNode(toFree->head);
+    return;
 }
 
 linkedListPtr newList()
