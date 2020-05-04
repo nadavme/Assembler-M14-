@@ -16,7 +16,7 @@
 #include "permanantTables.h"
 #include "main.c"
 #include "filesAssembler.h"
-#include "aidTools.c"
+
 
 #define MAX_DIGITS_BIN 100
 #define MAX_DIGITS_DEC 10
@@ -286,5 +286,9 @@ char* parseByTokens(char* line, Token* currTok);
  * @return
  */
 FILE* manageFiles(const char* file, char* suffix, char* mode);
+
+void createObFile(char* file);
+
+void createObFile(char* file);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H

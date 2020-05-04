@@ -88,7 +88,7 @@ dataNodePtr searchDataInList(int address, linkedListPtr list) /*if the data with
         if (address == searchedNode->address)
             return searchedNode;
         searchedNode = searchedNode->next;
-    }
+        }
     return searchedNode;
 }
 

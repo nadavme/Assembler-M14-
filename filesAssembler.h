@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "secondRunOver.h"
+#include "memory.h"
 
 extern int DC, IC;
 
