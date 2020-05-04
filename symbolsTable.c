@@ -8,6 +8,7 @@
 #include "symbolsTable.h"
 #include "filesAssembler.h"
 
+
 nodePtr newNode(char *symbolName, int address1, int isExternal1)
 {
     nodePtr new;
