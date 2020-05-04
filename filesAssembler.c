@@ -20,7 +20,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
     int filesCounter;
-    int IC, DC, errorFlag, lineCounter;
+    int errorFlag, lineCounter;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
