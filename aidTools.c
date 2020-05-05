@@ -514,7 +514,6 @@ char *parseByTokens(char* line, Token *currTok)
     }
     return line;
 }
-/*todo: add validation on mioon okef and ogerYashir*/
 /*todo: fix comments*/
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
@@ -525,7 +524,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
     /* Getting the the first operand into an array of operands */
     line = parseByTokens(line, &(operands[opCounter]));/*[0]*/
 
-    if (operands[opCounter].type == Tnumber) /* cant be a number without '#' */
+    if (operands[opCounter].type == Tnumber) /* Number must follow an '#' */
     {
         errorHandler(0, (int) currLine->data.lineNumber, "In a command, a number must"
                                                          " follow an  hash ('#') sign");
@@ -533,9 +532,9 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
     }
     if (operands[opCounter].type == '#') /* InstantAddressing */
     {
-        line = parseByTokens(line, &(operands[opCounter])); /* get the number */
+        line = parseByTokens(line, &(operands[opCounter])); /* Get the number */
 
-        if (operands[opCounter].type != Tnumber) /* a # sign without a number after */
+        if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
         {
             errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a number must "
                                                         "follow an  hash ('#') sign");
@@ -545,9 +544,9 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
     if (operands[opCounter].type == '*') /* registerBypassAddressing */
     {
-        line = parseByTokens(line, &(operands[opCounter])); /* get the register */
+        line = parseByTokens(line, &(operands[opCounter])); /* Get the register */
 
-        if (operands[opCounter].type != Tregister) /* a # sign without a number after */
+        if (operands[opCounter].type != Tregister) /* In a case of a * sign without a register after */
         {
             errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a * must "
                                                               "be followed by a register");
@@ -563,10 +562,10 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
         /*We collected two operand so far*/
 
-        if (operands[opCounter].type == ',') /* So there going to be 2 operands, separated with comma */
+        if (operands[opCounter].type == ',') /* So 2 operands are expected, separated by a comma */
         {
-            line = parseByTokens(line, &(operands[opCounter])); /* get the second operand */
-            if (operands[opCounter].type == Tnumber) /* cant be a number without '#' */
+            line = parseByTokens(line, &(operands[opCounter])); /* Get the second operand */
+            if (operands[opCounter].type == Tnumber) /* In a case of a # sign without a number after */
             {
                 errorHandler(0, (int) currLine->data.lineNumber, "number must begin"
                                                                  " with hash ('#') sign");
@@ -574,8 +573,8 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
             }
             if (operands[opCounter].type == '#') /* instantAddressing */
             {
-                line = parseByTokens(line, &(operands[opCounter])); /* get the number */
-                if (operands[opCounter].type != Tnumber) /* a # sign without a number after */
+                line = parseByTokens(line, &(operands[opCounter])); /* Get the number */
+                if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
                 {
                     errorHandler(0 , (int) currLine->data.lineNumber, "number must follow '#'");
                     return line;
@@ -584,9 +583,9 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
             if (operands[opCounter].type == '*') /* registerBypassAddressing */
             {
-                line = parseByTokens(line, &(operands[opCounter])); /* get the register */
+                line = parseByTokens(line, &(operands[opCounter])); /* Get the register */
 
-                if (operands[opCounter].type != Tregister) /* a # sign without a number after */
+                if (operands[opCounter].type != Tregister) /* a * sign without a register after */
                 {
                     errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a * must "
                                                                       "be followed by a register");
@@ -594,18 +593,19 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
                 }
             }
 
-            if (operands[opCounter].type == TnewLine) /* missing operand */
+            if (operands[opCounter].type == TnewLine) /* Missing an operand */
             {
                 errorHandler(0, (int) currLine->data.lineNumber, "comma at the end of the line");
             }
-            else /* valid operand */
+            else /* A valid operand */
             {
-                opCounter++; /* two operands */
+                opCounter++; /* Two operands */
                 line = parseByTokens(line, &(operands[opCounter]));
 
-                if (operands[opCounter].type != TnewLine) /* after two operands must be end of the line */
+                if (operands[opCounter].type != TnewLine) /* After two operands theend of the line char must appears */
                 {
-                    errorHandler(0, (int) currLine->data.lineNumber,"invalid parameter after the operands ");
+                    errorHandler(0, (int) currLine->data.lineNumber,"invalid parameter"
+                                                                    " after the operands ");
                     return line;
                 }
             }
@@ -618,7 +618,6 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         return line;
     }
 
-    /*todo: tallk to yair*/
     /* adds the commands and the operands into the instruction array */
     add_to_instruction_array(command, operands, opCounter);
     return line;
