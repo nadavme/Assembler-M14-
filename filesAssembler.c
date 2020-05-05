@@ -43,8 +43,8 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         lineStruct *symbolLine = (lineStruct *) malloc(sizeof(lineStruct));
         Token *currTok = (Token *) malloc(sizeof(Token));
         Token *symbolTok = (Token *) malloc(sizeof(Token));
-        symbolTable = NULL;
-        dataTable = NULL;
+        linkedListPtr symbolTable = newList();
+        dataLinkedListPtr dataTable = newDataList();
 
 
         if ((currTok == NULL) || (symbolTok == NULL))

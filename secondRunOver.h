@@ -9,9 +9,9 @@
 
 /*!
  *
- * @param lineStruct
+ * @param symbolTable
  * @return
  */
-int secondRunOver(lineStruct lineStruct);
+int secondRunOver(linkedListPtr symbolTable);
 
 #endif //MAABADA_MMN14_SECONDRUNOVER_H

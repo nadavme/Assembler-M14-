@@ -58,7 +58,7 @@ typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
 /*!
  *
  */
-typedef enum ARE { relocatable = 0, external, absolute } ARE;
+typedef enum ARE { external = 0, relocatable, absolute } ARE;
 
 /*!
  *
