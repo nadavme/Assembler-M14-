@@ -23,40 +23,47 @@ struct opTable
     char *codeName;
     unsigned int word;
     int numOfOperands;
+    int sourceAddressingMethods[4];
+    int destAddressingMethods[4];
 }
+/* addressing methods:
+	0: instant addressing
+	1: direct addressing
+	2: register bypass
+	3: register direct */
 commandsTable[] =
 {
-        {"mov", (unsigned short) 2032, 2},
+        {"mov", (unsigned short) 2032, 2,{ 1,1,1,1 },{ 0,1,1,1 }},
 
-        {"cmp", (unsigned short) 4088, 2},
+        {"cmp", (unsigned short) 4088, 2,{ 1,1,1,1 },{ 1,1,1,1 }},
 
-        {"add", (unsigned short) 6128, 2},
+        {"add", (unsigned short) 6128, 2,{ 1,1,1,1 },{ 0,1,1,1 }},
 
-        {"sub", (unsigned short) 8176, 2},
+        {"sub", (unsigned short) 8176, 2,{ 1,1,1,1 },{ 0,1,1,1 }},
 
-        {"lea", (unsigned short) 8560, 2},
+        {"lea", (unsigned short) 8560, 2,{ 1,0,0,0 },{ 0,1,1,1 }},
 
-        {"clr", (unsigned short) 10352, 1},
+        {"clr", (unsigned short) 10352, 1,{ 0,0,0,0 },{ 0,1,1,1 }},
 
-        {"not", (unsigned short) 12400, 1},
+        {"not", (unsigned short) 12400, 1,{ 0,0,0,0} ,{ 0,1,1,1 }},
 
-        {"inc", (unsigned short) 14448, 1},
+        {"inc", (unsigned short) 14448, 1,{ 0,0,0,0} ,{ 0,1,1,1 }},
 
-        {"dec", (unsigned short) 16496, 1},
+        {"dec", (unsigned short) 16496, 1,{ 0,0,0,0} ,{ 0,1,1,1 }},
 
-        {"jmp", (unsigned short) 18480, 1},
+        {"jmp", (unsigned short) 18480, 1,{ 0,0,0,0} ,{ 0,1,1,0 }},
 
-        {"bne", (unsigned short) 20528, 1},
+        {"bne", (unsigned short) 20528, 1,{ 0,0,0,0} ,{ 0,1,1,0 }},
 
-        {"red", (unsigned short) 22640, 1},
+        {"red", (unsigned short) 22640, 1,{ 0,0,0,0} ,{ 0,1,1,1 }},
 
-        {"prn", (unsigned short) 24696, 1},
+        {"prn", (unsigned short) 24696, 1,{ 0,0,0,0} ,{ 1,1,1,1 }},
 
-        {"jsr", (unsigned short) 26672, 1},
+        {"jsr", (unsigned short) 26672, 1,{ 0,0,0,0} ,{ 0,1,1,0 }},
 
-        {"rts", (unsigned short) 28672, 0},
+        {"rts", (unsigned short) 28672, 0,{ 0,0,0,0} ,{ 0,0,0,0 }},
 
-        {"stop", 30720, 0}
+        {"stop", 30720, 0,{ 0,0,0,0} ,{ 0,0,0,0 }}
 };
 
 

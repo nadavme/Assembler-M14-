@@ -93,7 +93,7 @@ void turn_On_bit_num(int place) /*this function turn on the bit at 'place' of th
 }
 
 /*
-this function gets a lineStruct, and returns it's addressing mode:
+this function gets a LineStruct, and returns it's addressing mode:
 instantAddressing,
 directAddressing,
 registerBypass
@@ -153,7 +153,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void add_to_comands_array(lineStruct *command, int operands_cnt)
+void add_to_comands_array(LineStruct *command, int operands_cnt)
 {
     int i;
     /* adding the command word now.*/
@@ -284,7 +284,7 @@ int isBothOperandsRegs(int x, int y) /*this function is checking if both operand
     return 0;
 }
 
-void weShare(lineStruct x) /*this function inserts 2 operands that use registers to 1 memory word.*/
+void weShare(LineStruct x) /*this function inserts 2 operands that use registers to 1 memory word.*/
 {
     add_to_arr(x.data.reg_op1,SRC_REG);
     add_to_arr(x.data.reg_op2,DEST_REG);
@@ -626,7 +626,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
 /*todo: edit comments*/
 /*todo: add validation on mioon okef and ogerYashir*/
-int operandsValidation(struct LineStruct* currLine, Token* operands, int opCounter)
+int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
 {
     int numOfOperands = commandsTable[currLine->data.command].numOfOperands; /* getting the data from the commands table */
 
@@ -650,22 +650,23 @@ int operandsValidation(struct LineStruct* currLine, Token* operands, int opCount
 
         /* Only destination addressingMethod is defined, one operand */
         {
-            if ((commandsTable[currLine->data.command].dest_addressing_modes)[get_addressing_mode(operands[0])]) /* the only operand */
+            if ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod
+            (operands[0])]) /* the only operand */
             {
-                return 1;
+                return 0;
             }
         }
     }
     else /* two operands */
     {
-        if (((commands_table[command->data.command].source_addressing_modes)[get_addressing_mode(operands[0])])
-            && ((commands_table[command->data.command].dest_addressing_modes)[get_addressing_mode(operands[1])]))
+        if (((commandsTable[currLine->data.command].sourceAddressingMethods)[parseAddressingMethod(operands[0])])
+            && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
-            return 1; /* is valid */
+            return 0; /* is valid */
         }
     }
-    print_error(PRINT_NUMBER, "invalid operand");
-    return 0;
+    errorHandler(0,(int) currLine->data.lineNumber ,"invalid operand");
+    return 1;
 }
 
 
@@ -673,7 +674,9 @@ int parseAddressingMethod(Token operand)
 {
     if (operand.type == Tnumber) return instantAddressing;
     if (operand.type == Tsymbol) return directAddressing;
-    if (operand.type == Tregister) return re
+    if (operand.type == Tregister) return registerDirect;
+    if (operand.type == '*') return registerBypass;
+
 }
 
 FILE* manageFiles(const char* file, char* suffix, char* mode)

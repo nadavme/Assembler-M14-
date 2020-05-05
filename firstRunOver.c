@@ -7,7 +7,7 @@
 int ARGS_NUM = 0;
 
 
-int runFirst(lineStruct linaStruct, int lineIdx)
+int runFirst(LineStruct linaStruct, int lineIdx)
 {
 
     return 0;

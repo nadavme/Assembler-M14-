@@ -39,8 +39,8 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         char temp;
         char *line;
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
-        lineStruct *currLine = (lineStruct *) malloc(sizeof(lineStruct));
-        lineStruct *symbolLine = (lineStruct *) malloc(sizeof(lineStruct));
+        LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
+        LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
         Token *currTok = (Token *) malloc(sizeof(Token));
         Token *symbolTok = (Token *) malloc(sizeof(Token));
         symbolTable = NULL;
@@ -101,10 +101,10 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addSymbolToTable(, , DATA)/*todo: adapt it to the version of lineStruct.*/
+                    addSymbolToTable(, , DATA)/*todo: adapt it to the version of LineStruct.*/
 
                 } else if (currTok->type == Tcommand) {
-                    addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
+                    addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of LineStruct.*/
 
                 } else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
@@ -238,7 +238,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
             {
                 currLine->theLinePurpose = Tcommand;
 
-                /*Validates command sentences, and prepering the current lineStruct to translation*/
+                /*Validates command sentences, and prepering the current LineStruct to translation*/
                 fillCurrLineStruct(currLine, line);
 
                 /* NADAV, IS IT OK THE PLACE I PLACED IT? also, please enter
@@ -347,7 +347,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 
 
 //    int linesIdx, bufferCounter;
-//        lineStruct *lineStructMain, *lineStructTemp;
+//        LineStruct *lineStructMain, *lineStructTemp;
 //
 //        linesIdx = 0, bufferCounter = BUFSIZ;
 //        sprintf(fileName, "%s%s", filesToInterpret[filesCounter], INPUT_SUFFIX);
@@ -362,14 +362,14 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 //        lineCounter = 0;
 //
 //        /*Allocate memory dynamically.*/
-//        lineStructMain = malloc(sizeof(lineStruct) * BUFSIZ);
+//        lineStructMain = malloc(sizeof(LineStruct) * BUFSIZ);
 //        lineStructMain = NULL;
 //        lineStructMain[linesIdx].line = malloc(sizeof(char) * MAX_LINE);
 //
 //        while ((fgets(lineStructMain[linesIdx].line, 82, fp) != EOF)) {
 //            if (linesIdx == bufferCounter) {
 //                bufferCounter += BUFSIZ;
-//                lineStructTemp = realloc(lineStructMain, sizeof(lineStruct) * bufferCounter);
+//                lineStructTemp = realloc(lineStructMain, sizeof(LineStruct) * bufferCounter);
 //                if (lineStructTemp) {
 //                    lineStructMain = lineStructTemp;
 //                } else {

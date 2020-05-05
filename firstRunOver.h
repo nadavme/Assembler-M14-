@@ -72,7 +72,7 @@ typedef struct third_word /*word for methods 2,3 (mio'n methods)*/
  * @param lineIdx
  * @return
  */
-int runFirst(lineStruct linaStruct, int lineIdx);
+int runFirst(LineStruct linaStruct, int lineIdx);
 
 /*!
  *

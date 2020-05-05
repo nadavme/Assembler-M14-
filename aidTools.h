@@ -124,7 +124,7 @@ typedef struct LineStruct
 
     }data;
 
-} lineStruct;
+} LineStruct;
 
 enum memory_word_toShift
 { 
@@ -144,7 +144,7 @@ enum memory_word_toShift
  * @param operands_cnt
  * @return
  */
-void add_to_comands_array(lineStruct *command, int operands_cnt);
+void add_to_comands_array(LineStruct *command, int operands_cnt);
 
 /*!
  *
@@ -160,7 +160,7 @@ int isBothOperandsRegs(int x,int y);/*this function check if both operands X and
  * 
  * 
  */
-void weShare(lineStruct x); /*this function inserts 2 operands that use registers to 1 memory word.*/
+void weShare(LineStruct x); /*this function inserts 2 operands that use registers to 1 memory word.*/
 
 
 /*!
@@ -281,7 +281,7 @@ char* parseByTokens(char* line, Token* currTok);
 char* fillCurrLineStruct(LineStruct* currLine, char* line);
 
 
-int operandsValidation(struct LineStruct* currLine, Token* operands, int opCounter);
+int operandsValidation(LineStruct* currLine, Token* operands, int opCounter);
 
 int parseAddressingMethod(Token operand)
 
