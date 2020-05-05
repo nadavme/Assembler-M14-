@@ -9,14 +9,14 @@
 #include "filesAssembler.h"
 
 /* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
-void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
+void add_to_symbol_table(nodePtr head, Token *symbol, int status, int lineNumber)
 {
 	nodePtr node = (nodePtr)malloc(sizeof(node));
 	nodePtr curr;
 
 	if (!node)
 	{
-		errorHandler(1, (int)symbol->data.lineNumber, "Memory allocation has failed");
+		errorHandler(1, -1, "Memory allocation has failed");
 		return;
 	}
 	if ((curr = searchSymbolNameInList(symbol->data.symbol, head)) == NULL) /* this is a new SYMBOL to add */
@@ -62,7 +62,7 @@ void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
 			case CODE_SYMBOL_DECLARATION:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
 				{
-                    errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+                    errorHandler(1, lineNumber, "symbol declared twice");
 					return;
 				}
 				else /* adding the addres */
@@ -77,7 +77,7 @@ void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
 			case DATA_SYMBOL:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
 				{
-					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					errorHandler(1, lineNumber, "symbol declared twice");
 					return;
 				}
 				else
@@ -89,7 +89,7 @@ void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
 			case ENTRY_SYMBOL:
 				if (curr->entry_extern != NOT_DECLARED)
 				{
-					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					errorHandler(1, lineNumber, "symbol declared twice");
 					return;
 				}
 				else
@@ -100,7 +100,7 @@ void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
 			case EXTERN_SYMBOL:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern != NOT_DECLARED))
 				{
-					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					errorHandler(1, lineNumber, "symbol declared twice");
 					return;
 				}
 				else
@@ -134,7 +134,8 @@ int add_symbol_occurrence(occPtr head, int line)
 }
 
 
-nodePtr newNode(char *symbolName, int address1, int entry_extern)
+nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a possible bug - theres no decleration for 
+                                                                                            occurences linked list*/
 {
     nodePtr new;
     int nameLen = 0;
@@ -146,9 +147,25 @@ nodePtr newNode(char *symbolName, int address1, int entry_extern)
     new = calloc(1, sizeof(node));
     new->symbolName = calloc(nameLen + 1, sizeof(char));
     strncpy(new->symbolName, symbolName, nameLen);
-    new->address = address1;
+    new->address = DC;
     new->entry_extern = entry_extern;
+    new->data_or_instruction = data_or_instruction;
     return new;
+}
+
+/* frees the memory of the occurance list in each node */
+void free_occur_list(occPtr head)
+{
+	occPtr curr;
+	if (*head != NULL)
+	{
+		curr = (head)->next;
+		for (; curr; curr = curr->next) {
+			free(head);
+			head = curr;
+		}
+		free(head);
+	}
 }
 
 void freeNode(nodePtr toFree)
@@ -159,6 +176,7 @@ void freeNode(nodePtr toFree)
     }
     if (toFree->symbolName != NULL)
     {
+        free_occur_list(&(curr->occurrence));/*freeing the allocated memory of the occurences linked list*/
         free(toFree->symbolName);/* maybe I need to free anything else from struct????*/
     }
     freeNode(toFree->next);
@@ -174,37 +192,6 @@ void freeSymbolsTable(linkedListPtr toFree)
 linkedListPtr newList()
 {
     return calloc(1, sizeof(struct linkedList));
-}
-
-void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isExternal1)
-{
-    nodePtr new, nodePtr1;
-    if (list == NULL || symbolName == NULL)
-    {
-        return;
-    }
-    new = newNode(symbolName, address1, isExternal1);
-    if (!list->size)
-    {
-        list->head = new;
-    }
-    else
-    {
-        for (nodePtr1 = list->head; nodePtr1->next; nodePtr1 = nodePtr1->next)
-            ;
-
-        nodePtr1->next = new;
-    }
-    new->next = NULL;
-    list->size++;
-}
-
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isExternal1)
-{
-    nodePtr new = newNode(symbolName, address1, isExternal1);
-    new->next = list->head;
-    list->head = new;
-    list->size = list->size + 1;
 }
 
 nodePtr searchSymbolNameInList(char symbolName[], nodePtr head)
@@ -256,11 +243,6 @@ void printNode(nodePtr node)
     {
         return;
     }
-    /*if ((node->next == NULL) && node->counter == 1)
-            printf("%s - 1 time\n", node->symbolName);
-
-        else if (node->next == NULL)
-            printf("%s - %d times\n", node->symbolName,node->counter); */
 
     else
         printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);
@@ -278,25 +260,5 @@ int listIsEmpty(linkedListPtr listPtr)
     {
         return 1;
     }
-    return 0;
-}
-
-int addSymbolToTable(char *symbolName, linkedListPtr list, int isExternal) /*if the symbol is already in the table - 
-    return 1. else if the insertion went well - return 0. */
-{
-    if (searchSymbolNameInList(symbolName, list) != NULL)
-    {
-        printf("Error!\n The symbol is already in the table.");
-        return 1;
-    }
-    if (listIsEmpty(list) == 1)
-    {
-        addNodeToStart(list, symbolName, DC + 100, isExternal);
-        IC++;
-        return 0;
-    }
-
-    addNodeToEnd(list, symbolName,  DC, isExternal);
-    IC++;
     return 0;
 }

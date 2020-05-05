@@ -45,6 +45,23 @@ enum symbol_type {
 };
 
 /*!
+ * this function adds a SYMBOL into the SYMBOL table, while doing validation chacks
+ * @param head
+ * @param symbol
+ * @param status
+ */
+void add_to_symbol_table(nodePtr head, Token *symbol, int status, int lineNumber);
+
+
+/*!
+ * this function adds a SYMBOL into the SYMBOL table, while doing validation checks
+ * @param symbolName
+ * @param entry_extern
+ * @param data_or_instruction
+ */
+nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction);
+
+/*!
  *
  * @param str
  * @return
@@ -80,24 +97,6 @@ linkedListPtr newList();
 
 /*!
  *
- * @param list
- * @param symbolName
- * @param address1
- * @param isExternal1
- */
-void addNodeToEnd(linkedListPtr list, char *symbolName, int address1, int isExternal1);
-
-/*!
- *
- * @param list
- * @param symbolName
- * @param address1
- * @param isExternal1
- */
-void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isExternal1);
-
-/*!
- *
  * @param symbolName
  * @param list
  * @return
@@ -129,16 +128,6 @@ int listIsEmpty(linkedListPtr listPtr);
  * @return
  */
 int strToInt(char c[]);
-
-/*!
- *
- * @param parsedLine
- * @param list
- * @param dc
- * @param isExternal
- * @return
- */
-int addSymbolToTable(char *symbolName, linkedListPtr list, int isExternal);
 
 /*!
  *
