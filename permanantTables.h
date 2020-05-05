@@ -24,7 +24,7 @@ struct opTable
     unsigned int word;
     int numOfOperands;
 }
-commandTable[] =
+commandsTable[] =
 {
         {"mov", (unsigned short) 2032, 2},
 
