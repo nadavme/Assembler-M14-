@@ -5,8 +5,9 @@
 #include "secondRunOver.h"
 
 
-int runSecond(lineStruct lineStruct)
+int secondRunOver()
 {
+
 
     return 0;
 }

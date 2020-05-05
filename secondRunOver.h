@@ -12,6 +12,6 @@
  * @param lineStruct
  * @return
  */
-int runSecond(lineStruct lineStruct);
+int secondRunOver(lineStruct lineStruct);
 
 #endif //MAABADA_MMN14_SECONDRUNOVER_H
