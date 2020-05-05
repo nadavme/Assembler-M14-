@@ -569,7 +569,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
         line = parseByTokens(line, &(operands[opCounter]));
 
-        /*We collected two operand so far*/
+        /*We collected two operands so far*/
 
         if (operands[opCounter].type == ',') /* So 2 operands are expected, separated by a comma */
         {
@@ -620,9 +620,10 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
             else /* A valid operand */
             {
                 opCounter++; /* Two operands */
+
                 line = parseByTokens(line, &(operands[opCounter]));
 
-                if (operands[opCounter].type != TnewLine) /* After two operands theend of the line char must appears */
+                if (operands[opCounter].type != TnewLine) /* After two operands the end of the line char must appears */
                 {
                     errorHandler(0, (int) currLine->data.lineNumber,"invalid parameter"
                                                                     " after the operands ");
@@ -677,6 +678,8 @@ int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
             (operands[0])]) /* the only operand */
             {
                 currLine->data.operand1 = parseAddressingMethod(operands[0]);
+                currLine->data.reg_op1 = operands[0].data.reg;
+
                 return 0;
             }
         }
@@ -687,6 +690,9 @@ int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
             && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
             currLine->data.operand1 = parseAddressingMethod(operands[0]);
+            currLine->data.reg_op1 = operands[0].data.reg;
+
+            currLine->data.reg_op2 = operands[1].data.reg;
             currLine->data.operand2 = parseAddressingMethod(operands[1]);
 
             return 0; /* is valid */
