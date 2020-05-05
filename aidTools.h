@@ -144,7 +144,7 @@ enum memory_word_toShift
  * @param operands_cnt
  * @return
  */
-void add_to_comands_array(LineStruct *command, int operands_cnt);
+void addToComandsArray(LineStruct *command, int operands_cnt);
 
 /*!
  *

@@ -153,7 +153,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void add_to_comands_array(LineStruct *command, int operands_cnt)
+void addToComandsArray(LineStruct *command, int operands_cnt)
 {
     int i;
     /* adding the command word now.*/
@@ -509,7 +509,7 @@ char *parseByTokens(char* line, Token *currTok)
 
     /*We understand that the line is a special character. returns the ascii value of the character.*/
     {
-        currTok->theLinePurpose = currLine->data.line;
+        currTok->type = *line;
         line++;
     }
     return line;
@@ -532,7 +532,9 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
     }
     if (operands[opCounter].type == '#') /* InstantAddressing */
     {
-        line = parseByTokens(line, &(operands[opCounter])); /* Get the number */
+        line = parseByTokens(line, &(operands[opCounter]));/* Get the number */
+
+
 
         if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
         {
@@ -540,6 +542,9 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
                                                         "follow an  hash ('#') sign");
             return line;
         }
+
+        currLine->data.number1 = (operands[opCounter]).data.number;
+        currLine->data.operand1 = instantAddressing;
     }
 
     if (operands[opCounter].type == '*') /* registerBypassAddressing */
@@ -552,12 +557,16 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
                                                               "be followed by a register");
             return line;
         }
+
+        currLine->data.reg_op1 = (operands[opCounter]).data.reg;
+        currLine->data.operand1 = registerBypass;
     }
     /*We collected one operand so far*/
 
     if (operands[opCounter].type != TnewLine) /* If true - it means there are operands */
     {
         opCounter++;
+
         line = parseByTokens(line, &(operands[opCounter]));
 
         /*We collected two operand so far*/
@@ -565,6 +574,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         if (operands[opCounter].type == ',') /* So 2 operands are expected, separated by a comma */
         {
             line = parseByTokens(line, &(operands[opCounter])); /* Get the second operand */
+
             if (operands[opCounter].type == Tnumber) /* In a case of a # sign without a number after */
             {
                 errorHandler(0, (int) currLine->data.lineNumber, "number must begin"
@@ -574,16 +584,22 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
             if (operands[opCounter].type == '#') /* instantAddressing */
             {
                 line = parseByTokens(line, &(operands[opCounter])); /* Get the number */
+
                 if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
                 {
                     errorHandler(0 , (int) currLine->data.lineNumber, "number must follow '#'");
                     return line;
                 }
+
+                currLine->data.number2 = (operands[opCounter]).data.number;
+                currLine->data.operand2 = instantAddressing;
             }
 
             if (operands[opCounter].type == '*') /* registerBypassAddressing */
             {
+
                 line = parseByTokens(line, &(operands[opCounter])); /* Get the register */
+
 
                 if (operands[opCounter].type != Tregister) /* a * sign without a register after */
                 {
@@ -591,6 +607,10 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
                                                                       "be followed by a register");
                     return line;
                 }
+
+                currLine->data.reg_op2 = (operands[opCounter]).data.reg;
+                currLine->data.operand2 = registerBypass;
+
             }
 
             if (operands[opCounter].type == TnewLine) /* Missing an operand */
@@ -612,14 +632,17 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         }
     }
 
-    /* operands validation checks */
-    if (operandsValidation(currLine, operands, opCounter))
+    /*todo: make sure it works*/
+    /*Operands validation checks- if not valid, return without translating the lines*/
+    if (!operandsValidation(currLine, operands, opCounter))
     {
         return line;
     }
 
-    /* adds the commands and the operands into the instruction array */
-    add_to_instruction_array(command, operands, opCounter);
+
+
+    /* Adds the commands and the operands into the instruction array */
+    addToComandsArray(currLine, opCounter);
     return line;
 }
 
@@ -641,6 +664,7 @@ int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
 
     if (numOfOperands == 0)
     {
+
         return 0; /* the operands are valid */
     }
 
@@ -652,6 +676,7 @@ int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
             if ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod
             (operands[0])]) /* the only operand */
             {
+                currLine->data.operand1 = parseAddressingMethod(operands[0]);
                 return 0;
             }
         }
@@ -661,6 +686,9 @@ int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
         if (((commandsTable[currLine->data.command].sourceAddressingMethods)[parseAddressingMethod(operands[0])])
             && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
+            currLine->data.operand1 = parseAddressingMethod(operands[0]);
+            currLine->data.operand2 = parseAddressingMethod(operands[1]);
+
             return 0; /* is valid */
         }
     }

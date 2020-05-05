@@ -239,11 +239,8 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                 currLine->theLinePurpose = Tcommand;
 
                 /*Validates command sentences, and prepering the current LineStruct to translation*/
-                fillCurrLineStruct(currLine, line);
+                line = fillCurrLineStruct(currLine, line);
 
-                /* NADAV, IS IT OK THE PLACE I PLACED IT? also, please enter
-            the parameters of the function (operands_cnt stands for the number of operands...) Thanks!*/
-                add_to_comands_array(lineStruct *command, int operands_cnt);
             }
 
             else
