@@ -22,7 +22,7 @@
 #define MAX_DIGITS_DEC 10
 #define EXTERN_MACRO "extern"
 #define ENTRY_MACRO "entry"
-#define MAX_LINE 80
+#define MAX_LINE 82
 
 
 /* types of addressing modes of the command operands */
