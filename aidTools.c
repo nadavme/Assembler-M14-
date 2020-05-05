@@ -514,6 +514,151 @@ char *parseByTokens(char* line, Token *currTok)
     }
     return line;
 }
+/*todo: add validation on mioon okef and ogerYashir*/
+/*todo: fix comments*/
+char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
+{
+    int opCounter = 0; /* how many operands found in the line read */
+    Token operands[2 + 1]; /* 1 for the new line */
+
+
+    /* getting the operands into an array of operands */
+    line = parseByTokens(line, &(operands[opCounter]));
+
+    if (operands[opCounter].type == Tnumber) /* cant be a number without '#' */
+    {
+        errorHandler(0, (int) currLine->data.lineNumber, "In a command, a number must"
+                                                         " follow an  hash ('#') sign");
+        return line;
+    }
+    if (operands[opCounter].type == '#') /* Instant_addressing */
+    {
+        line = parseByTokens(line, &(operands[opCounter])); /* get the number */
+        if (operands[opCounter].type != Tnumber) /* a # sign without a number after */
+        {
+            errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a number must "
+                                                        "follow an  hash ('#') sign");
+            return line;
+        }
+    }
+    if (operands[opCounter].type != TnewLine) /* there are operands */
+    {
+        opCounter++; /* one operand */
+        line = parseByTokens(line, &(operands[opCounter]));
+        if (operands[opCounter].type == '(') /* there goind to be three operands */
+        {
+            line = parseByTokens(line, &(operands[opCounter]));
+            if (operands[opCounter].type == Tnumber) /* cant be a number without '#' */
+            {
+                errorHandler(0, (int) currLine->data.lineNumber, "number must begin"
+                                                                 " with hash ('#') sign");
+                return line;
+            }
+            if (operands[opCounter].type == '#') /* instant_addressing */
+            {
+                line = parseByTokens(line, &(operands[opCounter])); /* get the number */
+                if (operands[opCounter].type != Tnumber) /* a # sign without a number after */
+                {
+                    errorHandler(0, (int) currLine->data.lineNumber, "number must follow '#'");
+                    return line;
+                }
+            }
+            opCounter++;
+            line = parseByTokens(line, &(operands[opCounter]));
+        }
+        if (operands[opCounter].type == ',') /* there going to be 2 operands, seperated with comma */
+        {
+            line = parseByTokens(line, &(operands[opCounter])); /* get the second operand */
+            if (operands[opCounter].type == Tnumber) /* cant be a number without '#' */
+            {
+                errorHandler(0, (int) currLine->data.lineNumber, "number must begin"
+                                                                 " with hash ('#') sign");
+                return line;
+            }
+            if (operands[opCounter].type == '#') /* instant_addressing */
+            {
+                line = parseByTokens(line, &(operands[opCounter])); /* get the number */
+                if (operands[opCounter].type != Tnumber) /* a # sign without a number after */
+                {
+                    errorHandler(0 , (int) currLine->data.lineNumber, "number must follow '#'");
+                    return line;
+                }
+            }
+            if (operands[opCounter].type == TnewLine) /* missing operand */
+            {
+                errorHandler(0, (int) currLine->data.lineNumber, "comma at the end of the line");
+            }
+            else /* valid operand */
+            {
+                opCounter++; /* two operands */
+                line = parseByTokens(line, &(operands[opCounter]));
+
+                if (operands[opCounter].type != TnewLine) /* after two operands must be end of the line */
+                {
+                    errorHandler(0, (int) currLine->data.lineNumber,"invalid parameter after the operands ");
+                    return line;
+                }
+            }
+        }
+    }
+
+    /* operands validation checks */
+    if (operandsValidation(currLine, operands, opCounter))
+    {
+        return line;
+    }
+
+    /* adds the commands and the operands into the instruction array */
+    add_to_instruction_array(command, operands, opCounter);
+    return line;
+}
+
+/*todo: edit comments*/
+/*todo: add validation on mioon okef and ogerYashir*/
+int operandsValidation(struct LineStruct* currLine, Token* operands, int opCounter)
+{
+    int numOfOperands = commandTable[currLine->data.command].numOfOperands; /* getting the data from the commands table */
+
+    /* checking the amount of operands supllied */
+    if (numOfOperands != opCounter)
+    {
+        errorHandler(0, (int) currLine->data.lineNumber,"Invalid number of operands.");
+        return 1;
+    }
+
+    /* validating the addressing modes for this command */
+    if (numOfOperands == 0)
+    {
+        return 0; /* the operands are valid */
+    }
+    else if (numOfOperands == 1)
+    {
+
+        else /* only destination addressing mode, one operand */
+        {
+            if ((commands_table[command->data.command].dest_addressing_modes)[get_addressing_mode(operands[0])]) /* the only operand */
+            {
+                return 1;
+            }
+        }
+    }
+    else /* two operands */
+    {
+        if (((commands_table[command->data.command].source_addressing_modes)[get_addressing_mode(operands[0])])
+            && ((commands_table[command->data.command].dest_addressing_modes)[get_addressing_mode(operands[1])]))
+        {
+            return 1; /* is valid */
+        }
+    }
+    print_error(PRINT_NUMBER, "invalid operand");
+    return 0;
+}
+
+
+int parseAddressingMethod(Token operand)
+{
+
+}
 
 FILE* manageFiles(const char* file, char* suffix, char* mode)
 {

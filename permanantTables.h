@@ -22,40 +22,41 @@ struct opTable
 {
     char *codeName;
     unsigned int word;
+    int numOfOperands;
 }
 commandTable[] =
 {
-        {"mov", (unsigned short) 2032},
+        {"mov", (unsigned short) 2032, 2},
 
-        {"cmp", (unsigned short) 4088},
+        {"cmp", (unsigned short) 4088, 2},
 
-        {"add", (unsigned short) 6128},
+        {"add", (unsigned short) 6128, 2},
 
-        {"sub", (unsigned short) 8176},
+        {"sub", (unsigned short) 8176, 2},
 
-        {"lea", (unsigned short) 8560},
+        {"lea", (unsigned short) 8560, 2},
 
-        {"clr", (unsigned short) 10352},
+        {"clr", (unsigned short) 10352, 1},
 
-        {"not", (unsigned short) 12400},
+        {"not", (unsigned short) 12400, 1},
 
-        {"inc", (unsigned short) 14448},
+        {"inc", (unsigned short) 14448, 1},
 
-        {"dec", (unsigned short) 16496},
+        {"dec", (unsigned short) 16496, 1},
 
-        {"jmp", (unsigned short) 18480},
+        {"jmp", (unsigned short) 18480, 1},
 
-        {"bne", (unsigned short) 20528},
+        {"bne", (unsigned short) 20528, 1},
 
-        {"red", (unsigned short) 22640},
+        {"red", (unsigned short) 22640, 1},
 
-        {"prn", (unsigned short) 24696},
+        {"prn", (unsigned short) 24696, 1},
 
-        {"jsr", (unsigned short) 26672},
+        {"jsr", (unsigned short) 26672, 1},
 
-        {"rts", (unsigned short) 28672},
+        {"rts", (unsigned short) 28672, 0},
 
-        {"stop", 30720}
+        {"stop", 30720, 0}
 };
 
 
