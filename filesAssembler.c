@@ -54,8 +54,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
             continue;/*Should i exit?*/
         }
 
-        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL)
-        {
+        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL) {
             currLine->data.line = originalLine;
             line = originalLine;
             lineCounter++;
@@ -234,10 +233,19 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                 }
 
                 /*This is the core of the program- the translation.*/
-            } else if (currTok->type == Tcommand)
+            }
+            else if (currTok->type == Tcommand)
+            {
+                currLine->theLinePurpose = Tcommand;
 
-            add_to_comands_array(lineStruct *command, int operands_cnt);/* NADAV, IS IT OK THE PLACE I PLACED IT? also, please enter 
+                /*Validates command sentences, and prepering the current lineStruct to translation*/
+                fillCurrLineStruct(currLine, line);
+
+                /* NADAV, IS IT OK THE PLACE I PLACED IT? also, please enter
             the parameters of the function (operands_cnt stands for the number of operands...) Thanks!*/
+                add_to_comands_array(lineStruct *command, int operands_cnt);
+            }
+
             else
                 {
                 errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter");
