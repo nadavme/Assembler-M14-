@@ -6,13 +6,24 @@
 #define MAABADA_MMN14_SYMBOLSTABLE_H
 
 /*!
- *
+ *this is one occurrence of a symbol in the file.
+ */
+typedef struct SYMBOL_occur {
+	int line;
+	occPtr next;
+}occurrence, *occPtr;
+
+/*!
+ * this node represent a symbol, it will be a part of a linked list 
+ * which will represent the symbol table.
  */
 typedef struct node{
-    char *symbolName;
-    int address;/*I did the symbol table as Dani Kalfon instructs in his lecture about the project (at time 2:01 in the video you can see the table...)*/
-    int isExternal;
-    struct node *next;
+    char *symbolName;/* the name of the symbol */
+    int address;/* the location in memory in which this symbol was declared */
+    int entry_extern;/*is it entry or extern?*/
+    int data_or_instruction; /* the type of the symbol, from the values of the enum above. */
+	occPtr occurrence; /* a linked list of all the occurrences of this symbol in the code */
+    struct node *next; 
 }*nodePtr, node;
 
 /*!
@@ -22,6 +33,16 @@ typedef struct linkedList {
     int size;
     nodePtr head;
 }*linkedListPtr;
+
+/* types of symbols in the assably code */
+enum symbol_type {
+	EXTERN_SYMBOL,
+	ENTRY_SYMBOL,
+	CODE_SYMBOL_DECLARATION,
+	DATA_SYMBOL,
+	CODE_SYMBOL, /* used, not declared */
+	NOT_DECLARED = -1
+};
 
 /*!
  *
@@ -81,7 +102,7 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEx
  * @param list
  * @return
  */
-nodePtr searchSymbolNameInList(char symbolName[], linkedListPtr list);
+nodePtr searchSymbolNameInList(char symbolName[], nodePtr head);
 
 /*!
  *
