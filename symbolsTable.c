@@ -8,8 +8,133 @@
 #include "symbolsTable.h"
 #include "filesAssembler.h"
 
+/* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
+void add2SYMBOL_table(nodePtr head, Token *symbol, int status)
+{
+	nodePtr node = (nodePtr)malloc(sizeof(node));
+	nodePtr curr;
 
-nodePtr newNode(char *symbolName, int address1, int isExternal1)
+	if (!node)
+	{
+		errorHandler(1, (int)symbol->data.lineNumber, "Memory allocation has failed");
+		return;
+	}
+	if ((curr = searchSymbolNameInList(symbol->data.symbol, head)) == NULL) /* this is a new SYMBOL to add */
+	{
+		/* creating the node */
+		strcpy(node->symbolName, symbol->data.symbol);/*initializing the fields*/
+		node->address = NOT_DECLARED;
+		node->data_or_instruction = NOT_DECLARED;
+		node->entry_extern = NOT_DECLARED;
+		node->occurrence = NULL; 
+
+		switch (status) /* which type of declaration there is... */
+		{
+			case CODE_SYMBOL_DECLARATION:
+				node->address = IC;
+				break;
+			case CODE_SYMBOL:
+				if (!add_symbol_occurrence(node->occurrence, IC)) return; /* adds the line to the list of occurances of this symbol */
+				break;
+			case DATA_SYMBOL:
+				node->address = DC;
+				node->data_or_instruction = DATA_SYMBOL;
+				break;
+			case ENTRY_SYMBOL:
+			case EXTERN_SYMBOL:
+				node->entry_extern = status;
+				break;
+		}
+		/* linking to the head of the list */
+		if (head == NULL) {
+			node->next = NULL;
+		}
+		else {
+			node->next = head;
+		}
+		head = node;
+		return;
+	}
+	else /* if the SYMBOL is already in the table */
+	{
+		free(node); /* so theres no need for this node */
+		switch (status) {
+			case CODE_SYMBOL_DECLARATION:
+				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
+				{
+                    errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					return;
+				}
+				else /* adding the addres */
+				{
+					curr->address = IC;
+					curr->data_or_instruction = CODE_SYMBOL;
+				}
+				break;
+			case CODE_SYMBOL:
+				if (!add_SYMBOL_occurrence(curr->occurrence, IC)) return; /* adds a new node to the list of occorances of this SYMBOL*/
+				break;
+			case DATA_SYMBOL:
+				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
+				{
+					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					return;
+				}
+				else
+				{
+					curr->address = DC;
+					curr->data_or_instruction = DATA_SYMBOL;
+				}
+				break;
+			case ENTRY_SYMBOL:
+				if (curr->entry_extern != NOT_DECLARED)
+				{
+					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					return;
+				}
+				else
+				{
+					curr->entry_extern = status; /* ENTRY_SYMBOL */
+				}
+				break;
+			case EXTERN_SYMBOL:
+				if ((curr->address != NOT_DECLARED) || (curr->entry_extern != NOT_DECLARED))
+				{
+					errorHandler(1, (int)symbol->data.lineNumber, "symbol declared twice");
+					return;
+				}
+				else
+				{
+					curr->entry_extern = status; /* EXTERN_SYMBOL */
+				}
+				break;
+		}
+	}
+}
+
+/* this function adds a new lable occurrence to a lable node */
+int add_symbol_occurrence(occPtr head, int line)
+{
+	occPtr node = (occPtr)malloc(sizeof(occurrence));
+	if (node == NULL)
+	{
+        errorHandler(1, line, "Memory allocation has failed");
+		return 0;
+	}
+	node->line = line;
+	if (head == NULL) { /* no nodes in the list */
+		node->next = NULL;
+	}
+	else
+	{
+		node->next = head;
+	}
+	head = node;
+	return 1;
+}
+
+
+nodePtr newNode(char *symbolName, int address1, int entry_extern)
 {
     nodePtr new;
     int nameLen = 0;
@@ -22,7 +147,7 @@ nodePtr newNode(char *symbolName, int address1, int isExternal1)
     new->symbolName = calloc(nameLen + 1, sizeof(char));
     strncpy(new->symbolName, symbolName, nameLen);
     new->address = address1;
-    new->isExternal = isExternal1;
+    new->entry_extern = entry_extern;
     return new;
 }
 
@@ -82,9 +207,9 @@ void addNodeToStart(linkedListPtr list, char *symbolName, int address1, int isEx
     list->size = list->size + 1;
 }
 
-nodePtr searchSymbolNameInList(char symbolName[], linkedListPtr list)
+nodePtr searchSymbolNameInList(char symbolName[], nodePtr head)
 {
-    nodePtr searchedNode = list->head;
+    nodePtr searchedNode = head;
     while (searchedNode != NULL)
     {
         if (strcmp(searchedNode->symbolName, symbolName) == 0)

@@ -110,7 +110,6 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                 else if (currTok->type == Tcommand)
                 {
                     addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of lineStruct.*/
-
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
