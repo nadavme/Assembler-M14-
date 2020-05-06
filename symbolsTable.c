@@ -157,7 +157,7 @@ nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a 
 void free_occur_list(occPtr head)
 {
 	occPtr curr;
-	if (*head != NULL)
+	if (head != NULL)
 	{
 		curr = (head)->next;
 		for (; curr; curr = curr->next) {

@@ -10,7 +10,6 @@
 #include <string.h>
 #include <math.h>
 #include <stdbool.h>
-#include "firstRunOver.h"
 #include <ctype.h>
 #include <stdarg.h>
 #include "permanantTables.h"
@@ -19,13 +18,34 @@
 #include "memoryMap.h"
 
 
-#define MAX_DIGITS_BIN 100
-#define MAX_DIGITS_DEC 10
 #define EXTERN_MACRO "extern"
 #define ENTRY_MACRO "entry"
 #define MAX_LINE 82
+
 #define BITS_IN_WORD 15
 #define DIGITS_IN_ADDRESS 4
+#define INPUT_SUFFIX ".as"
+#define OUTPUT_SUFFIX ".ob"
+#define EXTERN_OUTPUT_SUFFIX ".ent"
+#define EXNTRY_OUTPUT_SUFFIX ".ext"
+#define MAX_LINE 82
+#define MEMORY_START_ADDRESS 100 /* can be changed */
+
+extern int DC, IC;
+
+
+/*a global variables needed for the assembler: */
+extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
+
+extern int wordsWithoutARE[MAX_ARRAY];/*this global array will contain the addresses of words which has at least 1 operand in
+direct addressing (has an operand represented as label), this words also doesnt has a value yet, because the label might
+not have defined yet.*/
+
+extern linkedListPtr symbolTable;
+
+extern dataLinkedListPtr dataTable;
+
+
 
 /* types of addressing modes of the command operands */
 enum addressingMethods {
@@ -146,7 +166,7 @@ enum memory_word_toShift
  * @param operands_cnt
  * @return
  */
-void addToComandsArray(LineStruct *command, int operands_cnt);
+void addToCommandsArray(LineStruct *command, int operands_cnt);
 
 /*!
  *
@@ -172,12 +192,6 @@ void weShare(LineStruct x); /*this function inserts 2 operands that use register
  */
 int bin_to_octal(int binaryNum);/*converts from binary to octal, return the result.*/
 
-/*!
- *
- * @param dec
- * @return
- */
-int dec_to_bin(char dec[]); /*converts from decimal to binary, prints the result.*/
 
 /*!
  *
@@ -195,12 +209,7 @@ int isStringValid(char array[], int length, char* string);
  */
 int isInstruction(char* string);
 
-/*!
- *
- * @param string
- * @return
- */
-int isData(char* string);
+
 
 /*!
  *
@@ -216,19 +225,7 @@ int isRegister(char* string);
  */
 int isSymbol(char* string);
 
-/*!
- *
- * @param string
- * @return
- */
-int isExtern(char* string);
 
-/*!
- *
- * @param string
- * @return
- */
-int isEntry(char* string);
 
 /*!
  *
@@ -237,12 +234,7 @@ int isEntry(char* string);
  */
 int isWhitespace(char* line);
 
-/*!
- *
- * @param string
- * @return
- */
-int isInt(char* string);
+
 
 /*!
  *

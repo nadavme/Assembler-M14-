@@ -103,7 +103,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
 this function get called only after all checks for valid input are o.k.*/
-void addToComandsArray(LineStruct *command, int operands_cnt)
+void addToCommandsArray(LineStruct *command, int operands_cnt)
 {
     int i;
     /* adding the command word now.*/
@@ -130,7 +130,7 @@ void addToComandsArray(LineStruct *command, int operands_cnt)
         /*if we are dealing with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
 		{
-			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added
 		}
 		else*/
         if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
@@ -304,6 +304,8 @@ int isSymbol(char *string)
     return 1;
 }
 
+
+
 int isWhitespace(char *line)
 {
     while (*line != '\0')
@@ -419,7 +421,7 @@ char *parseByTokens(char* line, Token *currTok)
     }
     return line;
 }
-/*todo: fix comments*/
+
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter = 0; /* how many operands found in the line read */
@@ -538,7 +540,6 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         }
     }
 
-    /*todo: make sure it works*/
     /*Operands validation checks- if not valid, return without translating the lines*/
     if (!operandsValidation(currLine, operands, opCounter))
     {
@@ -548,12 +549,11 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
 
     /* Adds the commands and the operands into the instruction array */
-    addToComandsArray(currLine, opCounter);
+    addToCommandsArray(currLine, opCounter);
     return line;
 }
 
 /*todo: edit comments*/
-/*todo: add validation on mioon okef and ogerYashir*/
 int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
 {
     int numOfOperands = commandsTable[currLine->data.command].numOfOperands; /* getting the data from the commands table */
