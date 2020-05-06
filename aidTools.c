@@ -747,6 +747,7 @@ void createObFile(char* fileName)
 
     int line_num = FIRST_MEMORY_ADDRESS;
     unsigned short int mask = ((1 << (BITS_IN_MEMORY_WORD - 1)));
+
     file = manageFiles(fileName,OUTPUT_SUFFIX , "w");
 
     /* check if the array is empty */
