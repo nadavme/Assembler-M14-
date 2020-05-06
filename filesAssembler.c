@@ -252,7 +252,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         /*=========================================End of first run over==================================*/
 
         /*Running over the symbol table(second run over)*/
-        secondRunOver(symbolTable); /*This one will run over the symbol table*/
+        secondRunOver(symbolTable, dataTable); /*This one will run over the symbol table*/
 
         /*=========================================End of second run over==================================*/
 
