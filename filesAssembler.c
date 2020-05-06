@@ -5,7 +5,7 @@
 #include "filesAssembler.h"
 
 
-int assembler(char const* filesToInterpret[], int numOfFiles)
+int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
     int filesCounter;
@@ -266,6 +266,9 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         /*=========================================Creating output files==================================*/
 
         createEntExtFiles(filesToInterpret[filesCounter]);
+        createObFile(filesToInterpret[filesCounter]);
+
+
         fprintf(stdout, "\n Assembling has finished for all valid input files, output files has "
                         "been created for them\n");
 

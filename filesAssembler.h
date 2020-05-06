@@ -23,7 +23,7 @@ extern int wordsWithoutARE[MAX_ARRAY];/*this global array will contain the addre
 direct addressing (has an operand represented as label), this words also doesnt has a value yet, because the label might
 not have defined yet.*/
 
-extern lilinkedListPtr symbolTable;
+extern linkedListPtr symbolTable;
 
 extern dataLinkedListPtr dataTable;
 
@@ -40,7 +40,7 @@ extern dataLinkedListPtr dataTable;
  * @param numOfFiles
  * @return
  */
-int assembler(char const* filesToInterpret[], int numOfFiles);
+int assembler(char* filesToInterpret[], int numOfFiles);
 
 
 #endif //MAABADA_MMN14_FILESASSEMBLER_H
