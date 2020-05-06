@@ -60,7 +60,7 @@ enum symbol_type {
  * @param symbol
  * @param status
  */
-void addToSymbolTable(nodePtr head, struct Token *symbol, int status, int lineNumber);
+void addToSymbolTable(nodePtr head,struct Token *symbol, int status, int lineNumber);
 
 
 /*!

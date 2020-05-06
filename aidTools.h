@@ -51,14 +51,6 @@ enum addressingMethods {
 	registerDirect
 };
 
-void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the instruction array[ic].*/
-
-/*!
- *
- */
-void add_to_arr(int num_to_add, int toShift);/*this function is adding a number to the commands array.*/
-
-
 /*!
  *
  */
@@ -140,6 +132,14 @@ enum memory_word_toShift
 	SRC_REG = 6,
 	DEST_REG = 3
 };
+
+void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the instruction array[ic].*/
+
+/*!
+ *
+ */
+void add_to_arr(int num_to_add, int toShift);/*this function is adding a number to the commands array.*/
+
 
 /*!
  *
