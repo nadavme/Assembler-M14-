@@ -730,7 +730,7 @@ void createEntExtFiles(char* fileName)
             }
             while(occurList) /* to all occurrences */
             {
-                fprintf(externFile, "%s\t%d\n", curr->head->symbolName, (occurList->line) + address);
+                fprintf(externFile, "%s %d\n", curr->head->symbolName, (occurList->line) + address);
                 occurList = occurList->next;
             }
         }
@@ -743,7 +743,7 @@ void createEntExtFiles(char* fileName)
             {
                 address+=IC;
             }
-            fprintf(entryFile, "%s\t%d\n", curr->head->symbolName, address);
+            fprintf(entryFile, "%s %d\n", curr->head->symbolName, address);
         }
         curr->head = curr->head->next;
     }
