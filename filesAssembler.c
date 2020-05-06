@@ -22,7 +22,6 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         DC = 0;
         errorFlag = 1;
         lineCounter = 0;
-        char temp;
         char *line;
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
@@ -91,12 +90,12 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addToSymbolTable(&symbolTable,symbolTok , DATA_SYMBOL, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, currLine->data.lineNumber);
 
                 }
                 else if (currTok->type == Tcommand)
                 {
-                    addToSymbolTable(&symbolTable,symbolTok , CODE_SYMBOL, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL, currLine->data.lineNumber);
 
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
@@ -174,7 +173,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         continue;
                     }
 
-                    addToSymbolTable(&symbolTable,symbolTok , EXTERN_SYMBOL, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , EXTERN_SYMBOL, (int) currLine->data.lineNumber);
 
                 } else if (currTok->data.instruction == ENTRY_MACRO) {
                     /*Parsing the first token on the input line.*/
@@ -196,7 +195,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                                                                          "to follow a symbol.");
                         errorFlag = 0;
                     }
-                    addToSymbolTable(&symbolTable,symbolTok , ENTRY_SYMBOL, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , ENTRY_SYMBOL, (int) currLine->data.lineNumber);
                 }
 
                     /*In case of a string token.*/
@@ -279,7 +278,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         "been created for them\n");
 
         /*free the symbolTable, dataTable, commandsTable etc.*/
-        freeDataNode(dataTable);
+        freeDataNode((dataNodePtr) dataTable);
         freeSymbolsTable(symbolTable);
         fclose(fp);
     }

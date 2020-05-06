@@ -17,15 +17,13 @@
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
 
-extern int DC, IC;
+int DC, IC;
 
 
 /*a global variables needed for the assembler: */
 extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
-extern struct linkedListPtr* symbolTable;
 
-extern struct dataLinkedListPtr* dataTable;
 
 /* types of symbols in the assably code */
 enum symbol_type {
@@ -37,21 +35,20 @@ enum symbol_type {
 	NOT_DECLARED = -1
 };
 
-typedef struct
-{
-    char symbol[31];
-    char string[82];
-    int number;
-    char tempCh;
-    int command;
-    int reg;
-    int instruction;
-} data;
 
 typedef struct Token
 {
     int type;
-    data data;
+    union
+    {
+        char symbol[31];
+        char string[82];
+        int number;
+        char tempCh;
+        int command;
+        int reg;
+        int instruction;
+    } data;
 
 } Token;
 
@@ -226,8 +223,7 @@ struct instruction
                 {".data",   DATA},
                 {".string", STRING},
                 {".extern", EXTERN},
-                {".entry",  ENTRY},
-                {NULL}
+                {".entry",  ENTRY}
         };
 
 /*!
@@ -246,8 +242,7 @@ struct Register
                 {"r4", R4},
                 {"r5", R5},
                 {"r6", R6},
-                {"r7", R7},
-                {NULL}
+                {"r7", R7}
         };
 
         typedef struct SYMBOL_occur* occp;
@@ -283,5 +278,8 @@ typedef struct linkedList {
     nodePtr head;
 }linkedList, *linkedListPtr;
 
+linkedListPtr symbolTable;
+
+dataLinkedListPtr dataTable;
 
 #endif /*MAABADA_MMN14_DATASTRUCTURES_H*/
