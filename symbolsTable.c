@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbolsTable.h"
-#include "filesAssembler.h"
 
 /* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
 void addToSymbolTable(nodePtr head, struct Token *symbol, int status, int lineNumber)

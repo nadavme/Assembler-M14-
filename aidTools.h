@@ -118,6 +118,9 @@ void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
  */
 char* parseByTokens(char* line, Token* currTok);
 
+char* parseStringByTokens(char* line, Token* currTok);
+
+
 
 char* fillCurrLineStruct(LineStruct* currLine, char* line);
 
