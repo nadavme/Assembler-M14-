@@ -422,6 +422,51 @@ char *parseByTokens(char* line, struct Token *currTok)
     return line;
 }
 
+char* parseStringByTokens(char* line, Token* currTok)
+{
+    char token[MAX_LINE];
+    int idx;
+
+    idx = 0;
+
+    currTok->type = Tstring;
+    while (isWhitespace(line)) /* skip white spaces */
+    {
+        line++;
+    }
+    if (*line == '\"') /* start of the string's content */
+    {
+        line++;
+        if (*line == '\"') /* empty string */
+        {
+            currTok->data.string[0] = '\0'; /* marks an error */
+        }
+        else /* not an empty string */
+        {
+            do {
+                token[idx++] = *line;
+                line++;
+            } while ((*line != '\"') && (*line != '\n'));
+            token[idx] = '\0';
+            if (*line == '\n') /* missing quote (") at the end of the string */
+            {
+                currTok->data.string[0] = '\0'; /* marks an error */
+            }
+            else
+            {
+                strcpy(currTok->data.string, token);
+            }
+        }
+    }
+    else
+    {
+        currTok->data.string[0] = '\0'; /* marks an error */
+    }
+    line++;
+    return line;
+}
+
+
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter = 0; /* how many operands found in the line read */

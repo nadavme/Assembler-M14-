@@ -204,11 +204,7 @@ commandsTable[] =
 };
 
 
-int DC, IC;
 
-
-/*a global variables needed for the assembler: */
-extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
 /*!
  *
@@ -278,8 +274,14 @@ typedef struct linkedList {
     nodePtr head;
 }linkedList, *linkedListPtr;
 
-linkedListPtr symbolTable;
+extern linkedListPtr symbolTable;
 
-dataLinkedListPtr dataTable;
+extern dataLinkedListPtr dataTable;
+
+/*a global variables needed for the assembler: */
+extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
+
+extern int DC, IC;
+
 
 #endif /*MAABADA_MMN14_DATASTRUCTURES_H*/

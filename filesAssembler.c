@@ -4,16 +4,26 @@
 
 #include "filesAssembler.h"
 
+linkedListPtr symbolTable;
+
+dataLinkedListPtr dataTable;
+
+short int commands_array[MAX_ARRAY];
+
+int DC, IC;
+
+int filesCounter;
+int errorFlag, lineCounter;
 
 int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
-    int filesCounter;
-    int errorFlag, lineCounter;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
-
+        char *line;
+        char temp;
+        
         /*Open file for reading*/
         fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
 
@@ -22,8 +32,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         DC = 0;
         errorFlag = 1;
         lineCounter = 0;
-        char *line;
-        char temp;
+
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
         LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
@@ -85,7 +94,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                 line = parseByTokens(line, currTok);
 
                 if (currTok->type == Tinstruction) {
-                    if ((currTok->data.instruction == EXTERN_MACRO) || (currTok->data.instruction == ENTRY_MACRO)) {
+                    if ((currTok->data.instruction == EXTERN) || (currTok->data.instruction == ENTRY)) {
                         errorHandler(0, (int) currLine->data.lineNumber, "This instruction is not"
                                                                          " valid after a symbol");
                         errorFlag = 0;
@@ -151,7 +160,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                             break;
                         }
                     }
-                } else if (currTok->data.instruction == EXTERN_MACRO) {
+                } else if (currTok->data.instruction == EXTERN) {
                     /*Parsing the next token on the input line.*/
                     line = parseByTokens(line, currTok);/*A symbol is expected.*/
 
@@ -176,7 +185,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
 
                     addToSymbolTable(symbolTable->head,symbolTok , EXTERN_SYMBOL, (int) currLine->data.lineNumber);
 
-                } else if (currTok->data.instruction == ENTRY_MACRO) {
+                } else if (currTok->data.instruction == ENTRY) {
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
 
@@ -202,10 +211,10 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                     /*In case of a string token.*/
                 else if (currTok->data.instruction == STRING) {
                     /*Parsing the first token on the input line.*/
-                    line = parseByTokens(line, currTok);
+                    line = parseStringByTokens(line, currTok);
 
                     /*Check for an empty string*/
-                    if (currTok->data.string[0] == '/0') {
+                    if (currTok->data.string[0] == '\0') {
                         errorHandler(0, (int) currLine->data.lineNumber, "Invalid string");
                         errorFlag = 0;
                         continue;
