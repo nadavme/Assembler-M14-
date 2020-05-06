@@ -37,9 +37,9 @@ extern int DC, IC;
 /*a global variables needed for the assembler: */
 extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
-extern struct linkedListPtr symbolTable;
+extern struct linkedListPtr* symbolTable;
 
-extern struct dataLinkedListPtr dataTable;
+extern struct dataLinkedListPtr* dataTable;
 
 
 
@@ -63,21 +63,22 @@ typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
  */
 typedef enum ARE { external = 0, relocatable, absolute } ARE;
 
-
+typedef struct
+{
+    char symbol[31];
+    char string[82];
+    int number;
+    char tempCh;
+    int command;
+    int reg;
+    int instruction;
+} data;
 
 typedef struct Token
 {
     int type;
-    union
-    {
-        char symbol[31];
-        char string[82];
-        int number;
-        char tempCh;
-        int command;
-        int reg;
-        int instruction;
-    } data;
+    data data;
+
 } Token;
 
 /*!
@@ -181,7 +182,7 @@ int bin_to_octal(int binaryNum);/*converts from binary to octal, return the resu
  * @param string
  * @return
  */
-int isStringValid(char array[], int length, char* string);
+int isStringValid(char* array[], int length, char* string);
 
 /*!
  *
