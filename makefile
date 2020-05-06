@@ -4,7 +4,7 @@ CFLAGS = -g -Wall -ansi -pedantic
 default: Assembler
 
 Assembler: main.o filesAssembler.o symbolsTable.o aidTools.o memoryMap.o secondRunOver.o
-	$(CC) $(CFLAGS) -o main.o filesAssembler.o symbolTable.o aidTools.o memoryMap.o secondRunOver.o
+	$(CC) $(CFLAGS) -o main.o filesAssembler.o symbolsTable.o aidTools.o memoryMap.o secondRunOver.o
 
 main.o: main.c filesAssembler.h
 	$(CC) $(CFLAGS) -c main.c
