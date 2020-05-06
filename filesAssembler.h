@@ -10,9 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "secondRunOver.h"
-#include "memory.h"
+#include "memoryMap.h"
 
 extern int DC, IC;
+extern MEMORY_START_ADDRESS 100 /* can be changed */
+
 
 /*!
  *
@@ -22,9 +24,5 @@ extern int DC, IC;
  */
 int assembler(char const* filesToInterpret[], int numOfFiles);
 
-/*A symbol table instance, coded by a linked list.*/
-extern linkedListPtr symbolTable;
-/*A symbol table instance, coded by a linked list.*/
-extern dataLinkedListPtr dataTable;/*a funtion to create a new data table (linked list)*/
 
 #endif //MAABADA_MMN14_FILESASSEMBLER_H

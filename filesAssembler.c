@@ -3,8 +3,7 @@
 //
 
 #include "filesAssembler.h"
-#include "aidTools.h"
-#include "memoryMap.h"
+
 
 
 #define INPUT_SUFFIX ".as"
@@ -12,7 +11,6 @@
 #define EXTERN_OUTPUT_SUFFIX ".ent"
 #define EXNTRY_OUTPUT_SUFFIX ".ext"
 #define MAX_LINE 82
-#define MEMORY_START_ADDRESS 100 /* can be changed */
 
 
 
@@ -45,7 +43,11 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
         Token *currTok = (Token *) malloc(sizeof(Token));
         Token *symbolTok = (Token *) malloc(sizeof(Token));
+
+        /*A symbol table instance, coded by a linked list.*/
         linkedListPtr symbolTable = newList();
+
+        /*A data table instance, coded by a linked list.*/
         dataLinkedListPtr dataTable = newDataList();
 
 
@@ -103,10 +105,10 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addSymbolToTable(, , DATA)/*todo: adapt it to the version of LineStruct.*/
+                    addToSymbolTable(&symbolTable,symbolTok , DATA_SYMBOL, currLine->data.lineNumber)
 
                 } else if (currTok->type == Tcommand) {
-                    addSymbolToTable(, , codeSymbolDeclaration)/*todo: adapt it to the version of LineStruct.*/
+                    addToSymbolTable(&symbolTable,symbolTok , CODE_SYMBOL, currLine->data.lineNumber)
 
                 } else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
@@ -183,7 +185,9 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addToSynmbolTable(, , ,);
+
+                    addToSymbolTable(&symbolTable,symbolTok , EXTERN_SYMBOL, currLine->data.lineNumber);
+
                 } else if (currTok->data.instruction == ENTRY_MACRO) {
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
@@ -203,7 +207,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
                                                                          "to follow a symbol.");
                         errorFlag = 0;
                     }
-                    addToSynmbolTable(, , ,);
+                    addToSymbolTable(&symbolTable,symbolTok , ENTRY_SYMBOL, currLine->data.lineNumber)
                 }
 
                     /*In case of a string token.*/
@@ -262,7 +266,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         /*=========================================End of first run over==================================*/
 
         /*Running over the symbol table(second run over)*/
-        secondRunOver(); /*This one will run over the symbol table*/
+        secondRunOver(symbolTable); /*This one will run over the symbol table*/
 
         /*=========================================End of second run over==================================*/
 

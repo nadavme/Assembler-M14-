@@ -297,6 +297,6 @@ FILE* manageFiles(const char* file, char* suffix, char* mode);
 
 void createObFile(char* file);
 
-void createObFile(char* file);
+void createEntExtFiles(char* file);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H

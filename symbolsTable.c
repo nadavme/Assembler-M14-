@@ -9,7 +9,7 @@
 #include "filesAssembler.h"
 
 /* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
-void add_to_symbol_table(nodePtr head, Token *symbol, int status, int lineNumber)
+void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
 {
 	nodePtr node = (nodePtr)malloc(sizeof(node));
 	nodePtr curr;

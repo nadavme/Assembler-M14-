@@ -50,7 +50,7 @@ enum symbol_type {
  * @param symbol
  * @param status
  */
-void add_to_symbol_table(nodePtr head, Token *symbol, int status, int lineNumber);
+void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber);
 
 
 /*!
@@ -129,9 +129,6 @@ int listIsEmpty(linkedListPtr listPtr);
  */
 int strToInt(char c[]);
 
-/*!
- *
- */
-void secondRunOver();
+
 
 #endif //MAABADA_MMN14_SYMBOLSTABLE_H

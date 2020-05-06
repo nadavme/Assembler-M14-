@@ -7,6 +7,7 @@
 
 #include "aidTools.h"
 #include "filesAssembler.h"
+#include "memoryMap.h"
 
 
 /*!
