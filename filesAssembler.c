@@ -93,10 +93,13 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                     }
                     addToSymbolTable(&symbolTable,symbolTok , DATA_SYMBOL, currLine->data.lineNumber);
 
-                } else if (currTok->type == Tcommand) {
+                }
+                else if (currTok->type == Tcommand)
+                {
                     addToSymbolTable(&symbolTable,symbolTok , CODE_SYMBOL, currLine->data.lineNumber);
 
-                } else {/*In case that after a symbol appears something that is not valid.*/
+                }
+                else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
                                                                      " after a symbol declaration");
                     errorFlag = 0;
@@ -188,7 +191,8 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
 
-                    if (currTok->type != TnewLine) {
+                    if (currTok->type != TnewLine)
+                    {
                         errorHandler(0, (int) currLine->data.lineNumber, "Invalid instruction "
                                                                          "to follow a symbol.");
                         errorFlag = 0;
