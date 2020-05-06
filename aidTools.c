@@ -801,7 +801,7 @@ void createObFile(char* fileName)
 }
 
 
-void createEntExtFiles(const char* fileName)
+void createEntExtFiles(char* fileName)
 
 {
     FILE *entryFile, *externFile;
