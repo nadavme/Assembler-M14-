@@ -18,13 +18,12 @@ return the new node*/
     new->address = DC;
     if (isItString == true)
     {
-        new->word.num_or_address = (unsigned short)ch; /*maybe this line will cause trouble, maybe the cast, I can try Alon's function
-        to add numbers...*/
+        new->word = (short)ch; /*a posible bug??*/
     }
 
     else if (isItString == false)
     {
-        new->word.num_or_address = (unsigned short)x; /*maybe this line will cause trouble, maybe the cast, I can try Alon's function
+        new->word = (short)x; /*maybe this line will cause trouble, maybe the cast, I can try Alon's function
         to add numbers...*/
     }
 
@@ -79,8 +78,8 @@ void addDataNodeToStart(dataLinkedListPtr list, char ch, int x, bool isItString)
     list->size = list->size + 1;
 }
 
-dataNodePtr searchDataInList(int address, linkedListPtr list) /*if the data with this address is in the list - the dataNode
-    is return*/
+dataNodePtr searchDataInList(int address, dataLinkedListPtr list) /*if the data with this address is in the list - the dataNode
+    is returned*/
 {
     dataNodePtr searchedNode = list->head;
     while (searchedNode != NULL)

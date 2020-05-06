@@ -4,7 +4,7 @@
 
 #include "secondRunOver.h"
 
-int secondRunOver(linkedListPtr symbolTable)/*return 0 if theres errors and printing is irrelevant, return 1 if
+int secondRunOver(linkedListPtr symbolTable,dataLinkedListPtr dataTAblePtr)/*return 0 if theres errors and printing is irrelevant, return 1 if
                                                                         if theres no errors. */
 {
     int value;
@@ -37,7 +37,7 @@ int secondRunOver(linkedListPtr symbolTable)/*return 0 if theres errors and prin
             }
         }
 
-        dataPtr = searchDataInList(curr->address,);
+        dataPtr = searchDataInList(curr->address,dataTAblePtr);
         if (dataPtr)
         {
             value = (int)dataPtr->word;/*need to change word*/

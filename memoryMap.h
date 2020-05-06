@@ -14,7 +14,7 @@
 typedef struct dataNode{ /*we've decided to implement the data table with a linked list, becuse we can't tell
 the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
     int address;
-    struct second_word word;
+    short word;
     struct dataNode *next;
 }*dataNodePtr, dataNode;
 
@@ -81,7 +81,7 @@ void analyzeData(char* parsedLine, char instructionType[]);/*is it necasary?*/
  * @param list
  * @return
  */
-dataNodePtr searchDataInList(int address, linkedListPtr list);/*if the data with this address is in the list - the dataNode
+dataNodePtr searchDataInList(int address, dataLinkedListPtr list);/*if the data with this address is in the list - the dataNode
     is return*/
 
 /*!
