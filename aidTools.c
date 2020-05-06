@@ -34,12 +34,12 @@ int bin_to_octal(int binaryNum)
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
 void add_to_arr(int num_to_add, int toShift)
 {
-    commands_array[IC] |= (num_to_add << toShift);
+    commands_array[IC] |= (short)((num_to_add << toShift));
 }
 
 void turn_On_bit_num(int place) /*this function turn on the bit at 'place' of the instruction array[ic].*/
 {
-    commands_array[IC] = (commands_array[IC] | (int)pow(2, place));
+    commands_array[IC] = (short)((commands_array[IC] | (int)pow(2, place)));
 }
 
 /*
