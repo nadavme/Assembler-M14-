@@ -1,13 +1,28 @@
-EXEC_FILE = assembler
-C_FILES = main.c symbolsTable.c aidTools.c memoryMap.c filesAssembler.c permanentTables.c secondRunOver.c
-H_FILES = symbolsTable.h aidTools.h memoryMap.h filesAssembler.h permanentTables.h secondRunOver.h
+CC = gcc
+CFLAGS = -g -Wall -ansi -pedantic
 
-O_FILES = $(C_FILES:.c=.o)
+default: Assembler
 
-all: $(EXEC_FILE)
-$(EXEC_FILE): $(O_FILES)
-	gcc -Wall -ansi -pedantic -g $(O_FILES) -o $(EXEC_FILE)
-%.o: %.c $(H_FILES)
-	gcc -Wall -ansi -pedantic -c -o $@ $<
-clean:
-	rm -f *.o $(EXEC_FILE)
+Assembler: main.o filesAssembler.o symbolTable.o aidTools.o memoryMap.o permanentTables.o secondRunOver.o
+	$(CC) $(CFLAGS) -o main.o filesAssembler.o symbolTable.o aidTools.o memoryMap.o permanentTables.o secondRunOver.o
+
+main.o: main.c filesAssembler.h
+	$(CC) $(CFLAGS) -c main.c
+
+filesAssembler.o: filesAssembler.c filesAssembler.h SymbolTable.h memoryMap.h secondRunOver.h aidTools.h
+	$(CC) $(CFLAGS) -c filesAssembler.c
+
+SymbolTable.o: SymbolList.c SymbolList.h aidTools.h
+	$(CC) $(CFLAGS) -c SymbolTable.c
+
+aidTools.o: aidTools.c aidTools.h permanentTables.h symbolTable.h memoryMap.h
+	$(CC) $(CFLAGS) -c aidTools.c
+
+memoryMap.o: memoryMap.c memoryMap.h aidTools.h
+	$(CC) $(CFLAGS) -c memoryMap.c
+
+permanentTables.o: permanentTables.c permanentTables.h
+	$(CC) $(CFLAGS) -c permanentTables.c
+
+secondRunOver.o: secondRunOver.c secondRunOver.h aidTools.h filesAssembler.h memoryMap.h symbolTable.h
+	$(CC) $(CFLAGS) -c secondRunOver.c
