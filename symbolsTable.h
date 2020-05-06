@@ -11,12 +11,14 @@
 #include "aidTools.h"
 #include "filesAssembler.h"
 
+
 /*!
  *this is one occurrence of a symbol in the file.
  */
-typedef struct SYMBOL_occur {
+typedef struct SYMBOL_occur
+{
 	int line;
-	occPtr next;
+	struct occPtr* next;
 }occurrence, *occPtr;
 
 /*!
@@ -29,7 +31,7 @@ typedef struct node{
     int entry_extern;/*is it entry or extern?*/
     int data_or_instruction; /* the type of the symbol, from the values of the enum above. */
 	occPtr occurrence; /* a linked list of all the occurrences of this symbol in the code */
-    struct node *next; 
+    struct node* next;
 }*nodePtr, node;
 
 typedef struct  linkedListPtr *symbolT;
