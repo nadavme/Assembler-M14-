@@ -13,7 +13,6 @@
 #include <math.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include "permanentTables.h"
 #include "memoryMap.h"
 
 
