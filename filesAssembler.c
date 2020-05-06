@@ -108,7 +108,6 @@ int assembler(char* filesToInterpret[], int numOfFiles)
             }
             if (currTok->type == Tinstruction) {
                 if (currTok->data.instruction == DATA) {
-//                    currLine->theLinePurpose =
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
 
