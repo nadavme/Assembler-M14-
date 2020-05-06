@@ -26,7 +26,7 @@ typedef struct node{
     struct node *next; 
 }*nodePtr, node;
 
-typedef struct  node *symbolT;
+typedef struct  linkedListPtr *symbolT;
 
 /*!
  *

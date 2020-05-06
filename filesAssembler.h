@@ -23,6 +23,10 @@ extern int wordsWithoutARE[MAX_ARRAY];/*this global array will contain the addre
 direct addressing (has an operand represented as label), this words also doesnt has a value yet, because the label might
 not have defined yet.*/
 
+extern lilinkedListPtr symbolTable;
+
+extern dataLinkedListPtr dataTable;
+
 #define INPUT_SUFFIX ".as"
 #define OUTPUT_SUFFIX ".ob"
 #define EXTERN_OUTPUT_SUFFIX ".ent"
