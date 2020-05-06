@@ -3,14 +3,20 @@
 //
 
 #include "secondRunOver.h"
+#include "memoryMap.h"
 
 int secondRunOver(linkedListPtr symbolTable)/*return 0 if theres errors and printing is irrelevant, return 1 if
                                                                         if theres no errors. */
 {
+    int value;
+    dataNodePtr dataPtr;
     int flag;
     nodePtr curr;
     curr = symbolTable->head;
     flag = 1;
+    
+    
+
     while (curr) /* not reaching the end of the list */
     {
         /* validation checks */
@@ -32,21 +38,30 @@ int secondRunOver(linkedListPtr symbolTable)/*return 0 if theres errors and prin
             }
         }
 
+        dataPtr = searchDataInList(curr->address,);
+        if (dataPtr)
+        {
+            value = (int)dataPtr->word;/*need to change word*/
+        }
+        
+
         /*adding to the commands array's, bassically the core of the second run over...*/
 
         if (curr->entry_extern == EXTERN_SYMBOL) /* external symbol, will add 'E' in the ERA part of the memory word */
         {
             turnOnBits2Arr(external, curr->occurrence);
         }
-        else if (curr->address != NOT_DECLARED) /* all other lables */
+        else if (curr->address != NOT_DECLARED) /* all other symbols */
         {
-            if (curr->data_or_instruction == DATA_SYMBOL)/*מפה לחזור...*/
+            if (curr->data_or_instruction == DATA_SYMBOL)
             {
-                lable2array(((FIRST_MEMORY_ADDRESS + (curr->declaration) + IC) << DEST_ADDRESS) | RELOCATABLE, curr->occurrence);
+                symbol2array(((value) << DEST_ADDRESS), curr->occurrence);
+                turnOnBits2Arr(relocatable, curr->occurrence);
             }
-            else /* instruction lable, in the code part */
+            else /* instruction symbol, in the code part */
             {
-                lable2array(((FIRST_MEMORY_ADDRESS + (curr->declaration)) << DEST_ADDRESS) | RELOCATABLE, curr->occurrence);
+                symbol2array(((value) << DEST_ADDRESS) , curr->occurrence);
+                turnOnBits2Arr(relocatable, curr->occurrence);
             }
         }
         curr = curr->next;
@@ -55,13 +70,24 @@ int secondRunOver(linkedListPtr symbolTable)/*return 0 if theres errors and prin
 return flag;
 }
 
+/* this function adds number into the array, in all of the symbol occurrences */
+void symbol2array(int number, occPtr occurrence_list)
+{
+	occPtr curr = occurrence_list;
+	while (curr)
+	{
+		commands_array[curr->line] |= number;/*I need to check if this line really get initialized any time??*/
+		curr = curr->next;
+	}
+}
+
 /* this function adds number into the array, in all of the lable occurrences */
 void turnOnBits2Arr(int bit, occPtr occurrence_list)
 {
 	occPtr curr = occurrence_list;
 	while (curr)
 	{
-		turn_On_bit_on_cell(curr->line);
+		turn_On_bit_on_cell(bit, curr->line);
 		curr = curr->next;
 	}
 }

@@ -12,6 +12,8 @@
 #define EXTERN_OUTPUT_SUFFIX ".ent"
 #define EXNTRY_OUTPUT_SUFFIX ".ext"
 #define MAX_LINE 82
+#define MEMORY_START_ADDRESS 100 /* can be changed */
+
 
 
 
