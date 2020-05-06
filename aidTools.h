@@ -37,9 +37,9 @@ extern int DC, IC;
 /*a global variables needed for the assembler: */
 extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
-extern linkedListPtr symbolTable;
+extern struct linkedListPtr symbolTable;
 
-extern dataLinkedListPtr dataTable;
+extern struct dataLinkedListPtr dataTable;
 
 
 
@@ -64,7 +64,7 @@ void add_to_arr(int num_to_add, int toShift);/*this function is adding a number 
  */
 typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
                            Tstring = -4, Tcommand = -5, Tregister = -6, 
-                           TnewLine = -7, Terror = -8} ;
+                           TnewLine = -7, Terror = -8} linePurposes;
 
 /*!
  *
@@ -79,7 +79,7 @@ typedef struct Token
     union
     {
         char symbol[31];
-        string[82];
+        char string[82];
         int number;
         char tempCh;
         int command;

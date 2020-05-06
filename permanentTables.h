@@ -1,18 +1,20 @@
-
-/* Created by nadav on 04/02/2020.*/
-
+//
+// Created by nadav on 04/02/2020.
+//
+#ifndef MAABADA_MMN14_PERMANENTTABLES_H
+#define MAABADA_MMN14_PERMANENTTABLES_H
 
 #include <stdio.h>
 
 /*!
  *
  */
-typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} ;
+typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
 
 /*!
  *
  */
-typedef enum instructions {STRING, DATA, ENTRY, EXTERN } ;
+typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
 
 /*!
  *
@@ -109,3 +111,4 @@ struct Register
                 {"r7", R7},
                 {NULL}
         };
+#endif

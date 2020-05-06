@@ -331,7 +331,7 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
     va_end(parameters_to_print);
 }
 
-char *parseByTokens(char* line, Token *currTok)
+char *parseByTokens(char* line, struct Token *currTok)
 {
 
     char token[30];
@@ -425,7 +425,7 @@ char *parseByTokens(char* line, Token *currTok)
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter = 0; /* how many operands found in the line read */
-    Token operands[2 + 1]; /* 1 for the new line */
+    struct Token operands[2 + 1]; /* 1 for the new line */
 
 
     /* Getting the the first operand into an array of operands */
@@ -554,7 +554,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 }
 
 /*todo: edit comments*/
-int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
+int operandsValidation(LineStruct* currLine, struct Token* operands, int opCounter)
 {
     int numOfOperands = commandsTable[currLine->data.command].numOfOperands; /* getting the data from the commands table */
 

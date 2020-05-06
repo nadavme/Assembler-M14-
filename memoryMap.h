@@ -1,6 +1,7 @@
 
 /* Created by nadav on 04/02/2020.*/
-
+#ifndef MAABADA_MMN14_MEMORYMAP_H
+#define MAABADA_MMN14_MEMORYMAP_H
 
 #include "aidTools.h"
 #include <stdio.h>
@@ -70,3 +71,5 @@ void addStringToDataTable(dataLinkedListPtr list, char *str);/*adding a string t
 
 int add100ToMemory();/*this function updates the memory image, as described in the MAMAN.
                             return 0 if both tables are empty, else return 1.*/
+
+#endif

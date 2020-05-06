@@ -12,8 +12,8 @@ main.o: main.c filesAssembler.h
 filesAssembler.o: filesAssembler.c filesAssembler.h SymbolTable.h memoryMap.h secondRunOver.h aidTools.h
 	$(CC) $(CFLAGS) -c filesAssembler.c
 
-SymbolTable.o: SymbolList.c SymbolList.h aidTools.h
-	$(CC) $(CFLAGS) -c SymbolTable.c
+SymbolsTable.o: SymboslList.c SymbolsList.h aidTools.h
+	$(CC) $(CFLAGS) -c SymbolsTable.c
 
 aidTools.o: aidTools.c aidTools.h permanentTables.h symbolTable.h memoryMap.h
 	$(CC) $(CFLAGS) -c aidTools.c
