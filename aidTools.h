@@ -37,10 +37,6 @@ extern int DC, IC;
 /*a global variables needed for the assembler: */
 extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
-extern int wordsWithoutARE[MAX_ARRAY];/*this global array will contain the addresses of words which has at least 1 operand in
-direct addressing (has an operand represented as label), this words also doesnt has a value yet, because the label might
-not have defined yet.*/
-
 extern linkedListPtr symbolTable;
 
 extern dataLinkedListPtr dataTable;
@@ -62,11 +58,6 @@ void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the
  */
 void add_to_arr(int num_to_add, int toShift);/*this function is adding a number to the commands array.*/
 
-/*!
- *
- */
-typedef enum opCodes { mov, cmp, add, sub, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop } opCodes;
-
 
 /*!
  *
@@ -75,22 +66,12 @@ typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
                            Tstring = -4, Tcommand = -5, Tregister = -6, 
                            TnewLine = -7, Terror = -8} ;
 
-
-
 /*!
  *
  */
 typedef enum ARE { external = 0, relocatable, absolute } ARE;
 
-/*!
- *
- */
-typedef enum symbolType { tCode, tData, tString} symbolType;
 
-/*!
- *
- */
-typedef  enum isThatExtern {no, yes} isThatExtern;
 
 typedef struct Token
 {
@@ -235,23 +216,6 @@ int isSymbol(char* string);
 int isWhitespace(char* line);
 
 
-
-/*!
- *
- * @param code
- * @param source
- * @param dest
- * @return
- */
-int isValidSourceDest(OpCodes code,opType source, opType dest);
-
-
-/*!
- *
- * @param operand
- * @return
- */
-StatusCode trimOperand(char* operand);
 
 /*!
  *

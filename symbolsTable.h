@@ -11,6 +11,7 @@
 #include "aidTools.h"
 #include "filesAssembler.h"
 
+typedef struct SYMBOL_occur* occp;
 
 /*!
  *this is one occurrence of a symbol in the file.
@@ -18,8 +19,8 @@
 typedef struct SYMBOL_occur
 {
 	int line;
-	struct occPtr* next;
-}occurrence, *occPtr;
+	occp next;
+}occurrence;
 
 /*!
  * this node represent a symbol, it will be a part of a linked list 
@@ -30,7 +31,7 @@ typedef struct node{
     int address;/* the location in memory in which this symbol was declared */
     int entry_extern;/*is it entry or extern?*/
     int data_or_instruction; /* the type of the symbol, from the values of the enum above. */
-	occPtr occurrence; /* a linked list of all the occurrences of this symbol in the code */
+	occp occurrence; /* a linked list of all the occurrences of this symbol in the code */
     struct node* next;
 }*nodePtr, node;
 
@@ -71,21 +72,7 @@ void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber);
  */
 nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction);
 
-/*!
- *
- * @param str
- * @return
- */
-int parsStr(char *str);
 
-/*!
- *
- * @param symbolName
- * @param address1
- * @param isExternal1
- * @return
- */
-nodePtr newNode(char *symbolName, int address1, int isExternal1);
 
 /*!
  *
@@ -113,17 +100,8 @@ linkedListPtr newList();
  */
 nodePtr searchSymbolNameInList(char symbolName[], nodePtr head);
 
-/*!
- *
- * @param node
- */
-void printNode(nodePtr node);
 
-/*!
- *
- * @param listPtr
- */
-void printList(linkedListPtr listPtr);
+
 
 /*!
  *
@@ -132,14 +110,9 @@ void printList(linkedListPtr listPtr);
  */
 int listIsEmpty(linkedListPtr listPtr);
 
-/*!
- *
- * @param c
- * @return
- */
-int strToInt(char c[]);
 
-int add_symbol_occurrence(occPtr head, int line);
+
+int add_symbol_occurrence(occp head, int line);
 
 
 

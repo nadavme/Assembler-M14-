@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "secondRunOver.h"
 #include "memoryMap.h"
+#include "symbolsTable.h"
 
 
 
