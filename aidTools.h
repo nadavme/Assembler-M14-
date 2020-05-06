@@ -13,9 +13,10 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include "permanentTables.h"
-#include "main.c"
-#include "filesAssembler.h"
+//#include "main.c"
+//#include "filesAssembler.h"
 #include "memoryMap.h"
+#include "symbolsTable.h"
 
 
 #define EXTERN_MACRO "extern"
