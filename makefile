@@ -1,6 +1,5 @@
 EXEC_FILE = assembler
-C_FILES = main.c symbolsTable.c aidTools.c memoryMap.c filesAssembler.c
-                  permanentTables.c secondRunOver.c
+C_FILES = main.c symbolsTable.c aidTools.c memoryMap.c filesAssembler.c permanentTables.c secondRunOver.c
 H_FILES = symbolsTable.h aidTools.h memoryMap.h filesAssembler.h
                             permanentTables.h secondRunOver.h
 
