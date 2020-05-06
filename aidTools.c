@@ -739,30 +739,34 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     return fp;
 }
 
-void createObFile(char* file)
+void createObFile(char* fileName)
 {
-    int i, j, k,  mem_word, lineNumber; /* three counters and a mem_word value */
+    int i, j, k, mem_word, lineNumber; /* three counters and a mem_word value */
     FILE *file;
     char number_in_str[MAX_LINE];
-    int line_num = FIRST_MEMORY_ADDRESS;
 
+    int line_num = FIRST_MEMORY_ADDRESS;
     unsigned short int mask = ((1 << (BITS_IN_MEMORY_WORD - 1)));
-    file = open_file(file_name, OUTPUT_FILE_SUFFIX, "w");
+    file = manageFiles(fileName,OUTPUT_SUFFIX , "w");
+
     /* check if the array is empty */
     if ((DC + IC) == 0)
     {
-        fprintf(stderr, "%s%s is empty file", file_name, INPUT_FILE_SUFFIX);
+        fprintf(stderr, "%s%s is an empty file", fileName, INPUT_SUFFIX);
         return;
     }
     else
     {
         /* headline */
         fprintf(file, "\t%d\t%d\n", IC, DC);
+
         /*print the IC and DC array to a file*/
         /*IC array*/
         for (i = 0; i<IC; i++)
         {
+            /*todo: what is the name of the translated table*/
             mem_word = instruction_array[i];
+
             /* all the lines's number are printed in a 4 digit output; line 34 will be outputted 0034 */
             sprintf(number_in_str, "%d",line_num + i); /* changing the line number to string */
             for(k=DIGITS_IN_OUTPUT - strlen(number_in_str) ; k >0; k--)
@@ -804,17 +808,17 @@ void createObFile(char* file)
 }
 
 
-void createEntExtFiles(char* file)
+void createEntExtFiles(char* fileName)
 
 {
-    FILE *entry_file, *extern_file;
-    lablep curr = lable_list;
+    FILE *entryFile, *externFile;
+    symbolT curr = lable_list;
     int was_entry = 0, was_extern = 0;
     int address;
     occp occur_list;
 
-    entry_file = open_file(file_name, ENTRY_FILE_SUFFIX , "w");
-    extern_file = open_file(file_name, EXTERN_FILE_SUFFIX , "w");
+    entryFile = open_file(file_name, ENTRY_FILE_SUFFIX , "w");
+    externFile = open_file(file_name, EXTERN_FILE_SUFFIX , "w");
 
     while(curr) /* going over all the lables */
     {
@@ -829,7 +833,7 @@ void createEntExtFiles(char* file)
             }
             while(occur_list) /* to all occurences */
             {
-                fprintf(extern_file, "%s\t%d\n", curr->name, (occur_list->line) + address);
+                fprintf(externFile, "%s\t%d\n", curr->name, (occur_list->line) + address);
                 occur_list = occur_list->next;
             }
         }
@@ -841,12 +845,12 @@ void createEntExtFiles(char* file)
             {
                 address+=IC;
             }
-            fprintf(entry_file, "%s\t%d\n", curr->name, address);
+            fprintf(entryFile, "%s\t%d\n", curr->name, address);
         }
         curr = curr->next;
     }
-    fclose(entry_file);
-    fclose(extern_file);
+    fclose(entryFile);
+    fclose(externFile);
     if(!was_entry) /* if no entry lable found at all */
     {
         remove(strcat(file_name,ENTRY_FILE_SUFFIX )); /* deleteing the file */

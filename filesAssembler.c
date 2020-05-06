@@ -5,20 +5,6 @@
 #include "filesAssembler.h"
 
 
-
-#define INPUT_SUFFIX ".as"
-#define OUTPUT_SUFFIX ".ob"
-#define EXTERN_OUTPUT_SUFFIX ".ent"
-#define EXNTRY_OUTPUT_SUFFIX ".ext"
-#define MAX_LINE 82
-
-
-
-
-
-
-
-
 int assembler(char const* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
