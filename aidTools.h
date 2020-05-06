@@ -29,6 +29,7 @@
 #define EXNTRY_OUTPUT_SUFFIX ".ext"
 #define MAX_LINE 82
 #define MEMORY_START_ADDRESS 100 /* can be changed */
+#define MAX_ARRAY 500
 
 extern int DC, IC;
 
