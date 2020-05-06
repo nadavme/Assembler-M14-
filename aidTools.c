@@ -29,7 +29,6 @@ int bin_to_octal(int binaryNum)
     return sum;
 }
 
-
 /* this function adds a number to the instruction array.
  toShift is the number of bits that is required to set the number in it's place.
 example: the call: add_to_arr(2,6), adds the number 2 (in binary) to the 7'th bit.*/
@@ -102,7 +101,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
     }
 }
 
-/*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
+/*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
 this function get called only after all checks for valid input are o.k.*/
 void addToCommandsArray(LineStruct *command, int operands_cnt)
 {

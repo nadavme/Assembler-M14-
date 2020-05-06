@@ -2,11 +2,13 @@
 // Created by nadav on 04/02/2020.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "symbolsTable.h"
+#include "filesAssembler.h"
 
-
-/* this function adds a SYMBOL into the SYMBOL table, while doing validation checks */
-
+/* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
 void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
 {
 	nodePtr node = (nodePtr)malloc(sizeof(node));
