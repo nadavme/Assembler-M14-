@@ -20,7 +20,7 @@ the length of it before the user insert file input. anyway, with linked list we 
 typedef struct dataLinkedList {
     int size;
     dataNodePtr head;
-}*dataLinkedListPtr;
+}dataLinkedList, *dataLinkedListPtr;
 
 
 dataNodePtr newDataNode(char ch, int x, bool isItString); /*is string = true if its .string, false if its .data,

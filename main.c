@@ -17,5 +17,5 @@ int main(int argc, char* argv[] )
         printf("No files error");
         return 1;
     }
-    return assembler((const char**) argv, argc);
+    return assembler(argv, argc);
 }

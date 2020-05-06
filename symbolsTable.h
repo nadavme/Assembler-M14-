@@ -34,7 +34,6 @@ typedef struct node{
     struct node* next;
 }*nodePtr, node;
 
-typedef struct  linkedListPtr *symbolT;
 
 /*!
  *
@@ -42,7 +41,7 @@ typedef struct  linkedListPtr *symbolT;
 typedef struct linkedList {
     int size;
     nodePtr head;
-}*linkedListPtr;
+}linkedList, *linkedListPtr;
 
 /* types of symbols in the assably code */
 enum symbol_type {
@@ -60,7 +59,7 @@ enum symbol_type {
  * @param symbol
  * @param status
  */
-void addToSymbolTable(nodePtr head, struct Token *symbol, int status, int lineNumber);
+void addToSymbolTable(nodePtr head, Token* symbol, int status, int lineNumber);
 
 
 /*!

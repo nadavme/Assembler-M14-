@@ -240,13 +240,13 @@ void weShare(LineStruct x) /*this function inserts 2 operands that use registers
     IC++;
 }
 
-int isStringValid(char array[], int length, char *string)
+int isStringValid(char* array[], int length, char *string)
 {
     /*The function allows validation of any string(operation, register, etc.)*/
     int i;
     for (i = 0; i < length; i++)
     {
-        if (strcmp(array[i], string) == 0)
+        if (strcmp( array[i], string) == 0)
             return 0;
     }
     return -1;
@@ -254,7 +254,7 @@ int isStringValid(char array[], int length, char *string)
 
 int isInstruction(char *string)
 {
-    return isStringValid(validInstructions, strlen(string), string);
+    return isStringValid((char **) validInstructions, strlen(string), string);
 }
 
 int isCommand(char *string)
