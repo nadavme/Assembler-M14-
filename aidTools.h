@@ -16,6 +16,7 @@
 #include "permanantTables.h"
 #include "main.c"
 #include "filesAssembler.h"
+#include "memoryMap.h"
 
 
 #define MAX_DIGITS_BIN 100
@@ -23,7 +24,8 @@
 #define EXTERN_MACRO "extern"
 #define ENTRY_MACRO "entry"
 #define MAX_LINE 82
-
+#define BITS_IN_WORD 15
+#define DIGITS_IN_ADDRESS 4
 
 /* types of addressing modes of the command operands */
 enum addressingMethods {

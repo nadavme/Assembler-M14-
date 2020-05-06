@@ -4,7 +4,8 @@
 
 #include "aidTools.h"
 
-int bin_to_octal(int binaryNum) /*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
+int bin_to_octal(int binaryNum) 
+/*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
 {
     int i = 0, j = 0;
     int sum = 0;
@@ -737,14 +738,15 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     return fp;
 }
 
-void createObFile(char* fileName)
+void createObFile(char* fileName, dataLinkedListPtr data_table)
 {
+    dataNodePtr curr;
     int i, j, k, mem_word, lineNumber; /* three counters and a mem_word value */
     FILE *file;
     char number_in_str[MAX_LINE];
 
-    int line_num = FIRST_MEMORY_ADDRESS;
-    unsigned short int mask = ((1 << (BITS_IN_MEMORY_WORD - 1)));
+    int line_num = MEMORY_START_ADDRESS;
+    unsigned short int mask = ((1 << (BITS_IN_WORD - 1)));
 
     file = manageFiles(fileName,OUTPUT_SUFFIX , "w");
 
@@ -756,51 +758,43 @@ void createObFile(char* fileName)
     }
     else
     {
-        /* headline */
-        fprintf(file, "\t%d\t%d\n", IC, DC);
+        /* headline  
+        and printing the IC and DC:*/
+        fprintf(file, "\t%d %d\n", IC, DC);
 
         /*print the IC and DC array to a file*/
         /*IC array*/
         for (i = 0; i<IC; i++)
         {
-            /*todo: what is the name of the translated table*/
-            mem_word = instruction_array[i];
+            mem_word = commands_array[i];
 
-            /* all the lines's number are printed in a 4 digit output; line 34 will be outputted 0034 */
+            /* all the addresses are printed in a 4 digit output: */
             sprintf(number_in_str, "%d",line_num + i); /* changing the line number to string */
-            for(k=DIGITS_IN_OUTPUT - strlen(number_in_str) ; k >0; k--)
+            for(k=DIGITS_IN_ADDRESS - strlen(number_in_str) ; k >0; k--)
             {
                 fprintf(file, "0" ); /* printing leading zero */
             }
-            fprintf(file, "%d\t", line_num + i);
-            for (j = 0; j<BITS_IN_MEMORY_WORD; j++)
-            {
-                if (mem_word&(mask >> j))
-                    fputc(ONE_OUTPUT, file);
-                else
-                    fputc(ZERO_OUTPUT, file);
-            }
-            fprintf(file, "\n");
+            fprintf(file, "%d ", line_num + i);
+            fprintf(file, "%d\n", bin_to_octal((int) commands_array[line_num + i]));
         }
-        /*DC array*/
+        /*now running on data table.*/
         line_num += i;
+        if (DC > 0)
+        {
+            curr = data_table->head;
+            mem_word = curr->word;
+        }
         for (i = 0; i<DC; i++)
         {
-            mem_word = data_array[i];
             sprintf(number_in_str, "%d",line_num + i); /* changing the line number to string */
-            for(k=DIGITS_IN_OUTPUT - strlen(number_in_str) ; k >0; k--)
+            for(k=DIGITS_IN_ADDRESS - strlen(number_in_str) ; k >0; k--)
             {
                 fprintf(file, "0" ); /* printing leading zero */
             }
-            fprintf(file, "%d\t", line_num+i);
-            for (j = 0; j<BITS_IN_MEMORY_WORD; j++)
-            {
-                if (mem_word&(mask >> j))
-                    fputc(ONE_OUTPUT, file);
-                else
-                    fputc(ZERO_OUTPUT, file);
-            }
-            fprintf(file, "\n");
+            fprintf(file, "%d ", line_num + i);
+            fprintf(file, "%d\n", bin_to_octal((int) mem_word));
+            curr = curr->next
+            mem_word = curr->word;
         }
     }
     fclose(file);
