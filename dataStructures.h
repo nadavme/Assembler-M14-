@@ -17,11 +17,7 @@
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
 
-int DC, IC;
 
-
-/*a global variables needed for the assembler: */
-extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
 
 
@@ -34,6 +30,50 @@ enum symbol_type {
 	CODE_SYMBOL, /* used, not declared */
 	NOT_DECLARED = -1
 };
+
+/* types of addressing modes of the command operands */
+enum addressingMethods {
+    instantAddressing,
+    directAddressing,
+    registerBypass,
+    registerDirect
+};
+
+
+/*!
+ *
+ */
+typedef enum ARE { external = 0, relocatable, absolute } ARE;
+
+
+/*!
+ *
+ */
+typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
+    Tstring = -4, Tcommand = -5, Tregister = -6,
+    TnewLine = -7, Terror = -8} linePurposes;
+
+enum memory_word_toShift
+{
+    ERA = 0,
+    DEST_ADDRESS = 3,
+    SRC_ADDRESS = 7,
+    COMMAND_OPCODE = 11,
+
+    NUM = 3,
+    SRC_REG = 6,
+    DEST_REG = 3
+};
+
+/*!
+ *
+ */
+typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
+
+/*!
+ *
+ */
+typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
 
 
 typedef struct Token
@@ -53,27 +93,6 @@ typedef struct Token
 } Token;
 
 
-
-
-/* types of addressing modes of the command operands */
-enum addressingMethods {
-	instantAddressing,
-	directAddressing,
-	registerBypass,
-	registerDirect
-};
-
-/*!
- *
- */
-typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
-                           Tstring = -4, Tcommand = -5, Tregister = -6, 
-                           TnewLine = -7, Terror = -8} linePurposes;
-
-/*!
- *
- */
-typedef enum ARE { external = 0, relocatable, absolute } ARE;
 
 /*!
  *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine
@@ -116,17 +135,7 @@ typedef struct LineStruct
 
 } LineStruct;
 
-enum memory_word_toShift
-{ 
-	ERA = 0,
-	DEST_ADDRESS = 3,
-	SRC_ADDRESS = 7,
-	COMMAND_OPCODE = 11,
 
-	NUM = 3,
-	SRC_REG = 6,
-	DEST_REG = 3
-};
 
 typedef struct dataNode{ /*we've decided to implement the data table with a linked list, becuse we can't tell
 the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
@@ -141,15 +150,7 @@ typedef struct dataLinkedList {
     dataNodePtr head;
 }dataLinkedList, *dataLinkedListPtr;
 
-/*!
- *
- */
-typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
 
-/*!
- *
- */
-typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
 
 /*!
  *
@@ -203,12 +204,11 @@ commandsTable[] =
 };
 
 
+int DC, IC;
 
-/*!
- *
- */
-char validCommands[16][4] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red",
-                             "prn", "jsr", "rts", "stop"};
+
+/*a global variables needed for the assembler: */
+extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
 /*!
  *
