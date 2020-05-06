@@ -31,10 +31,10 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
         Token *symbolTok = (Token *) malloc(sizeof(Token));
 
         /*A symbol table instance, coded by a linked list.*/
-        linkedListPtr symbolTable = newList();
+        symbolTable = newList();
 
         /*A data table instance, coded by a linked list.*/
-        dataLinkedListPtr dataTable = newDataList();
+        dataTable = newDataList();
 
 
         if ((currTok == NULL) || (symbolTok == NULL))
@@ -265,7 +265,7 @@ int assembler(char const* filesToInterpret[], int numOfFiles)
 
         /*=========================================Creating output files==================================*/
 
-        createOutputFiles(filesToInterpret[filesCounter]);
+        createEntExtFiles(filesToInterpret[filesCounter]);
         fprintf(stdout, "\n Assembling has finished for all valid input files, output files has "
                         "been created for them\n");
 

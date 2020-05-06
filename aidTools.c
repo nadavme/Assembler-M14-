@@ -801,55 +801,56 @@ void createObFile(char* fileName, dataLinkedListPtr data_table)
 }
 
 
-void createEntExtFiles(char* fileName)
+void createEntExtFiles(const char* fileName)
 
 {
     FILE *entryFile, *externFile;
-    symbolT curr = lable_list;
-    int was_entry = 0, was_extern = 0;
+    linkedListPtr curr;
     int address;
-    occp occur_list;
+    occPtr occurList;
 
-    entryFile = open_file(file_name, ENTRY_FILE_SUFFIX , "w");
-    externFile = open_file(file_name, EXTERN_FILE_SUFFIX , "w");
+    curr = symbolTable;
+    int wasEntry = 0, wasExtern = 0;
+    entryFile = manageFiles(fileName, EXNTRY_OUTPUT_SUFFIX , "w");
+    externFile = manageFiles(fileName, EXTERN_OUTPUT_SUFFIX , "w");
 
-    while(curr) /* going over all the lables */
+    while(curr->head) /* going over all the lables */
     {
-        if (curr->entry_extern == EXTERN_LABLE) /* lable is extern lable */
+        if (curr->head->entry_extern == EXTERN_SYMBOL) /* lable is extern lable */
         {
-            was_extern = 1; /* extern lable found */
-            occur_list = curr->occurrence;
-            address = FIRST_MEMORY_ADDRESS;
-            if(curr->data_or_instruction == DATA_LABLE)
+            wasExtern = 1; /* extern lable found */
+            occurList = curr->head->occurrence;
+            address = 100;
+            if(curr->head->data_or_instruction == DATA_SYMBOL)
             {
                 address+=IC;
             }
-            while(occur_list) /* to all occurences */
+            while(occurList) /* to all occurences */
             {
-                fprintf(externFile, "%s\t%d\n", curr->name, (occur_list->line) + address);
-                occur_list = occur_list->next;
+                fprintf(externFile, "%s\t%d\n", curr->head->symbolName, (occurList->line) + address);
+                occurList = occurList->next;
             }
         }
-        else if(curr->entry_extern == ENTRY_LABLE)
+        else if(curr->head->entry_extern == ENTRY_SYMBOL)
         {
-            was_entry = 1;
-            address = FIRST_MEMORY_ADDRESS + curr->declaration;
-            if(curr->data_or_instruction == DATA_LABLE)
+            wasEntry = 1;
+            address = 100 + curr->head->address;
+            if(curr->head->data_or_instruction == DATA_SYMBOL)
             {
                 address+=IC;
             }
-            fprintf(entryFile, "%s\t%d\n", curr->name, address);
+            fprintf(entryFile, "%s\t%d\n", curr->head->symbolName, address);
         }
-        curr = curr->next;
+        curr->head = curr->head->next;
     }
     fclose(entryFile);
     fclose(externFile);
-    if(!was_entry) /* if no entry lable found at all */
+    if(!wasEntry) /* if no entry lable found at all */
     {
-        remove(strcat(file_name,ENTRY_FILE_SUFFIX )); /* deleteing the file */
+        remove(strcat(fileName,EXNTRY_OUTPUT_SUFFIX )); /* deleteing the file */
     }
-    if(!was_extern) /* if no extern lable found at all */
+    if(!wasExtern) /* if no extern lable found at all */
     {
-        remove(strcat(file_name,EXTERN_FILE_SUFFIX )); /* ddeleteing the file */
+        remove(strcat(fileName,EXTERN_OUTPUT_SUFFIX )); /* ddeleteing the file */
     }
 }

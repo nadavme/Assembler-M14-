@@ -9,7 +9,7 @@ short int commands_array[MAX_ARRAY]; /* this array is the commands table, declar
 
 
 
-int main(int argc, char const *argv[] )
+int main(int argc, char* argv[] )
 {
 
     if (argc < 2)
@@ -17,5 +17,5 @@ int main(int argc, char const *argv[] )
         printf("No files error");
         return 1;
     }
-    return assembler(argv, argc);
+    return assembler((const char**) argv, argc);
 }

@@ -297,8 +297,8 @@ int parseAddressingMethod(Token operand)
  */
 FILE* manageFiles(const char* file, char* suffix, char* mode);
 
-void createObFile(char* file);
+void createObFile(const char* file);
 
-void createEntExtFiles(char* file);
+void createEntExtFiles(const char* file);
 
 #endif //MAABADA_MMN14_AIDTOOLS_H
