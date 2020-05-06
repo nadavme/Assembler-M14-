@@ -84,7 +84,7 @@ typedef struct Token
         char tempCh;
         int command;
         int reg;
-        int instruction
+        int instruction;
     } data;
 } Token;
 
