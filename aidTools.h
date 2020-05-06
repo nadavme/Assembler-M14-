@@ -297,7 +297,7 @@ int parseAddressingMethod(Token operand)
  */
 FILE* manageFiles(const char* file, char* suffix, char* mode);
 
-void createObFile(const char* file);
+void createObFile(char* fileName)
 
 void createEntExtFiles(char* file);
 
