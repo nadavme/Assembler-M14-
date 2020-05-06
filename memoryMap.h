@@ -122,3 +122,6 @@ int addCharToTable(dataLinkedListPtr list,char ch);  /*if the address is already
     return 1. else if the insertion went well - return 0. */
 
 void addStringToDataTable(dataLinkedListPtr list, char *str);/*adding a string to the data table.*/
+
+int add100ToMemory();/*this function updates the memory image, as described in the MAMAN.
+                            return 0 if both tables are empty, else return 1.*/

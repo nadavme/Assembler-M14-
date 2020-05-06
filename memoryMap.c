@@ -87,7 +87,7 @@ dataNodePtr searchDataInList(int address, dataLinkedListPtr list) /*if the data 
         if (address == searchedNode->address)
             return searchedNode;
         searchedNode = searchedNode->next;
-        }
+    }
     return searchedNode;
 }
 
@@ -183,10 +183,35 @@ void addStringToDataTable(dataLinkedListPtr list, char *str)
 
     for (i = 0; i < length; i++)
     {
-        addCharToTable(list,str[i]);
+        addCharToTable(list, str[i]);
         DC++;
     }
-    addCharToTable(list,'\0');/*I need to check if this put 0000000000 on the table...*/
+    addCharToTable(list, '\0'); /*I need to check if this put 0000000000 on the table...*/
     DC++;
     return;
+}
+
+int add100ToMemory()/*this function updates the memory image, as described in the MAMAN.
+                            return 0 if both tables are empty, else return 1.*/
+{
+    dataNodePtr curr;
+    curr = dataTable->head;
+    int i;
+    if (IC + DC == 0)
+    {
+        return 0;
+    }
+
+    while (curr)
+    {
+        curr->address += (short)100 + IC;
+        curr = curr->next;
+    }
+
+    for (i = 0; i < IC; i++)
+    {
+        commands_array[i] += (short) 100;
+    }
+
+    return 1;
 }

@@ -245,12 +245,15 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                 }
         }
 
+        
         /*Free all dynamic memory allocation.*/
         free(originalLine);
         free(currLine);
         free(symbolLine);
         free(currTok);
         free(symbolTok);
+
+        add100ToMemory();/*this function updates the memory image, as described in the MAMAN, in page 36*/
 
         /*=========================================End of first run over==================================*/
 
