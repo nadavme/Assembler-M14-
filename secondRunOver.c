@@ -13,8 +13,6 @@ int secondRunOver(linkedListPtr symbolTable,dataLinkedListPtr dataTAblePtr)/*ret
     nodePtr curr;
     curr = symbolTable->head;
     flag = 1;
-    
-    
 
     while (curr) /* not reaching the end of the list */
     {
