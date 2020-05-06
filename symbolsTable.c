@@ -57,7 +57,7 @@ void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
 	}
 	else /* if the SYMBOL is already in the table */
 	{
-		free(node); /* so theres no need for this node */
+		free(node); /* so there is no need for this node */
 		switch (status) {
 			case CODE_SYMBOL_DECLARATION:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
@@ -65,14 +65,15 @@ void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
                     errorHandler(1, lineNumber, "symbol declared twice");
 					return;
 				}
-				else /* adding the addres */
+				else /* adding the address */
 				{
 					curr->address = IC;
 					curr->data_or_instruction = CODE_SYMBOL;
 				}
 				break;
 			case CODE_SYMBOL:
-				if (!add_SYMBOL_occurrence(curr->occurrence, IC)) return; /* adds a new node to the list of occorances of this SYMBOL*/
+				if (!add_symbol_occurrence(curr->occurrence, IC)) return; /* adds a new node to the
+                                                                            * list of occorances of this SYMBOL*/
 				break;
 			case DATA_SYMBOL:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
@@ -113,9 +114,9 @@ void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
 }
 
 /* this function adds a new lable occurrence to a lable node */
-int add_symbol_occurrence(occPtr head, int line)
+int add_symbol_occurrence(occp head, int line)
 {
-	occPtr node = (occPtr)malloc(sizeof(occurrence));
+	occp node = (occp)malloc(sizeof(occurrence));
 	if (node == NULL)
 	{
         errorHandler(1, line, "Memory allocation has failed");
@@ -134,7 +135,7 @@ int add_symbol_occurrence(occPtr head, int line)
 }
 
 
-nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a possible bug - theres no decleration for 
+nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a possible bug - there is no decleration for
                                                                                             occurences linked list*/
 {
     nodePtr new;
@@ -154,9 +155,9 @@ nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a 
 }
 
 /* frees the memory of the occurance list in each node */
-void free_occur_list(occPtr head)
+void free_occur_list(occp head)
 {
-	occPtr curr;
+	occp curr;
 	if (head != NULL)
 	{
 		curr = (head)->next;
@@ -176,7 +177,7 @@ void freeNode(nodePtr toFree)
     }
     if (toFree->symbolName != NULL)
     {
-        free_occur_list(&(curr->occurrence));/*freeing the allocated memory of the occurences linked list*/
+        free_occur_list(toFree->occurrence);/*freeing the allocated memory of the occurences linked list*/
         free(toFree->symbolName);/* maybe I need to free anything else from struct????*/
     }
     freeNode(toFree->next);
@@ -186,7 +187,6 @@ void freeNode(nodePtr toFree)
 void freeSymbolsTable(linkedListPtr toFree)
 {
     freeNode(toFree->head);
-    return;
 }
 
 linkedListPtr newList()
@@ -206,53 +206,7 @@ nodePtr searchSymbolNameInList(char symbolName[], nodePtr head)
     return searchedNode;
 }
 
-void printList(linkedListPtr listPtr)
-{
-    /*   some code from stack overflow: */
 
-
-    /*fp = fopen("newfile.txt", "w+");
-
-    // Get the size of the linked list and write as the first piece of data.
-    size_t listSize = getLinkedListSize(head)
-
-        fwrite(&listSize, 1, sizeof(size_t), fp);
-
-    // Now write each node of the linked list.
-    while (iterator != NULL)
-    {
-        fwrite(&(iterator->data), 1, sizeof(iterator->data), fp);
-        iterator = iterator->next;
-    }*/
-
-    int i;
-    nodePtr node = listPtr->head;
-
-    for (i = 0; i < listPtr->size; i++)
-    {
-        printNode(node);
-        printf("                            ||                        \n");
-        printf("                            ||                        \n");
-        node = node->next;
-    }
-}
-
-void printNode(nodePtr node)
-{
-    if (!node)
-    {
-        return;
-    }
-
-    else
-        printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);
-
-    if (node->isExternal == 1)
-        printf("is EXTERNAL? - YES. *** ]");
-
-    else if (node->isExternal == 0)
-        printf("is EXTERNAL? - NO. *** \n");
-}
 
 int listIsEmpty(linkedListPtr listPtr)
 {

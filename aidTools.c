@@ -713,7 +713,7 @@ void createEntExtFiles(char* fileName)
     FILE *entryFile, *externFile;
     linkedListPtr curr;
     int address;
-    occPtr occurList;
+    occp occurList;
 
     curr = symbolTable;
     int wasEntry = 0, wasExtern = 0;

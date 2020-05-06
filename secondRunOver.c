@@ -68,9 +68,9 @@ return flag;
 }
 
 /* this function adds number into the array, in all of the symbol occurrences */
-void symbol2array(int number, occPtr occurrence_list)
+void symbol2array(int number, occp occurrence_list)
 {
-	occPtr curr = occurrence_list;
+	occp curr = occurrence_list;
 	while (curr)
 	{
 		commands_array[curr->line] |= number;/*I need to check if this line really get initialized any time??*/
@@ -79,9 +79,9 @@ void symbol2array(int number, occPtr occurrence_list)
 }
 
 /* this function adds number into the array, in all of the lable occurrences */
-void turnOnBits2Arr(int bit, occPtr occurrence_list)
+void turnOnBits2Arr(int bit, occp occurrence_list)
 {
-	occPtr curr = occurrence_list;
+	occp curr = occurrence_list;
 	while (curr)
 	{
 		turn_On_bit_on_cell(bit, curr->line);
