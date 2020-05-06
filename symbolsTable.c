@@ -2,13 +2,11 @@
 // Created by nadav on 04/02/2020.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "symbolsTable.h"
-#include "filesAssembler.h"
 
-/* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
+
+/* this function adds a SYMBOL into the SYMBOL table, while doing validation checks */
+
 void addToSymbolTable(nodePtr head, Token *symbol, int status, int lineNumber)
 {
 	nodePtr node = (nodePtr)malloc(sizeof(node));
@@ -157,7 +155,7 @@ nodePtr newNode(char *symbolName, int entry_extern, int data_or_instruction)/*a 
 void free_occur_list(occPtr head)
 {
 	occPtr curr;
-	if (*head != NULL)
+	if (head != NULL)
 	{
 		curr = (head)->next;
 		for (; curr; curr = curr->next) {
@@ -247,10 +245,10 @@ void printNode(nodePtr node)
     else
         printf("[NAME - %s ***  ADDRESS - %d ***  ", node->symbolName, node->address);
 
-    if (node->isExternal == 1)
+    if (node->entry_extern == 1)
         printf("is EXTERNAL? - YES. *** ]");
 
-    else if (node->isExternal == 0)
+    else if (node->entry_extern == 0)
         printf("is EXTERNAL? - NO. *** \n");
 }
 

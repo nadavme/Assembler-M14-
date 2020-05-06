@@ -5,6 +5,12 @@
 #ifndef MAABADA_MMN14_SYMBOLSTABLE_H
 #define MAABADA_MMN14_SYMBOLSTABLE_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "aidTools.h"
+#include "filesAssembler.h"
+
 /*!
  *this is one occurrence of a symbol in the file.
  */
@@ -130,6 +136,9 @@ int listIsEmpty(linkedListPtr listPtr);
  * @return
  */
 int strToInt(char c[]);
+
+int add_symbol_occurrence(occPtr head, int line);
+
 
 
 

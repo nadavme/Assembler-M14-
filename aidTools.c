@@ -29,56 +29,6 @@ int bin_to_octal(int binaryNum)
     return sum;
 }
 
-int dec_to_bin(char dec[])
-{
-    char binNum[MAX_DIGITS_BIN] = {'0', '\0'}; /*creating a char array (a string) which will express the binary 	       number.  the first cell in the array contains the char 0 representation, and all other cells in the 			array 	contain of the integer 0.*/
-    int string_length;
-    int i;
-    char tmp;
-
-    unsigned int decInt = strtoul(dec, NULL, 10); /*converting the decimal number (string) to int*/
-    i = 0;
-    while (decInt != 0)
-    {
-        binNum[i] = '0' + decInt % 2; /*collecting the remainders from devision by 2 at the array*/
-        decInt = decInt / 2;          /*deviding by 2 (basically cutting out the fractions)*/
-        i++;
-    }
-
-    /* step 2: reverse string */
-    string_length = 0;
-    while (binNum[string_length] != '\0')
-        string_length = string_length + 1;
-
-    for (i = 0; i < string_length / 2; i++)
-    {
-        tmp = binNum[i];
-        binNum[i] = binNum[string_length - i - 1];
-        binNum[string_length - i - 1] = tmp;
-    }
-
-    printf("%s\n", binNum); /*printing the binary number*/
-
-    return 0;
-}
-
-void printBits(size_t const size, void const *const ptr) /*the function prints the binary representation of any type.
-size is the number of bytes. an example can be seen in tester_for_matrix.c */
-{
-    unsigned char *b = (unsigned char *)ptr;
-    unsigned char byte;
-    int i, j;
-
-    for (i = size - 1; i >= 0; i--)
-    {
-        for (j = 7; j >= 0; j--)
-        {
-            byte = (b[i] >> j) & 1;
-            printf("%u", byte);
-        }
-    }
-    puts("");
-}
 
 /* this function adds a number to the instruction array.
  toShift is the number of bits that is required to set the number in it's place.
@@ -154,7 +104,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the instructions array.
 this function get called only after all checks for valid input are o.k.*/
-void addToComandsArray(LineStruct *command, int operands_cnt)
+void addToCommandsArray(LineStruct *command, int operands_cnt)
 {
     int i;
     /* adding the command word now.*/
@@ -181,7 +131,7 @@ void addToComandsArray(LineStruct *command, int operands_cnt)
         /*if we are dealing with symbols here, let this code free (after edit)
 		if (operands[i].type == lable_tok)
 		{
-			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added 
+			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added
 		}
 		else*/
         if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
@@ -355,38 +305,7 @@ int isSymbol(char *string)
     return 1;
 }
 
-//int isData(char* string)
-//{
-//    if ((unsigned char)(*string) == '.')
-//    {
-//        string++;
-//        return isStringValid(dataTypes, NUM_OF_DATA_TYPES, string);
-//    }
-//    else
-//        return 0;
-//}
 
-int isExtern(char *string)
-{
-    if ((unsigned char)(*string) == '.')
-    {
-        string++;
-        return (strcmp(EXTERN_MACRO, string) == 0);
-    }
-    else
-        return 0;
-}
-
-int isEntry(char *string)
-{
-    if ((unsigned char)(*string) == '.')
-    {
-        string++;
-        return (strcmp(ENTRY_MACRO, string) == 0);
-    }
-    else
-        return 0;
-}
 
 int isWhitespace(char *line)
 {
@@ -397,16 +316,6 @@ int isWhitespace(char *line)
         line++;
     }
     return 1;
-}
-
-int isInt(char *string)
-{
-    char *ptr;
-    long int result;
-    strtol(string, &ptr, 10);
-    result = strtol(string, &ptr, 10);
-    (void)result;
-    return (isWhitespace(ptr) || *ptr == '\0'); /* If the rest of the string is empty it still counts as an int*/
 }
 
 
@@ -513,7 +422,7 @@ char *parseByTokens(char* line, Token *currTok)
     }
     return line;
 }
-/*todo: fix comments*/
+
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter = 0; /* how many operands found in the line read */
@@ -632,7 +541,6 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         }
     }
 
-    /*todo: make sure it works*/
     /*Operands validation checks- if not valid, return without translating the lines*/
     if (!operandsValidation(currLine, operands, opCounter))
     {
@@ -642,12 +550,11 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
 
     /* Adds the commands and the operands into the instruction array */
-    addToComandsArray(currLine, opCounter);
+    addToCommandsArray(currLine, opCounter);
     return line;
 }
 
 /*todo: edit comments*/
-/*todo: add validation on mioon okef and ogerYashir*/
 int operandsValidation(LineStruct* currLine, Token* operands, int opCounter)
 {
     int numOfOperands = commandsTable[currLine->data.command].numOfOperands; /* getting the data from the commands table */
@@ -793,7 +700,7 @@ void createObFile(char* fileName)
             }
             fprintf(file, "%d ", line_num + i);
             fprintf(file, "%d\n", bin_to_octal((int) mem_word));
-            curr = curr->next
+            curr = curr->next;
             mem_word = curr->word;
         }
     }
