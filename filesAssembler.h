@@ -14,6 +14,11 @@
 
 extern int DC, IC;
 extern MEMORY_START_ADDRESS 100 /* can be changed */
+#define INPUT_SUFFIX ".as"
+#define OUTPUT_SUFFIX ".ob"
+#define EXTERN_OUTPUT_SUFFIX ".ent"
+#define EXNTRY_OUTPUT_SUFFIX ".ext"
+#define MAX_LINE 82
 
 
 /*!
