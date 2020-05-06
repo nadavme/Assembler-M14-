@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdarg.h>
-#include "permanantTables.h"
+#include "permanentTables.h"
 #include "main.c"
 #include "filesAssembler.h"
 #include "memoryMap.h"
