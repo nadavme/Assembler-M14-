@@ -714,24 +714,21 @@ void createEntExtFiles(char* fileName)
     linkedListPtr curr;
     int address;
     occp occurList;
-
     curr = symbolTable;
-    int wasEntry = 0, wasExtern = 0;
-    entryFile = manageFiles(fileName, EXNTRY_OUTPUT_SUFFIX , "w");
-    externFile = manageFiles(fileName, EXTERN_OUTPUT_SUFFIX , "w");
 
-    while(curr->head) /* going over all the lables */
+    while(curr->head) /* going over all the symbols in the list */
     {
-        if (curr->head->entry_extern == EXTERN_SYMBOL) /* lable is extern lable */
+        if (curr->head->entry_extern == EXTERN_SYMBOL) /* symbol is an extern symbol */
         {
-            wasExtern = 1; /* extern lable found */
+            externFile = manageFiles(fileName, EXTERN_OUTPUT_SUFFIX , "w");
+
             occurList = curr->head->occurrence;
             address = 100;
             if(curr->head->data_or_instruction == DATA_SYMBOL)
             {
                 address+=IC;
             }
-            while(occurList) /* to all occurences */
+            while(occurList) /* to all occurrences */
             {
                 fprintf(externFile, "%s\t%d\n", curr->head->symbolName, (occurList->line) + address);
                 occurList = occurList->next;
@@ -739,7 +736,8 @@ void createEntExtFiles(char* fileName)
         }
         else if(curr->head->entry_extern == ENTRY_SYMBOL)
         {
-            wasEntry = 1;
+            entryFile = manageFiles(fileName, EXNTRY_OUTPUT_SUFFIX , "w");
+
             address = 100 + curr->head->address;
             if(curr->head->data_or_instruction == DATA_SYMBOL)
             {
@@ -751,12 +749,4 @@ void createEntExtFiles(char* fileName)
     }
     fclose(entryFile);
     fclose(externFile);
-    if(!wasEntry) /* if no entry lable found at all */
-    {
-        remove(strcat(fileName,EXNTRY_OUTPUT_SUFFIX )); /* deleteing the file */
-    }
-    if(!wasExtern) /* if no extern lable found at all */
-    {
-        remove(strcat(fileName,EXTERN_OUTPUT_SUFFIX )); /* ddeleteing the file */
-    }
 }
