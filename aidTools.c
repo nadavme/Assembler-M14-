@@ -203,7 +203,6 @@ void addToComandsArray(LineStruct *command, int operands_cnt)
 
             else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
-                wordsWithoutARE[IC] = 1;
                 IC++;
             }
 
@@ -253,7 +252,6 @@ void addToComandsArray(LineStruct *command, int operands_cnt)
 
                 else if (command->data.operand2 == directAddressing) /*in case were dealing with a direct mio'n*/
                 {
-                    wordsWithoutARE[IC] = 1;
                     IC++;
                 }
 
