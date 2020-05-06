@@ -16,7 +16,7 @@
  * @param symbolTable
  * @return
  */
-int secondRunOver(linkedListPtr symbolTable,dataLinkedListPtr dataTable);
+int secondRunOver();
 
 #endif //MAABADA_MMN14_SECONDRUNOVER_H
 

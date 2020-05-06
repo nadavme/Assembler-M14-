@@ -91,10 +91,10 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addToSymbolTable(&symbolTable,symbolTok , DATA_SYMBOL, currLine->data.lineNumber)
+                    addToSymbolTable(&symbolTable,symbolTok , DATA_SYMBOL, currLine->data.lineNumber);
 
                 } else if (currTok->type == Tcommand) {
-                    addToSymbolTable(&symbolTable,symbolTok , CODE_SYMBOL, currLine->data.lineNumber)
+                    addToSymbolTable(&symbolTable,symbolTok , CODE_SYMBOL, currLine->data.lineNumber);
 
                 } else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
@@ -193,7 +193,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                                                                          "to follow a symbol.");
                         errorFlag = 0;
                     }
-                    addToSymbolTable(&symbolTable,symbolTok , ENTRY_SYMBOL, currLine->data.lineNumber)
+                    addToSymbolTable(&symbolTable,symbolTok , ENTRY_SYMBOL, currLine->data.lineNumber);
                 }
 
                     /*In case of a string token.*/
