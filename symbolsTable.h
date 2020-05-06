@@ -5,53 +5,11 @@
 #ifndef MAABADA_MMN14_SYMBOLSTABLE_H
 #define MAABADA_MMN14_SYMBOLSTABLE_H
 
+#include "dataStructures.h"
+#include "aidTools.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "aidTools.h"
-
-typedef struct SYMBOL_occur* occp;
-
-/*!
- *this is one occurrence of a symbol in the file.
- */
-typedef struct SYMBOL_occur
-{
-	int line;
-	occp next;
-}occurrence;
-
-/*!
- * this node represent a symbol, it will be a part of a linked list 
- * which will represent the symbol table.
- */
-typedef struct node{
-    char *symbolName;/* the name of the symbol */
-    int address;/* the location in memory in which this symbol was declared */
-    int entry_extern;/*is it entry or extern?*/
-    int data_or_instruction; /* the type of the symbol, from the values of the enum above. */
-	occp occurrence; /* a linked list of all the occurrences of this symbol in the code */
-    struct node* next;
-}*nodePtr, node;
-
-
-/*!
- *
- */
-typedef struct linkedList {
-    int size;
-    nodePtr head;
-}linkedList, *linkedListPtr;
-
-/* types of symbols in the assably code */
-enum symbol_type {
-	EXTERN_SYMBOL,
-	ENTRY_SYMBOL,
-	CODE_SYMBOL_DECLARATION,
-	DATA_SYMBOL,
-	CODE_SYMBOL, /* used, not declared */
-	NOT_DECLARED = -1
-};
 
 /*!
  * this function adds a SYMBOL into the SYMBOL table, while doing validation chacks
@@ -59,7 +17,7 @@ enum symbol_type {
  * @param symbol
  * @param status
  */
-void addToSymbolTable(nodePtr head, Token* symbol, int status, int lineNumber);
+void addToSymbolTable(nodePtr head,struct Token* symbol, int status, int lineNumber);
 
 
 /*!

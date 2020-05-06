@@ -3,24 +3,12 @@
 #ifndef MAABADA_MMN14_MEMORYMAP_H
 #define MAABADA_MMN14_MEMORYMAP_H
 
+#include "dataStructures.h"
 #include "aidTools.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
-typedef struct dataNode{ /*we've decided to implement the data table with a linked list, becuse we can't tell
-the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
-    int address;
-    short word;
-    struct dataNode *next;
-}*dataNodePtr, dataNode;
-
-
-typedef struct dataLinkedList {
-    int size;
-    dataNodePtr head;
-}dataLinkedList, *dataLinkedListPtr;
 
 
 dataNodePtr newDataNode(char ch, int x, bool isItString); /*is string = true if its .string, false if its .data,

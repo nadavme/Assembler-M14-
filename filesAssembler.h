@@ -2,6 +2,7 @@
 #ifndef MAABADA_MMN14_FILESASSEMBLER_H
 #define MAABADA_MMN14_FILESASSEMBLER_H
 
+#include "dataStructures.h"
 #include "aidTools.h"
 #include <stdio.h>
 #include <stdlib.h>
