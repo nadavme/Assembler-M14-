@@ -738,7 +738,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     return fp;
 }
 
-void createObFile(char* fileName, dataLinkedListPtr data_table)
+void createObFile(char* fileName)
 {
     dataNodePtr curr;
     int i, j, k, mem_word, lineNumber; /* three counters and a mem_word value */
@@ -781,7 +781,7 @@ void createObFile(char* fileName, dataLinkedListPtr data_table)
         line_num += i;
         if (DC > 0)
         {
-            curr = data_table->head;
+            curr = dataTable->head;
             mem_word = curr->word;
         }
         for (i = 0; i<DC; i++)
