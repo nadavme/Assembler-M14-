@@ -23,6 +23,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         errorFlag = 1;
         lineCounter = 0;
         char *line;
+        char temp;
         char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
         LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
