@@ -1,6 +1,6 @@
-//
-// Created by nadav on 04/02/2020.
-//
+
+/* Created by nadav on 04/02/2020.*/
+
 
 #ifndef MAABADA_MMN14_SYMBOLSTABLE_H
 #define MAABADA_MMN14_SYMBOLSTABLE_H
@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "aidTools.h"
-//#include "filesAssembler.h"
 
 typedef struct SYMBOL_occur* occp;
 
@@ -117,4 +116,4 @@ int add_symbol_occurrence(occp head, int line);
 
 
 
-#endif //MAABADA_MMN14_SYMBOLSTABLE_H
+#endif /*MAABADA_MMN14_SYMBOLSTABLE_H*/

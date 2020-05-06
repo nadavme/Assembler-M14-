@@ -1,6 +1,6 @@
-//
-// Created by nadav on 04/02/2020.
-//
+
+/* Created by nadav on 04/02/2020.*/
+
 
 #include <stdio.h>
 #include <stdlib.h>

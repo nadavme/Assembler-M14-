@@ -22,4 +22,4 @@
 int assembler(char* filesToInterpret[], int numOfFiles);
 
 
-#endif //MAABADA_MMN14_FILESASSEMBLER_H
+#endif /*MAABADA_MMN14_FILESASSEMBLER_H*/

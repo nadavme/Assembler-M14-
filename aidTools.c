@@ -1,6 +1,6 @@
-//
-// Created by nadav on 04/02/2020.
-//
+
+/* Created by nadav on 04/02/2020.*/
+
 
 #include "aidTools.h"
 
@@ -407,7 +407,7 @@ char *parseByTokens(char* line, Token *currTok)
         {
             /*This symbol needs to be added to the symbol table.*/
             currTok->type = Tsymbol;
-            strcpy(currTok->data.symbolName, token);
+            strcpy(currTok->data.symbol, token);
         }
         else
             currTok->type = Terror;

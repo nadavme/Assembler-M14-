@@ -1,6 +1,3 @@
-//
-// this a tester for bin to octal
-//
 
 #include "aidTools.h" 
 #include <stdio.h>

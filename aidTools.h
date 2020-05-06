@@ -1,6 +1,6 @@
-//
-// Created by nadav on 04/02/2020.
-//
+
+/* Created by nadav on 04/02/2020.*/
+
 
 #ifndef MAABADA_MMN14_AIDTOOLS_H
 #define MAABADA_MMN14_AIDTOOLS_H
@@ -13,8 +13,6 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include "permanentTables.h"
-//#include "main.c"
-//#include "filesAssembler.h"
 #include "memoryMap.h"
 #include "symbolsTable.h"
 
@@ -242,7 +240,7 @@ char* fillCurrLineStruct(LineStruct* currLine, char* line);
 
 int operandsValidation(LineStruct* currLine, Token* operands, int opCounter);
 
-int parseAddressingMethod(Token operand)
+int parseAddressingMethod(Token operand);
 
 
 /*!
@@ -258,4 +256,4 @@ void createObFile(char* fileName);
 
 void createEntExtFiles(char* file);
 
-#endif //MAABADA_MMN14_AIDTOOLS_H
+#endif /*MAABADA_MMN14_AIDTOOLS_H*/
