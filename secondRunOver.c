@@ -91,5 +91,5 @@ void turnOnBits2Arr(int bit, occp occurrence_list)
 
 void turn_On_bit_on_cell(int place, int cell)
 {
-    commands_array[cell] |= (int)pow(2, place);
+    commands_array[cell] |= (short)pow(2, place);
 }

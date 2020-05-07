@@ -105,7 +105,7 @@ int isSymbol(char* string);
  * @param errorMsg
  * @param ...
  */
-void errorHandler(bool mentionLine, int lineIdx, char* errorMsg, ...);
+void errorHandler(int mentionLine, int lineIdx, char* errorMsg, ...);
 
 
 /*!
