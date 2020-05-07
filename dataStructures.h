@@ -18,8 +18,6 @@
 #define MAX_ARRAY 500
 
 
-
-
 /* types of symbols in the assably code */
 enum symbol_type {
 	EXTERN_SYMBOL,
@@ -235,5 +233,11 @@ typedef struct linkedList {
     int size;
     nodePtr head;
 }linkedList, *linkedListPtr;
+
+extern int IC,DC;
+extern linkedListPtr symbolTable;
+extern dataLinkedListPtr dataTable;
+extern short int commands_array[MAX_ARRAY];
+
 
 #endif /*MAABADA_MMN14_DATASTRUCTURES_H*/
