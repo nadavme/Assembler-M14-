@@ -21,7 +21,7 @@
 
 
 
-/* types of symbols in the assably code */
+/* types of symbols in the assembly code */
 enum symbol_type {
 	EXTERN_SYMBOL,
 	ENTRY_SYMBOL,
