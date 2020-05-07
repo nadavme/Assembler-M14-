@@ -30,7 +30,7 @@ void add_to_arr(int num_to_add, int toShift);/*this function is adding a number 
  * @param operands_cnt
  * @return
  */
-void addToCommandsArray(LineStruct *command, int operands_cnt);
+void addToCommandsArray(LineStruct *command, int operands_cnt, Token *symbol);
 
 /*!
  *

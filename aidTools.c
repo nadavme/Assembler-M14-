@@ -76,7 +76,7 @@ int bin_to_octal(int binaryNum)
         for (j = 0; j < 3; j++) /*the function basically looks at the 3 most right bits, and check for each bit from right to left - if it's on we add 1 
 		multyplied by 2 to the power of the place of the bit (0/1/2) to midSum.*/
         {
-            if (binaryNum & 1 == 1)
+            if ((binaryNum & 1) == 1)
             {
                 midSum = midSum + (int)pow(2, j);
             }
@@ -162,9 +162,9 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
 this function get called only after all checks for valid input are o.k.*/
-void addToCommandsArray(LineStruct *command, int operands_cnt)
+void addToCommandsArray(LineStruct *command, int operands_cnt, Token *symbol)/* only if there's lable before the command it will
+                                                                                     be stored in symbol, else null*/
 {
-    int i;
     /* adding the command word now.*/
     add_to_arr(command->data.command, COMMAND_OPCODE); /*the opCode in the word is at bit number 11*/
     turn_On_bit_num(absolute);
@@ -186,12 +186,13 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)
     /* adding the other memory words: */
 
     {
-        /*if we are dealing with symbols here, let this code free (after edit)
-		if (operands[i].type == lable_tok)
+        /* a possible bug - here*/
+		if (symbol != NULL)
 		{
-			add2lable_table(&lable_list, &(operands[i]), CODE_LABLE); /* CODE_LABLE is the type of lable to be added
+			addToSymbolTable(symbolTable->head, symbol, CODE_SYMBOL_DECLARATION, command->data.lineNumber);/*in case were dealing
+                                                                                                            with a declaration*/
 		}
-		else*/
+		
         if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
         {
             if (isBothOperandsRegs(command->data.operand1, command->data.operand2) == 1)
@@ -212,6 +213,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)
 
             else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
+                addToSymbolTable(symbolTable->head, command->data.operand1Symbol, CODE_SYMBOL, command->data.lineNumber);
                 IC++;
             }
 
@@ -261,6 +263,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)
 
                 else if (command->data.operand2 == directAddressing) /*in case were dealing with a direct mio'n*/
                 {
+                    addToSymbolTable(symbolTable->head, command->data.operand2Symbol, CODE_SYMBOL, command->data.lineNumber);
                     IC++;
                 }
 

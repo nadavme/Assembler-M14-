@@ -105,7 +105,7 @@ typedef struct LineStruct
     
     union
     {
-        char* line; /*This is the genuine line from the input, and we run over her*/
+        char* line; /*This is the genuine line from the input, and we run over it*/
 
         char* symbolName; /*This is where the symbol name parsed and stored, if found.*/
 
@@ -114,6 +114,10 @@ typedef struct LineStruct
         int number1; /*This is where the data of type number for parameter 1 is parsed and stored, if found */
 
 		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
+
+        Token *operand1Symbol;/* if one of the operands is a symbol than this Token will contain its details.*/
+
+        Token *operand2Symbol;/* if one of the operands is a symbol than this Token will contain its details.*/
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
