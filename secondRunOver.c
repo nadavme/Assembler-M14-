@@ -50,7 +50,6 @@ int secondRunOver()/*return 0 if theres errors and printing is irrelevant, retur
             else /* instruction symbol, in the code part */
             {
                 symbol2array(((curr->address) << DEST_ADDRESS) , curr->occurrence);
-                turnOnBits2Arr(relocatable, curr->occurrence);
             }
         }
         curr = curr->next;
