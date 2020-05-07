@@ -213,7 +213,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
 
             else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
-                addToSymbolTable(symbolTable->head, command->data.operand1Symbol, CODE_SYMBOL, command->data.lineNumber);
+                addToSymbolTable(symbolTable->head, command->data.operand1Token, CODE_SYMBOL, command->data.lineNumber);
                 IC++;
             }
 
@@ -263,7 +263,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
 
                 else if (command->data.operand2 == directAddressing) /*in case were dealing with a direct mio'n*/
                 {
-                    addToSymbolTable(symbolTable->head, command->data.operand2Symbol, CODE_SYMBOL, command->data.lineNumber);
+                    addToSymbolTable(symbolTable->head, command->data.operand2Token, CODE_SYMBOL, command->data.lineNumber);
                     IC++;
                 }
 
@@ -316,8 +316,15 @@ int isStringValid(char* array[], int length, char *string)
 
 int isInstruction(char *string)
 {
-    return isStringValid((char **) validInstructions, strlen(string), string);
-}
+    int i;
+    for (i = 0; validInstructions[i].instruction; i++)
+    {
+        if (strcmp(string, validInstructions[i].instruction) == 0) /* instruction found */
+        {
+            return validInstructions[i].insType;
+        }
+    }
+    return -1; /* no istruction found */}
 
 int isCommand(char *string)
 {
@@ -369,6 +376,7 @@ int isSymbol(char *string)
 
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
+    errorFlag =1;
     va_list parameters_to_print;
     va_start(parameters_to_print, errorMsg);
     if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
@@ -410,7 +418,7 @@ char *parseByTokens(char* line, struct Token *currTok)
     {
         do
         {
-            token[idx] = *line;
+            token[idx++] = *line;
             line++;
         } while (!isspace(*line));
         token[idx++] = '\0';
@@ -520,7 +528,8 @@ char* parseStringByTokens(char* line, Token* currTok)
 
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
-    int opCounter = 0; /* how many operands found in the line read */
+    int opCounter;
+    opCounter = 0; /* how many operands found in the line read */
     struct Token operands[2 + 1]; /* 1 for the new line */
 
 
@@ -642,8 +651,6 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
         return line;
     }
 
-
-
     /* Adds the commands and the operands into the instruction array */
     addToCommandsArray(currLine, opCounter);
     return line;
@@ -692,11 +699,15 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
         if (((commandsTable[currLine->data.command].sourceAddressingMethods)[parseAddressingMethod(operands[0])])
             && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
+            currLine->data.operand1Token = operands[0];
             currLine->data.operand1 = parseAddressingMethod(operands[0]);
             currLine->data.reg_op1 = operands[0].data.reg;
 
+            currLine->data.operand2Token = operands[1];
             currLine->data.reg_op2 = operands[1].data.reg;
             currLine->data.operand2 = parseAddressingMethod(operands[1]);
+
+
 
             return 0; /* is valid */
         }

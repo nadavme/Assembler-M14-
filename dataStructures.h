@@ -115,9 +115,9 @@ typedef struct LineStruct
 
 		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
 
-        Token *operand1Symbol;/* if one of the operands is a symbol than this Token will contain its details.*/
+        Token* operand1Token;/* if one of the operands is a symbol than this Token will contain its details.*/
 
-        Token *operand2Symbol;/* if one of the operands is a symbol than this Token will contain its details.*/
+        Token* operand2Token;/* if one of the operands is a symbol than this Token will contain its details.*/
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
@@ -231,6 +231,7 @@ extern int IC,DC;
 extern linkedListPtr symbolTable;
 extern dataLinkedListPtr dataTable;
 extern short int commands_array[MAX_ARRAY];
+int errorFlag;
 
 
 #endif /*MAABADA_MMN14_DATASTRUCTURES_H*/
