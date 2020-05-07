@@ -846,3 +846,13 @@ void createEntExtFiles(char* fileName)
     fclose(entryFile);
     fclose(externFile);
 }
+
+/* this function initialize every cell to value 0, */
+void arrayInit(short int array[], int length)
+{
+	int i;
+	for (i = 0; i<length; i++)
+	{
+		array[i] = 0;
+	}
+}

@@ -23,6 +23,9 @@ void turn_On_bit_num(int place);/*this function turn on the bit at'place' of the
  */
 void add_to_arr(int num_to_add, int toShift);/*this function is adding a number to the commands array.*/
 
+/* this function initialize every cell to value 0, */
+void arrayInit(short int array[], int length);
+
 
 /*!
  *

@@ -21,6 +21,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
     int errNum;
+    arrayInit(commands_array,MAX_ARRAY);/*initializing the array to 0.*/
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
