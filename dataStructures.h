@@ -20,7 +20,7 @@
 #define true 1
 #define false 0
 #define NOT_RELAVANT -1
-#define MAX_STRING_NAME
+#define MAX_STRING_NAME 31
 
 
 #define isWhiteSpace(x) (((x) == ' ')||((x) == '\t'))

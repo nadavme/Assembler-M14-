@@ -372,7 +372,7 @@ int isSymbol(char *string)
 }
 
 
-void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
+void errorHandler(int mentionLine, int lineIdx, char *errorMsg, ...)
 {
     va_list parameters_to_print;
     errorFlag =true;
@@ -391,10 +391,10 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 char *parseByTokens(char* line, struct Token *currTok)
 {
 
-    char token[31];
+    char token[MAX_STRING_NAME];
     int idx;
 
-    idx = 0;
+    idx = INITIAL_VALUE;
 
     /*Skip all white spaces at the the beginning of the line*/
     while (isWhiteSpace(*line))
