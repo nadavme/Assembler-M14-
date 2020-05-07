@@ -153,11 +153,8 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
         {
             return (SRC_ADDRESS + registerDirect);
         }
-        else
-        {
-            return -1;
-        }
     }
+    return -1;
 }
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
@@ -376,8 +373,8 @@ int isSymbol(char *string)
 
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
-    errorFlag =1;
     va_list parameters_to_print;
+    errorFlag =1;
     va_start(parameters_to_print, errorMsg);
     if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
     else
@@ -529,8 +526,11 @@ char* parseStringByTokens(char* line, Token* currTok)
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter;
+    Token operands[2 + 1]; /* 1 for the new line */
+
     opCounter = 0; /* how many operands found in the line read */
-    struct Token operands[2 + 1]; /* 1 for the new line */
+
+
 
 
     /* Getting the the first operand into an array of operands */
@@ -754,7 +754,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
 void createObFile(char* fileName)
 {
     dataNodePtr curr;
-    int i, j, k, mem_word, lineNumber; /* three counters and a mem_word value */
+    int i, k, mem_word; /* three counters and a mem_word value */
     FILE *file;
     char number_in_str[MAX_LINE];
 

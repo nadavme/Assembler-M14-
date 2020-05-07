@@ -9,7 +9,7 @@ dataNodePtr newDataNode(char ch, int x, bool isItString)
 
 return the new node*/
     dataNodePtr new;
-    int nameLen = 0;
+
     if (ch == 0 && isItString == true)
     {
         return NULL;
@@ -194,9 +194,10 @@ void addStringToDataTable(dataLinkedListPtr list, char *str)
 int add100ToMemory()/*this function updates the memory image, as described in the MAMAN.
                             return 0 if both tables are empty, else return 1.*/
 {
-    dataNodePtr curr;
-    curr = dataTable->head;
     int i;
+    dataNodePtr curr;
+
+    curr = dataTable->head;
     if (IC + DC == 0)
     {
         return 0;

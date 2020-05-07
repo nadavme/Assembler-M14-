@@ -23,7 +23,8 @@ int assembler(char* filesToInterpret[], int numOfFiles)
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
-        char *line;
+        char* originalLine;
+        char* line;
         char temp;
 
         /*Open file for reading*/
@@ -41,7 +42,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         errorFlag = 1;
         lineCounter = 0;
 
-        char *originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
+        originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
         LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
         LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
         Token *currTok = (Token *) malloc(sizeof(Token));
