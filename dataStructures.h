@@ -115,7 +115,7 @@ typedef struct LineStruct
 
 		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
 
-        Token* operand1Token;/* if one of the operands is a symbol than this Token will contain its details.*/
+		Token* operand1Token;/* if one of the operands is a symbol than this Token will contain its details.*/
 
         Token* operand2Token;/* if one of the operands is a symbol than this Token will contain its details.*/
 
@@ -129,10 +129,10 @@ typedef struct LineStruct
 
 		int reg_op2;/*This is where the register number parsed and stored, if found */
 
-        int operand1;/*if theres at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
+        int operand1;/*if there is at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
 							it will contain the destination operand.*/
 
-        int operand2;/*if theres 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
+        int operand2;/*if there is 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 
