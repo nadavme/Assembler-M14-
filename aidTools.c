@@ -193,7 +193,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
                                                                                                             with a declaration
 		}*/
 		
-        if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
+        if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) 
         {
             if (isBothOperandsRegs(command->data.operand1, command->data.operand2) == 1)
             {
@@ -213,7 +213,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
 
             else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
-                addToSymbolTable(symbolTable->head, command->data.operand1Token, CODE_SYMBOL, command->data.lineNumber);
+                addToSymbolTable(symbolTable->head, command->data.operand1Token, CODE_SYMBOL , command->data.lineNumber);
                 IC++;
             }
 
