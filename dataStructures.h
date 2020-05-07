@@ -17,7 +17,14 @@
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
 
+/*a global variables needed for the assembler: */
+extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
 
+extern int DC, IC;
+
+extern linkedListPtr symbolTable;
+
+extern dataLinkedListPtr dataTable;
 
 commandsTable[];
 
