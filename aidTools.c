@@ -352,6 +352,7 @@ int isRegister(char *string)
 
         return false; /*in case it's not a register*/
     }
+    return false;
 }
 
 int isSymbol(char *string)
@@ -721,6 +722,7 @@ int parseAddressingMethod(Token operand)
     if (operand.type == Tsymbol) return directAddressing;
     if (operand.type == Tregister) return registerDirect;
     if (operand.type == '*') return registerBypass;
+    return NOT_RELAVANT;
 
 }
 
