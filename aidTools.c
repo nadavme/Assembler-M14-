@@ -381,10 +381,12 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
     va_list parameters_to_print;
     va_start(parameters_to_print, errorMsg);
-    if (mentionLine == 0)
-        fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
+    if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
     else
+        {
         fprintf(stderr, "%s\n", errorMsg);
+        }
+
     vfprintf(stderr, errorMsg, parameters_to_print);
     fprintf(stderr, "\n");
     va_end(parameters_to_print);
@@ -731,7 +733,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     if (fullFileName == NULL)
     {
         errorHandler(1, -1, "\n Error: memory allocation has failed"
-                            " during openning file %s", file);
+                            " during opening file %s", file);
         return NULL;
     }
     strcpy(fullFileName, file);
@@ -741,7 +743,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
     /*Failure*/
     if(fp == NULL)
     {
-        errorHandler(1, -1, "\n Error: failed during openning file %s", fullFileName);
+        errorHandler(1, -1, "\n Error: Failed during openning file %s", fullFileName);
         return NULL;
     }
     /*All good.*/

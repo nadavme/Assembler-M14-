@@ -3,6 +3,7 @@
 
 
 #include "filesAssembler.h"
+#include <errno.h>
 
 
 linkedListPtr symbolTable;
@@ -19,6 +20,7 @@ int errorFlag, lineCounter;
 int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
+    int errNum;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
@@ -26,6 +28,16 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         char temp;
 
         /*Open file for reading*/
+        fprintf(stdout, "\nOpening file: %s%s ....\n", filesToInterpret[filesCounter], INPUT_SUFFIX);
+        if (!manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r"))
+        {
+            errNum = errno;
+            fprintf(stderr, "Value of errno: %d\n", errno);
+            perror("Error printed by perror");
+            fprintf(stderr, "Error opening file: %s\n", strerror( errNum ));
+            fprintf(stderr, "No output files will be created");
+            continue;
+        }
         fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
 
         /*Initiate variables*/

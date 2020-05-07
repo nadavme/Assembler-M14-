@@ -11,7 +11,7 @@ int main(int argc, char* argv[] )
 
     if (argc < 2)
     {
-        printf("No files error");
+        printf("ERROR: No files");
         return 1;
     }
     return assembler(argv, argc);
