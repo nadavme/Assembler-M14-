@@ -119,8 +119,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                 }
                 else if (currTok->type == Tcommand)
                 {
-                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL, currLine->data.lineNumber);
-
+                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, currLine->data.lineNumber);
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"

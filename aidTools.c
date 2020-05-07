@@ -162,7 +162,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
 this function get called only after all checks for valid input are o.k.*/
-void addToCommandsArray(LineStruct *command, int operands_cnt, Token *symbol)/* only if there's lable before the command it will
+void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's lable before the command it will
                                                                                      be stored in symbol, else null*/
 {
     /* adding the command word now.*/
@@ -186,12 +186,12 @@ void addToCommandsArray(LineStruct *command, int operands_cnt, Token *symbol)/* 
     /* adding the other memory words: */
 
     {
-        /* a possible bug - here*/
+        /* a possible bug - here
 		if (symbol != NULL)
 		{
-			addToSymbolTable(symbolTable->head, symbol, CODE_SYMBOL_DECLARATION, command->data.lineNumber);/*in case were dealing
-                                                                                                            with a declaration*/
-		}
+			addToSymbolTable(symbolTable->head, symbol, CODE_SYMBOL_DECLARATION, command->data.lineNumber);in case were dealing
+                                                                                                            with a declaration
+		}*/
 		
         if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) /*might check null, possible bug!!*/
         {
