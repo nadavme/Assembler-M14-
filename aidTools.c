@@ -388,7 +388,7 @@ char *parseByTokens(char* line, struct Token *currTok)
     idx = 0;
 
     /*Skip all white spaces at the the beginning of the line*/
-    while (isWhiteSpace(line))
+    while (isWhiteSpace(*line))
         line++;
 
     /*Check for a number*/
@@ -478,7 +478,7 @@ char* parseStringByTokens(char* line, Token* currTok)
     idx = 0;
 
     currTok->type = Tstring;
-    while (isWhitespace(line)) /* skip white spaces */
+    while (isWhiteSpace(line)) /* skip white spaces */
     {
         line++;
     }

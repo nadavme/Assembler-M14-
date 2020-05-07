@@ -66,7 +66,8 @@ int assembler(char* filesToInterpret[], int numOfFiles)
             continue;/*Should i exit?*/
         }
 
-        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL) {
+        while (fgets(originalLine, MAX_LINE + 2, fp) != NULL)
+        {
             currLine->data.line = originalLine;
             line = originalLine;
             lineCounter++;
