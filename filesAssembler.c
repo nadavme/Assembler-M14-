@@ -26,6 +26,8 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         char* originalLine;
         char* line;
         char temp;
+        LineStruct *currLine, *symbolLine;
+        Token *currTok, *symbolTok;
 
         /*Open file for reading*/
         fprintf(stdout, "\nOpening file: %s%s ....\n", filesToInterpret[filesCounter], INPUT_SUFFIX);
@@ -43,10 +45,10 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         lineCounter = INITIAL_VALUE;
 
         originalLine = (char *) malloc(sizeof(char) * MAX_LINE);
-        LineStruct *currLine = (LineStruct *) malloc(sizeof(LineStruct));
-        LineStruct *symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
-        Token *currTok = (Token *) malloc(sizeof(Token));
-        Token *symbolTok = (Token *) malloc(sizeof(Token));
+        currLine = (LineStruct *) malloc(sizeof(LineStruct));
+        symbolLine = (LineStruct *) malloc(sizeof(LineStruct));
+        currTok = (Token *) malloc(sizeof(Token));
+        symbolTok = (Token *) malloc(sizeof(Token));
 
         /*A symbol table instance, coded by a linked list.*/
         symbolTable = newList();
