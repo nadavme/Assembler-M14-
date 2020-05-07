@@ -172,14 +172,8 @@ struct instruction
 {
     char* instruction;
     int insType;
-}
-    validInstructions[] =
-        {
-                {".data",   DATA},
-                {".string", STRING},
-                {".extern", EXTERN},
-                {".entry",  ENTRY}
-        };
+}instruction;
+
         
 
 /*!
@@ -189,19 +183,10 @@ struct Register
 {
     char* regName;
     int regNum;
-}
-        validRegisters[] =
-        {
-                {"r1", R1},
-                {"r2", R2},
-                {"r3", R3},
-                {"r4", R4},
-                {"r5", R5},
-                {"r6", R6},
-                {"r7", R7}
-        };
+}Register;
 
-        typedef struct SYMBOL_occur* occp;
+
+typedef struct SYMBOL_occur* occp;
 
 /*!
  *this is one occurrence of a symbol in the file.

@@ -44,6 +44,24 @@ struct opTable commandsTable[16] =
         {"stop", 30720, 0,{ 0,0,0,0} ,{ 0,0,0,0 }}
 };
 
+struct instruction validInstructions[4] =
+{
+{".data",   DATA},
+{".string", STRING},
+{".extern", EXTERN},
+{".entry",  ENTRY}
+};
+
+struct Register validRegisters[7] =
+        {
+                {"r1", R1},
+                {"r2", R2},
+                {"r3", R3},
+                {"r4", R4},
+                {"r5", R5},
+                {"r6", R6},
+                {"r7", R7}
+        };
 
 int bin_to_octal(int binaryNum) 
 /*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
