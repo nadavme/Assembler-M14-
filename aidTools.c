@@ -66,14 +66,16 @@ struct Register validRegisters[7] =
 int bin_to_octal(int binaryNum) 
 /*this function converts a number from binary base to octal base, I used a method that we have learned in class.*/
 {
-    int i = 0, j = 0;
-    int sum = 0;
-    int midSum = 0;
+    int i , j, sum, midSum;
 
-    while (binaryNum != 0)
+    i = INITIAL_VALUE;
+    j = INITIAL_VALUE;
+    sum = INITIAL_VALUE;
+
+    while (binaryNum != INITIAL_VALUE)
     {
-        midSum = 0;
-        for (j = 0; j < 3; j++) /*the function basically looks at the 3 most right bits, and check for each bit from right to left - if it's on we add 1 
+        midSum = INITIAL_VALUE ;
+        for (j = INITIAL_VALUE ; j < 3; j++) /*the function basically looks at the 3 most right bits, and check for each bit from right to left - if it's on we add 1
 		multyplied by 2 to the power of the place of the bit (0/1/2) to midSum.*/
         {
             if ((binaryNum & 1) == 1)
@@ -190,7 +192,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
                                                                                                             with a declaration
 		}*/
 		
-        if ((command->data.operand1 != -1) && (command->data.operand2 != -1)) 
+        if ((command->data.operand1 != -1) && (command->data.operand2 != NOT_RELAVANT))
         {
             if (isBothOperandsRegs(command->data.operand1, command->data.operand2) == 1)
             {
@@ -199,7 +201,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
                 return;
             }
         }
-        if (command->data.operand1 != -1)
+        if (command->data.operand1 != NOT_RELAVANT)
         {
             if (command->data.operand1 == instantAddressing) /*in case were dealing with instant mio'n*/
             {
@@ -286,9 +288,9 @@ int isBothOperandsRegs(int x, int y) /*this function is checking if both operand
 {
     if ((x == registerBypass && y == registerBypass) || (x == registerBypass && y == registerDirect) || (x == registerDirect && y == registerBypass) || (x == registerDirect && y == registerDirect))
     {
-        return 1;
+        return true;
     }
-    return 0;
+    return false;
 }
 
 void weShare(LineStruct x) /*this function inserts 2 operands that use registers to 1 memory word.*/
@@ -303,39 +305,38 @@ int isStringValid(char* array[], int length, char *string)
 {
     /*The function allows validation of any string(operation, register, etc.)*/
     int i;
-    for (i = 0; i < length; i++)
+    for (i = INITIAL_VALUE; i < length; i++)
     {
         if (strcmp( array[i], string) == 0)
-            return 0;
+            return true;
     }
-    return -1;
+    return false;
 }
 
 int isInstruction(char *string)
 {
     int i;
-    for (i = 0; validInstructions[i].instruction; i++)
+
+    for (i = INITIAL_VALUE; validInstructions[i].instruction; i++)
     {
         if (strcmp(string, validInstructions[i].instruction) == 0) /* instruction found */
         {
             return validInstructions[i].insType;
         }
     }
-    return -1; /* no istruction found */}
+    return NOT_RELAVANT; /* no istruction found */}
 
 int isCommand(char *string)
 {
     int i;
-    /*register prefix*/
-    if (string[0] != 'r')
-    {
-        for (i = 0; commandsTable[i].codeName; i++)
+
+        for (i = INITIAL_VALUE; commandsTable[i].codeName; i++)
         {
             if (strcmp(string, commandsTable[i].codeName) == 0)
                 return i;
         }
-    }
-    return -1; /*in case it's not a command*/
+
+    return NOT_RELAVANT; /*in case it's not a command*/
 }
 
 int isRegister(char *string)
@@ -344,13 +345,13 @@ int isRegister(char *string)
     /*register prefix*/
     if (string[0] != 'r')
     {
-        for (i = 0; validRegisters[i].regName; i++)
+        for (i = INITIAL_VALUE; validRegisters[i].regName; i++)
         {
-            if (strcmp(string, validRegisters[i].regName) == 0)
-                return i;
+            if (strcmp(string, validRegisters[i].regName) == 0) return validRegisters[i].regNum;
         }
+
+        return false; /*in case it's not a register*/
     }
-    return -1; /*in case it's not a register*/
 }
 
 int isSymbol(char *string)
@@ -359,24 +360,24 @@ int isSymbol(char *string)
 
     /*validate every char on symbol*/
     /*make sure all are letters or digits*/
-    for (i = 0; i < strlen(string); i++)
+    for (i = INITIAL_VALUE; i < strlen(string); i++)
         if (!isalnum(string[i]))
-            return 0;
+            return false;
 
     /*symbol name must starts with a letter*/
     if (!isalpha(string[0]))
-        return 0;
+        return false;
 
-    return 1;
+    return true;
 }
 
 
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
     va_list parameters_to_print;
-    errorFlag =1;
+    errorFlag =true;
     va_start(parameters_to_print, errorMsg);
-    if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
+    if (mentionLine == true) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
     else
         {
         fprintf(stderr, "%s\n", errorMsg);
@@ -526,9 +527,9 @@ char* parseStringByTokens(char* line, Token* currTok)
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
     int opCounter;
-    Token operands[2 + 1]; /* 1 for the new line */
+    Token operands[MAX_OPERANDS + 1]; /* 1 for the new line */
 
-    opCounter = 0; /* how many operands found in the line read */
+    opCounter = INITIAL_VALUE; /* how many operands found in the line read */
 
 
 

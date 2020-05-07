@@ -2,7 +2,6 @@
 #ifndef MAABADA_MMN14_DATASTRUCTURES_H
 #define MAABADA_MMN14_DATASTRUCTURES_H
 
-#include <stdbool.h>
 #define EXTERN_MACRO "extern"
 #define ENTRY_MACRO "entry"
 #define MAX_LINE 82
@@ -16,6 +15,13 @@
 #define MAX_LINE 82
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
+#define MAX_OPERANDS 2
+#define INITIAL_VALUE 0
+#define true 1
+#define false 0
+#define NOT_RELAVANT -1
+#define MAX_STRING_NAME
+
 
 #define isWhiteSpace(x) (((x) == ' ')||((x) == '\t'))
 
@@ -82,8 +88,8 @@ typedef struct Token
     int type;
     union
     {
-        char symbol[31];
-        char string[82];
+        char symbol[MAX_STRING_NAME];
+        char string[MAX_LINE];
         int number;
         char tempCh;
         int command;
@@ -121,7 +127,7 @@ typedef struct LineStruct
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
-        bool isTranslated; /*This is a flag, helps us to understand if there is more job on this line.*/
+        int isTranslated; /*This is a flag, helps us to understand if there is more job on this line.*/
 
         int command; /*This is where the command name parsed and stored, if found.*/
 
