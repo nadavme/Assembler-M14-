@@ -7,8 +7,6 @@
 int secondRunOver()/*return 0 if theres errors and printing is irrelevant, return 1 if
                                                                         if theres no errors. */
 {
-    int value;
-    dataNodePtr dataPtr;
     int flag;
     nodePtr curr;
     curr = symbolTable->head;
@@ -34,12 +32,6 @@ int secondRunOver()/*return 0 if theres errors and printing is irrelevant, retur
                 continue;
             }
         }
-
-        dataPtr = searchDataInList(curr->address,dataTable);
-        if (dataPtr!=NULL)
-        {
-            value = (int)dataPtr->word;
-        }
         
 
         /*adding to the commands array's, bassically the core of the second run over...*/
@@ -52,12 +44,12 @@ int secondRunOver()/*return 0 if theres errors and printing is irrelevant, retur
         {
             if (curr->data_or_instruction == DATA_SYMBOL)
             {
-                symbol2array(((value) << DEST_ADDRESS), curr->occurrence);
+                symbol2array(((curr->address) << DEST_ADDRESS), curr->occurrence);
                 turnOnBits2Arr(relocatable, curr->occurrence);
             }
             else /* instruction symbol, in the code part */
             {
-                symbol2array(((value) << DEST_ADDRESS) , curr->occurrence);
+                symbol2array(((curr->address) << DEST_ADDRESS) , curr->occurrence);
                 turnOnBits2Arr(relocatable, curr->occurrence);
             }
         }
