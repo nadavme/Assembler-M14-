@@ -364,19 +364,6 @@ int isSymbol(char *string)
 }
 
 
-
-int isWhitespace(char *line)
-{
-    while (*line != '\0')
-    {
-        if (!isspace((unsigned char)(*line)))
-            return 0;
-        line++;
-    }
-    return 1;
-}
-
-
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
     va_list parameters_to_print;
@@ -395,13 +382,13 @@ void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 char *parseByTokens(char* line, struct Token *currTok)
 {
 
-    char token[30];
+    char token[31];
     int idx;
 
     idx = 0;
 
     /*Skip all white spaces at the the beginning of the line*/
-    while (isWhitespace(line))
+    while (isWhiteSpace(line))
         line++;
 
     /*Check for a number*/

@@ -17,6 +17,9 @@
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
 
+#define isWhiteSpace(x) (((x) == ' ')||((x) == '\t'))
+
+
 
 /* types of symbols in the assably code */
 enum symbol_type {
@@ -71,6 +74,7 @@ typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
  *
  */
 typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
+
 
 
 typedef struct Token

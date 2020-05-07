@@ -91,12 +91,7 @@ int isSymbol(char* string);
 
 
 
-/*!
- *
- * @param line
- * @return
- */
-int isWhitespace(char* line);
+
 
 
 
