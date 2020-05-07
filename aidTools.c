@@ -689,7 +689,7 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
                 currLine->data.operand1Token = &operands[0];
                 currLine->data.operand2 = -1;
 
-                return 0;
+                return true;
             }
         }
     }
@@ -708,11 +708,11 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
 
 
 
-            return 0; /* is valid */
+            return true; /* is valid */
         }
     }
     errorHandler(0,(int) currLine->data.lineNumber ,"invalid operand");
-    return 1;
+    return false;
 }
 
 
@@ -733,7 +733,7 @@ FILE* manageFiles(const char* file, char* suffix, char* mode)
 
     if (fullFileName == NULL)
     {
-        errorHandler(1, -1, "\n Error: memory allocation has failed"
+        errorHandler(1, '\0', "\n Error: memory allocation has failed"
                             " during opening file %s", file);
         return NULL;
     }
