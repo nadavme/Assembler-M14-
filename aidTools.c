@@ -645,7 +645,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
     }
 
     /*Operands validation checks- if not valid, return without translating the lines*/
-    if (!operandsValidation(currLine, operands, opCounter))
+    if (!(operandsValidation(currLine, operands, opCounter)))
     {
         return line;
     }
@@ -665,7 +665,7 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
     {
         errorHandler(true, (int) currLine->data.lineNumber,"Number of operands accepted is not"
                                                         " matching the amount by the commandsTable.");
-        return 1;
+        return 0;
     }
 
     /* validating the addressingMethods for this command */
@@ -673,7 +673,7 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
     if (numOfOperands == 0)
     {
 
-        return 0; /* the operands are valid */
+        return 1; /* the operands are valid */
     }
 
     else if (numOfOperands == 1)
