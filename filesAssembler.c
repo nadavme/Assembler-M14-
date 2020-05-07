@@ -20,7 +20,6 @@ int errorFlag, lineCounter;
 int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
-    int errNum;
 
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
@@ -31,10 +30,6 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         fprintf(stdout, "\nOpening file: %s%s ....\n", filesToInterpret[filesCounter], INPUT_SUFFIX);
         if (!manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r"))
         {
-            errNum = errno;
-            fprintf(stderr, "Value of errno: %d\n", errno);
-            perror("Error printed by perror");
-            fprintf(stderr, "Error opening file: %s\n", strerror( errNum ));
             fprintf(stderr, "No output files will be created");
             continue;
         }
@@ -96,7 +91,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                 /*Parsing the next token on the input line.*/
                 line = parseByTokens(line, currTok);
 
-                if (currTok->type == ':')/*The valid suffix of a symbol declaration.*/
+                if (currTok->type != ':')/*The valid suffix of a symbol declaration.*/
                 {
                     errorHandler(0, (int) currLine->data.lineNumber, "A symbol declaration must "
                                                                      "end with a colon.");
@@ -114,12 +109,13 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         errorFlag = 0;
                         continue;
                     }
-                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, (int)currLine->data.lineNumber);
 
                 }
                 else if (currTok->type == Tcommand)
                 {
-                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, (int)currLine->data.lineNumber);
+
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"

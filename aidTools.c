@@ -316,8 +316,15 @@ int isStringValid(char* array[], int length, char *string)
 
 int isInstruction(char *string)
 {
-    return isStringValid((char **) validInstructions, strlen(string), string);
-}
+    int i;
+    for (i = 0; validInstructions[i].instruction; i++)
+    {
+        if (strcmp(string, validInstructions[i].instruction) == 0) /* instruction found */
+        {
+            return validInstructions[i].insType;
+        }
+    }
+    return -1; /* no istruction found */}
 
 int isCommand(char *string)
 {
@@ -410,7 +417,7 @@ char *parseByTokens(char* line, struct Token *currTok)
     {
         do
         {
-            token[idx] = *line;
+            token[idx++] = *line;
             line++;
         } while (!isspace(*line));
         token[idx++] = '\0';
@@ -520,7 +527,8 @@ char* parseStringByTokens(char* line, Token* currTok)
 
 char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 {
-    int opCounter = 0; /* how many operands found in the line read */
+    int opCounter;
+    opCounter = 0; /* how many operands found in the line read */
     struct Token operands[2 + 1]; /* 1 for the new line */
 
 
@@ -641,8 +649,6 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
     {
         return line;
     }
-
-
 
     /* Adds the commands and the operands into the instruction array */
     addToCommandsArray(currLine, opCounter);
