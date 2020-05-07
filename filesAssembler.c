@@ -3,7 +3,6 @@
 
 
 #include "filesAssembler.h"
-#include <errno.h>
 
 
 linkedListPtr symbolTable;
@@ -55,10 +54,10 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         dataTable = newDataList();
 
 
-        if ((currTok == NULL) || (symbolTok == NULL))
+        if ((currTok == NULL) || (symbolTok == NULL) || (symbolLine == NULL)|| (currLine == NULL))
         {
             errorHandler(1, 0, "ERROR: Memory allocation has failed.");
-            errorFlag = 0;
+            errorFlag = 1;
             continue;/*Should i exit?*/
         }
 
@@ -74,7 +73,6 @@ int assembler(char* filesToInterpret[], int numOfFiles)
             /*Length of line validation*/
             if (!strchr(line, '\n')) {
                 errorHandler(0, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
-                errorFlag = 0;
                 /*To "cut" the rest  of the line.*/
                 while ((temp = fgetc(fp)) != '\n');
                 continue;
@@ -96,37 +94,41 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                 {
                     errorHandler(0, (int) currLine->data.lineNumber, "A symbol declaration must "
                                                                      "end with a colon.");
-                    errorFlag = 0;
                     continue;
                 }
 
                 /*Parsing the next token on the input line.*/
                 line = parseByTokens(line, currTok);
 
-                if (currTok->type == Tinstruction) {
-                    if ((currTok->data.instruction == EXTERN) || (currTok->data.instruction == ENTRY)) {
+                if (currTok->type == Tinstruction)
+                {
+                    if ((currTok->data.instruction == EXTERN) || (currTok->data.instruction == ENTRY))
+                    {
                         errorHandler(0, (int) currLine->data.lineNumber, "This instruction is not"
                                                                          " valid after a symbol");
-                        errorFlag = 0;
+                        errorFlag = 1;
                         continue;
                     }
-                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, (int)currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, (int) currLine->data.lineNumber);
 
                 }
                 else if (currTok->type == Tcommand)
                 {
-                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, (int)currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, (int) currLine->data.lineNumber);
 
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
                     errorHandler(0, (int) currLine->data.lineNumber, "Invalid parameter,"
                                                                      " after a symbol declaration");
-                    errorFlag = 0;
+                    errorFlag = 1;
                     continue;
                 }
             }
-            if (currTok->type == Tinstruction) {
-                if (currTok->data.instruction == DATA) {
+            if (currTok->type == Tinstruction)
+            {
+                if (currTok->data.instruction == DATA)
+                {
+
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
 
