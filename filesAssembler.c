@@ -24,7 +24,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
     {
         char *line;
         char temp;
-        
+
         /*Open file for reading*/
         fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
 

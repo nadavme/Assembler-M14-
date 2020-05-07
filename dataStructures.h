@@ -17,52 +17,40 @@
 #define MEMORY_START_ADDRESS 100 /* can be changed */
 #define MAX_ARRAY 500
 
-commandsTable[];
+
+
 
 /* types of symbols in the assably code */
-enum symbol_type
-{
-    EXTERN_SYMBOL,
-    ENTRY_SYMBOL,
-    CODE_SYMBOL_DECLARATION,
-    DATA_SYMBOL,
-    CODE_SYMBOL, /* used, not declared */
-    NOT_DECLARED = -1
+enum symbol_type {
+	EXTERN_SYMBOL,
+	ENTRY_SYMBOL,
+	CODE_SYMBOL_DECLARATION,
+	DATA_SYMBOL,
+	CODE_SYMBOL, /* used, not declared */
+	NOT_DECLARED = -1
 };
 
 /* types of addressing modes of the command operands */
-enum addressingMethods
-{
+enum addressingMethods {
     instantAddressing,
     directAddressing,
     registerBypass,
     registerDirect
 };
 
-/*!
- *
- */
-typedef enum ARE
-{
-    external = 0,
-    relocatable,
-    absolute
-} ARE;
 
 /*!
  *
  */
-typedef enum linePurposes
-{
-    Tsymbol = -1,
-    Tnumber = -2,
-    Tinstruction = -3,
-    Tstring = -4,
-    Tcommand = -5,
-    Tregister = -6,
-    TnewLine = -7,
-    Terror = -8
-} linePurposes;
+typedef enum ARE { external = 0, relocatable, absolute } ARE;
+
+
+/*!
+ *
+ */
+typedef enum linePurposes {Tsymbol = -1, Tnumber = -2, Tinstruction = -3,
+    Tstring = -4, Tcommand = -5, Tregister = -6,
+    TnewLine = -7, Terror = -8} linePurposes;
 
 enum memory_word_toShift
 {
@@ -79,33 +67,19 @@ enum memory_word_toShift
 /*!
  *
  */
-typedef enum registers
-{
-    R0,
-    R1,
-    R2,
-    R3,
-    R4,
-    R5,
-    R6,
-    R7
-} registers;
+typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
 
 /*!
  *
  */
-typedef enum instructions
-{
-    STRING,
-    DATA,
-    ENTRY,
-    EXTERN
-} instructions;
+typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
+
 
 typedef struct Token
 {
     int type;
-    union {
+    union
+    {
         char symbol[31];
         char string[82];
         int number;
@@ -117,6 +91,8 @@ typedef struct Token
 
 } Token;
 
+
+
 /*!
  *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine
  * language code.
@@ -124,17 +100,18 @@ typedef struct Token
 typedef struct LineStruct
 {
     int theLinePurpose; /*the line type/ purpose out of LinePurposes that declared above.*/
+    
+    union
+    {
+        char* line; /*This is the genuine line from the input, and we run over her*/
 
-    union {
-        char *line; /*This is the genuine line from the input, and we run over her*/
+        char* symbolName; /*This is where the symbol name parsed and stored, if found.*/
 
-        char *symbolName; /*This is where the symbol name parsed and stored, if found.*/
-
-        char *string; /*This is where the data of type string is parsed and stored, if found.*/
+        char* string; /*This is where the data of type string is parsed and stored, if found.*/
 
         int number1; /*This is where the data of type number for parameter 1 is parsed and stored, if found */
 
-        int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
+		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
 
         unsigned int lineNumber; /*This is the genuine line number from the input.*/
 
@@ -144,32 +121,35 @@ typedef struct LineStruct
 
         int reg_op1; /*This is where the register number parsed and stored, if found */
 
-        int reg_op2; /*This is where the register number parsed and stored, if found */
+		int reg_op2;/*This is where the register number parsed and stored, if found */
 
-        int operand1; /*if theres at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
+        int operand1;/*if theres at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
 							it will contain the destination operand.*/
 
-        int operand2; /*if theres 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
+        int operand2;/*if theres 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
 
         int instruction; /*This is where the instruction type name parsed and stored, if found.*/
 
-    } data;
+    }data;
 
 } LineStruct;
 
-typedef struct dataNode
-{ /*we've decided to implement the data table with a linked list, becuse we can't tell
+
+
+typedef struct dataNode{ /*we've decided to implement the data table with a linked list, becuse we can't tell
 the length of it before the user insert file input. anyway, with linked list we can add nodes dynamically*/
     int address;
     short word;
     struct dataNode *next;
-} * dataNodePtr, dataNode;
+}*dataNodePtr, dataNode;
 
-typedef struct dataLinkedList
-{
+
+typedef struct dataLinkedList {
     int size;
     dataNodePtr head;
-} dataLinkedList, *dataLinkedListPtr;
+}dataLinkedList, *dataLinkedListPtr;
+
+
 
 /*!
  *
@@ -181,80 +161,79 @@ struct opTable
     int numOfOperands;
     int sourceAddressingMethods[4];
     int destAddressingMethods[4];
-};
+}opTable;
+
+struct opTable commandsTable[16];
+
+
 
 /*!
  *
  */
 struct instruction
 {
-    char *instruction;
+    char* instruction;
     int insType;
-} validInstructions[] =
-    {
-        {".data", DATA},
-        {".string", STRING},
-        {".extern", EXTERN},
-        {".entry", ENTRY}};
+}
+    validInstructions[] =
+        {
+                {".data",   DATA},
+                {".string", STRING},
+                {".extern", EXTERN},
+                {".entry",  ENTRY}
+        };
+        
 
 /*!
  *
  */
 struct Register
 {
-    char *regName;
+    char* regName;
     int regNum;
-} validRegisters[] =
-    {
-        {"r1", R1},
-        {"r2", R2},
-        {"r3", R3},
-        {"r4", R4},
-        {"r5", R5},
-        {"r6", R6},
-        {"r7", R7}};
+}
+        validRegisters[] =
+        {
+                {"r1", R1},
+                {"r2", R2},
+                {"r3", R3},
+                {"r4", R4},
+                {"r5", R5},
+                {"r6", R6},
+                {"r7", R7}
+        };
 
-typedef struct SYMBOL_occur *occp;
+        typedef struct SYMBOL_occur* occp;
 
 /*!
  *this is one occurrence of a symbol in the file.
  */
 typedef struct SYMBOL_occur
 {
-    int line;
-    occp next;
-} occurrence;
+	int line;
+	occp next;
+}occurrence;
 
 /*!
  * this node represent a symbol, it will be a part of a linked list 
  * which will represent the symbol table.
  */
-typedef struct node
-{
-    char *symbolName;        /* the name of the symbol */
-    int address;             /* the location in memory in which this symbol was declared */
-    int entry_extern;        /*is it entry or extern?*/
+typedef struct node{
+    char *symbolName;/* the name of the symbol */
+    int address;/* the location in memory in which this symbol was declared */
+    int entry_extern;/*is it entry or extern?*/
     int data_or_instruction; /* the type of the symbol, from the values of the enum above. */
-    occp occurrence;         /* a linked list of all the occurrences of this symbol in the code */
-    struct node *next;
-} * nodePtr, node;
+	occp occurrence; /* a linked list of all the occurrences of this symbol in the code */
+    struct node* next;
+}*nodePtr, node;
+
 
 /*!
  *
  */
-typedef struct linkedList
-{
+typedef struct linkedList {
     int size;
     nodePtr head;
-} linkedList, *linkedListPtr;
-
-/*a global variables needed for the assembler: */
-extern short int commands_array[MAX_ARRAY]; /* this array is the commands table, declared globally. */
-
-extern int DC, IC;
-
-extern linkedListPtr symbolTable;
-
-extern dataLinkedListPtr dataTable;
+}linkedList, *linkedListPtr;
 
 #endif /*MAABADA_MMN14_DATASTRUCTURES_H*/

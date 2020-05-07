@@ -9,7 +9,7 @@
 	1: direct addressing
 	2: register bypass
 	3: register direct */
-commandsTable[] =
+struct opTable commandsTable[16] =
 {
         {"mov", (unsigned short) 2032, 2,{ 1,1,1,1 },{ 0,1,1,1 }},
 
