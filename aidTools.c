@@ -687,7 +687,7 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
             {
                 currLine->data.operand1 = parseAddressingMethod(operands[0]);
                 currLine->data.reg_op1 = operands[0].data.reg;
-                currLine->data.reg_op1 = -1;
+                currLine->data.operand1Token = &operands[0];
                 currLine->data.operand2 = -1;
 
                 return 0;
@@ -699,11 +699,11 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
         if (((commandsTable[currLine->data.command].sourceAddressingMethods)[parseAddressingMethod(operands[0])])
             && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
-            currLine->data.operand1Token = operands[0];
+            currLine->data.operand1Token = &operands[0];
             currLine->data.operand1 = parseAddressingMethod(operands[0]);
             currLine->data.reg_op1 = operands[0].data.reg;
 
-            currLine->data.operand2Token = operands[1];
+            currLine->data.operand2Token = &operands[1];
             currLine->data.reg_op2 = operands[1].data.reg;
             currLine->data.operand2 = parseAddressingMethod(operands[1]);
 
