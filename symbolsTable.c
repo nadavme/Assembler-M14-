@@ -112,7 +112,7 @@ void addToSymbolTable(nodePtr head, struct Token *symbol, int status, int lineNu
 	}
 }
 
-/* this function adds a new lable occurrence to a lable node */
+/* this function adds a new symbol occurrence to a symbol node */
 int add_symbol_occurrence(occp head, int line)
 {
 	occp node = (occp)malloc(sizeof(occurrence));

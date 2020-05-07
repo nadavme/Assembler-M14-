@@ -162,7 +162,7 @@ int get_addressing_mode(int operandMethod, int destOrSrc)
 
 /*we've decided to implement the instructions table as an array. this function adds a command to the commands array.
 this function get called only after all checks for valid input are o.k.*/
-void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's lable before the command it will
+void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's Symbol before the command it will
                                                                                      be stored in symbol, else null*/
 {
     /* adding the command word now.*/

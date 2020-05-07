@@ -14,9 +14,9 @@ int secondRunOver()/*return 0 if theres errors and printing is irrelevant, retur
     curr = symbolTable->head;
     flag = 1;
 
-    while (curr) /* not reaching the end of the list */
+    while (curr) /* this loop runs on every node on the Symbol Table list */
     {
-        /* validation checks */
+        /*basic validation*/
         if ((curr->entry_extern == ENTRY_SYMBOL) && (curr->address == NOT_DECLARED))
         {
             errorHandler(1,-1,"symbol %s not declared",curr->symbolName);
@@ -36,7 +36,7 @@ int secondRunOver()/*return 0 if theres errors and printing is irrelevant, retur
         }
 
         dataPtr = searchDataInList(curr->address,dataTable);
-        if (dataPtr)
+        if (dataPtr!=NULL)
         {
             value = (int)dataPtr->word;
         }
@@ -78,7 +78,7 @@ void symbol2array(int number, occp occurrence_list)
 	}
 }
 
-/* this function adds number into the array, in all of the lable occurrences */
+/* this function adds number into the array, in all of the symbol occurrences */
 void turnOnBits2Arr(int bit, occp occurrence_list)
 {
 	occp curr = occurrence_list;

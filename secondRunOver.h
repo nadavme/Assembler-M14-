@@ -23,7 +23,7 @@ int secondRunOver();
 /* this function adds number into the array, in all of the symbol occurrences */
 void symbol2array(int number, occp occurrence_list);
 
-/* this function adds number into the array, in all of the lable occurrences */
+
 void turnOnBits2Arr(int bit, occp occurrence_list);
 
 void turn_On_bit_on_cell(int place, int cell);
