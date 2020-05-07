@@ -213,7 +213,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
 
             else if (command->data.operand1 == directAddressing) /*in case were dealing with a direct mio'n*/
             {
-                addToSymbolTable(symbolTable->head, command->data.operand1Symbol, CODE_SYMBOL, command->data.lineNumber);
+                addToSymbolTable(symbolTable->head, command->data.operand1Token, CODE_SYMBOL, command->data.lineNumber);
                 IC++;
             }
 
@@ -263,7 +263,7 @@ void addToCommandsArray(LineStruct *command, int operands_cnt)/* only if there's
 
                 else if (command->data.operand2 == directAddressing) /*in case were dealing with a direct mio'n*/
                 {
-                    addToSymbolTable(symbolTable->head, command->data.operand2Symbol, CODE_SYMBOL, command->data.lineNumber);
+                    addToSymbolTable(symbolTable->head, command->data.operand2Token, CODE_SYMBOL, command->data.lineNumber);
                     IC++;
                 }
 
@@ -376,6 +376,7 @@ int isSymbol(char *string)
 
 void errorHandler(bool mentionLine, int lineIdx, char *errorMsg, ...)
 {
+    errorFlag =1;
     va_list parameters_to_print;
     va_start(parameters_to_print, errorMsg);
     if (mentionLine == 0) fprintf(stderr, "Error found in line %d: %s\n", lineIdx, errorMsg);
@@ -698,11 +699,15 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
         if (((commandsTable[currLine->data.command].sourceAddressingMethods)[parseAddressingMethod(operands[0])])
             && ((commandsTable[currLine->data.command].destAddressingMethods)[parseAddressingMethod(operands[1])]))
         {
+            currLine->data.operand1Token = operands[0];
             currLine->data.operand1 = parseAddressingMethod(operands[0]);
             currLine->data.reg_op1 = operands[0].data.reg;
 
+            currLine->data.operand2Token = operands[1];
             currLine->data.reg_op2 = operands[1].data.reg;
             currLine->data.operand2 = parseAddressingMethod(operands[1]);
+
+
 
             return 0; /* is valid */
         }
