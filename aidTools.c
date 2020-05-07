@@ -427,8 +427,7 @@ char *parseByTokens(char* line, struct Token *currTok)
             currTok->type = Tinstruction;
         }
         /*We figure out its not an instruction thus its not valid*/
-        else
-            currTok->type = Terror;
+        else currTok->type = Terror;
     }
 
     else if (*line == '\n')
@@ -442,7 +441,7 @@ char *parseByTokens(char* line, struct Token *currTok)
     {
         do
         {
-            token[idx] = *line;
+            token[idx++] = *line;
             line++;
         } while (isalnum(*line));
         token[idx] = '\0';
@@ -451,13 +450,11 @@ char *parseByTokens(char* line, struct Token *currTok)
         if ((currTok->data.command = isCommand(token)) >= 0)
         {
             currTok->type = Tcommand;
-            if (!isspace(*line))
-                currTok->type = Terror;
+            if (!isspace(*line)) currTok->type = Terror;
         }
 
         /*In case we found a match to a valid register.*/
-        else if ((currTok->data.reg = isRegister(token)) >= 0)
-            currTok->type = Tregister;
+        else if ((currTok->data.reg = isRegister(token)) >= 0) currTok->type = Tregister;
 
         /*If all is false, we understand it's a symbol.*/
         else if (isSymbol(token))
@@ -487,7 +484,7 @@ char* parseStringByTokens(char* line, Token* currTok)
     idx = 0;
 
     currTok->type = Tstring;
-    while (isWhiteSpace(line)) /* skip white spaces */
+    while (isWhiteSpace(*line)) /* skip white spaces */
     {
         line++;
     }
@@ -517,7 +514,7 @@ char* parseStringByTokens(char* line, Token* currTok)
     }
     else
     {
-        currTok->data.string[0] = '\0'; /* marks an error */
+        currTok->data.string[0] = '\0'; /* marks as an error */
     }
     line++;
     return line;
@@ -539,7 +536,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
     if (operands[opCounter].type == Tnumber) /* Number must follow an '#' */
     {
-        errorHandler(0, (int) currLine->data.lineNumber, "In a command, a number must"
+        errorHandler(true, (int) currLine->data.lineNumber, "In a command, a number must"
                                                          " follow an  hash ('#') sign");
         return line;
     }
@@ -551,7 +548,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
         if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
         {
-            errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a number must "
+            errorHandler(true, (int) currLine->data.lineNumber,  "In a command, a number must "
                                                         "follow an  hash ('#') sign");
             return line;
         }
@@ -566,7 +563,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
         if (operands[opCounter].type != Tregister) /* In a case of a * sign without a register after */
         {
-            errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a * must "
+            errorHandler(true, (int) currLine->data.lineNumber,  "In a command, a * must "
                                                               "be followed by a register");
             return line;
         }
@@ -590,7 +587,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
             if (operands[opCounter].type == Tnumber) /* In a case of a # sign without a number after */
             {
-                errorHandler(0, (int) currLine->data.lineNumber, "number must begin"
+                errorHandler(true, (int) currLine->data.lineNumber, "number must begin"
                                                                  " with hash ('#') sign");
                 return line;
             }
@@ -600,7 +597,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
                 if (operands[opCounter].type != Tnumber) /* In a case of a # sign without a number after */
                 {
-                    errorHandler(0 , (int) currLine->data.lineNumber, "number must follow '#'");
+                    errorHandler(true , (int) currLine->data.lineNumber, "number must follow '#'");
                     return line;
                 }
 
@@ -616,7 +613,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
                 if (operands[opCounter].type != Tregister) /* a * sign without a register after */
                 {
-                    errorHandler(0, (int) currLine->data.lineNumber,  "In a command, a * must "
+                    errorHandler(true, (int) currLine->data.lineNumber,  "In a command, a * must "
                                                                       "be followed by a register");
                     return line;
                 }
@@ -638,7 +635,7 @@ char* fillCurrLineStruct(struct LineStruct* currLine, char* line)
 
                 if (operands[opCounter].type != TnewLine) /* After two operands the end of the line char must appears */
                 {
-                    errorHandler(0, (int) currLine->data.lineNumber,"invalid parameter"
+                    errorHandler(true, (int) currLine->data.lineNumber,"invalid parameter"
                                                                     " after the operands ");
                     return line;
                 }
@@ -665,7 +662,7 @@ int operandsValidation(LineStruct* currLine, struct Token* operands, int opCount
     /* checking the amount of operands accepted */
     if (numOfOperands != opCounter)
     {
-        errorHandler(0, (int) currLine->data.lineNumber,"Number of operands accepted is not"
+        errorHandler(true, (int) currLine->data.lineNumber,"Number of operands accepted is not"
                                                         " matching the amount by the commandsTable.");
         return 1;
     }
