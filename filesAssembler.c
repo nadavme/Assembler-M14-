@@ -289,7 +289,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         if (errorFlag)
         {
             printf("Error: Errors has found on file %s,"
-                                " no output files will be created.", filesToInterpret[filesCounter]);
+                                " no output files will be created.\n", filesToInterpret[filesCounter]);
             continue;
         }
 
