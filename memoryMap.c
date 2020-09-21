@@ -4,42 +4,38 @@
 
 #include "memoryMap.h"
 
-dataNodePtr newDataNode(char ch, int x, bool isItString)
+dataNodePtr newDataNode(char ch, int x, bool isItChar)
 { /*is string = true if its .string, false if its .data,
 
 return the new node*/
     dataNodePtr new;
 
-    if (ch == 0 && isItString == true)
-    {
-        return NULL;
-    }
+    
     new = calloc(1, sizeof(dataNode));
     new->address = DC;
-    if (isItString == true)
+    if (isItChar == true)
     {
-        new->word = (short)ch; /*a posible bug??*/
+        new->word = ch; /*a posible bug??*/
     }
 
-    else if (isItString == false)
+    else if (isItChar == false)
     {
-        new->word = (short)x; /*maybe this line will cause trouble, maybe the cast, I can try Alon's function
-        to add numbers...*/
+        new->word = (short)x; 
     }
 
     return new;
 }
 
-void freeDataNode(dataNodePtr toFree)
+void freeDataNode(dataLinkedListPtr toFree)
 { /*a recursive function to free a node and his next node and so on till last one.
 to free the whole list just insert the head as a parameter*/
-    if (toFree == NULL)
-    {
-        return;
-    }
-
-    freeDataNode(toFree->next);
-    free(toFree);
+	dataNodePtr curr = toFree->head;
+	dataNodePtr temp;
+	while (curr) {
+		temp = curr;
+		curr = curr->next;
+		free(temp);
+	}
 }
 
 dataLinkedListPtr newDataList() /*a funtion to create a new data table (linked list)*/
@@ -180,6 +176,12 @@ void addStringToDataTable(dataLinkedListPtr list, char *str)
 {
     int i, length;
     length = strlen(str);
+
+    if (length == 1)
+        {
+            addCharToTable(list, str);/*if were dealing with one char and not a string...*/
+            return;
+        }
 
     for (i = 0; i < length; i++)
     {

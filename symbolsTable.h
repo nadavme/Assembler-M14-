@@ -17,7 +17,7 @@
  * @param symbol
  * @param status
  */
-void addToSymbolTable(nodePtr head,struct Token* symbol, int status, int lineNumber);
+void addToSymbolTable(linkedListPtr head,struct Token* symbol, int status, int lineNumber);
 
 
 /*!
@@ -54,7 +54,7 @@ linkedListPtr newList();
  * @param list
  * @return
  */
-nodePtr searchSymbolNameInList(char symbolName[], nodePtr head);
+nodePtr searchSymbolNameInList(char* symbolName, linkedListPtr head);
 
 
 

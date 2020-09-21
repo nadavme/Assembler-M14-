@@ -12,7 +12,9 @@ int main(int argc, char* argv[] )
     if (argc < 2)
     {
         printf("ERROR: No files");
+		getchar();
         return 1;
     }
-    return assembler(argv, argc);
+     assembler(argv, argc);
+	 getchar();
 }

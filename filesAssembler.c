@@ -20,23 +20,22 @@ int assembler(char* filesToInterpret[], int numOfFiles)
 {
     FILE *fp;
     arrayInit(commands_array,MAX_ARRAY); /*initializing the array to 0.*/
-
+	char* originalLine;
+	char* line;
+	char temp;
+	LineStruct *currLine, *symbolLine;
+	Token *currTok, *symbolTok;
+	int isLastLine = false;
     for (filesCounter = 1; filesCounter < numOfFiles; filesCounter++)
     {
-        char* originalLine;
-        char* line;
-        char temp;
-        LineStruct *currLine, *symbolLine;
-        Token *currTok, *symbolTok;
-
         /*Open file for reading*/
         fprintf(stdout, "\nOpening file: %s%s ....\n", filesToInterpret[filesCounter], INPUT_SUFFIX);
-        if (!manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r"))
+		fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
+		if (!fp)
         {
             fprintf(stderr, "No output files will be created");
             continue;
         }
-        fp = manageFiles(filesToInterpret[filesCounter], INPUT_SUFFIX, "r");
 
         /*Initiate variables*/
         IC = INITIAL_VALUE;
@@ -61,11 +60,16 @@ int assembler(char* filesToInterpret[], int numOfFiles)
         {
             errorHandler(false, 0, "ERROR: Memory allocation has failed.");
             errorFlag = true;
-            continue;/*Should i exit?*/
+			exit(1);
         }
 
         while (fgets(originalLine, MAX_LINE + 2, fp) != NULL)
         {
+			/*remove /n from end of string
+			if (originalLine[MAX_LINE] == '/n')
+				originalLine[MAX_LINE] = 0;
+			else originalLine[strlen(originalLine) -1] = 0;*/
+
             currLine->data.line = originalLine;
             line = originalLine;
             lineCounter++;
@@ -74,7 +78,9 @@ int assembler(char* filesToInterpret[], int numOfFiles)
             /*Validations on input*/
 
             /*Length of line validation*/
-            if (!strchr(line, '\n')) {
+			if (strlen(originalLine) == MAX_LINE || (originalLine[strlen(originalLine) -1] != '\n'))
+				isLastLine = true;
+            if (!strchr(line, '\n') && !isLastLine) {
                 errorHandler(true, lineCounter, "The line must be shorter than %d characters", MAX_LINE);
                 /*To "cut" the rest  of the line.*/
                 while ((temp = fgetc(fp)) != '\n');
@@ -112,12 +118,12 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         errorFlag = 1;
                         continue;
                     }
-                    addToSymbolTable(symbolTable->head,symbolTok , DATA_SYMBOL, (int) currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable,symbolTok , DATA_SYMBOL, (int) currLine->data.lineNumber);
 
                 }
                 else if (currTok->type == Tcommand)
                 {
-                    addToSymbolTable(symbolTable->head,symbolTok , CODE_SYMBOL_DECLARATION, (int) currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable,symbolTok , CODE_SYMBOL_DECLARATION, (int) currLine->data.lineNumber);
 
                 }
                 else {/*In case that after a symbol appears something that is not valid.*/
@@ -191,14 +197,14 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                     /*Parsing the first token on the input line.*/
                     line = parseByTokens(line, currTok);
 
-                    if (currTok->type != TnewLine) {
+                    if (currTok->type != TnewLine && !isLastLine) {
                         errorHandler(true, (int) currLine->data.lineNumber, "Invalid instruction to"
                                                                          " follow a symbol");
                         errorFlag = true;
                         continue;
                     }
 
-                    addToSymbolTable(symbolTable->head,symbolTok , EXTERN_SYMBOL, (int) currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable,symbolTok , EXTERN_SYMBOL, (int) currLine->data.lineNumber);
 
                 } else if (currTok->data.instruction == ENTRY) {
                     /*Parsing the first token on the input line.*/
@@ -220,7 +226,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                                                                          "to follow a symbol.");
                         errorFlag = true;
                     }
-                    addToSymbolTable(symbolTable->head,symbolTok , ENTRY_SYMBOL, (int) currLine->data.lineNumber);
+                    addToSymbolTable(symbolTable,symbolTok , ENTRY_SYMBOL, (int) currLine->data.lineNumber);
                 }
 
                     /*In case of a string token.*/
@@ -256,7 +262,7 @@ int assembler(char* filesToInterpret[], int numOfFiles)
             else if (currTok->type == Tcommand)
             {
                 currLine->theLinePurpose = Tcommand;
-
+				currLine->data.command = currTok->data.command;
                 /*Validates command sentences, and prepering the current LineStruct to translation*/
                 line = fillCurrLineStruct(currLine, line);
 
@@ -303,7 +309,8 @@ int assembler(char* filesToInterpret[], int numOfFiles)
                         "been created for them\n");
 
         /*free the symbolTable, dataTable, commandsTable etc.*/
-        freeDataNode((dataNodePtr) dataTable);
+
+        freeDataNode(dataTable);
         freeSymbolsTable(symbolTable);
         fclose(fp);
     }

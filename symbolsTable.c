@@ -6,57 +6,62 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbolsTable.h"
-
+#pragma warning(disable : 4996)
 /* this function adds a SYMBOL into the SYMBOL table, while doing validation chacks */
-void addToSymbolTable(nodePtr head, struct Token *symbol, int status, int lineNumber)
+void addToSymbolTable(linkedListPtr symbols, struct Token *symbol, int status, int lineNumber)
 {
-	nodePtr node = (nodePtr)malloc(sizeof(node));
+	
+	nodePtr newNode = (nodePtr)malloc(sizeof(node));
+	newNode->symbolName = (char*)malloc(sizeof(char)* MAX_STRING_NAME);
 	nodePtr curr;
 
-	if (!node)
+	if (!newNode)
 	{
 		errorHandler(1, -1, "Memory allocation has failed");
 		return;
 	}
-	if ((curr = searchSymbolNameInList(symbol->data.symbol, head)) == NULL) /* this is a new SYMBOL to add */
+	if ((curr = searchSymbolNameInList(symbol->data.symbol, symbols)) == NULL) /* this is a new SYMBOL to add */
 	{
 		/* creating the node */
-		strcpy(node->symbolName, symbol->data.symbol);/*initializing the fields*/
-		node->address = NOT_DECLARED;
-		node->data_or_instruction = NOT_DECLARED;
-		node->entry_extern = NOT_DECLARED;
-		node->occurrence = NULL; 
+		strcpy(newNode->symbolName, symbol->data.symbol);/*initializing the fields*/
+		newNode->address = NOT_DECLARED;
+		newNode->data_or_instruction = NOT_DECLARED;
+		newNode->entry_extern = NOT_DECLARED;
+		newNode->occurrence = NULL;
 
 		switch (status) /* which type of declaration there is... */
 		{
 			case CODE_SYMBOL_DECLARATION:
-				node->address = IC;
+				newNode->address = IC;
 				break;
 			case CODE_SYMBOL:
-				if (!add_symbol_occurrence(node->occurrence, IC)) return; /* adds the line to the list of occurances of this symbol */
+				if (!add_symbol_occurrence(newNode->occurrence, IC)) return; /* adds the line to the list of occurances of this symbol */
 				break;
 			case DATA_SYMBOL:
-				node->address = DC;
-				node->data_or_instruction = DATA_SYMBOL;
+				newNode->address = DC;
+				newNode->data_or_instruction = DATA_SYMBOL;
 				break;
 			case ENTRY_SYMBOL:
 			case EXTERN_SYMBOL:
-				node->entry_extern = status;
+				newNode->entry_extern = status;
 				break;
 		}
-		/* linking to the head of the list */
-		if (head == NULL) {
-			node->next = NULL;
+		/* linking to the tail of the list */
+		newNode->next = 0;
+		if (symbols->head == NULL) {
+			symbols->head = newNode;
 		}
 		else {
-			node->next = head;
+			curr = symbols->head;
+			while (curr->next)
+				curr = curr->next;
+			curr->next = newNode;
 		}
-		head = node;
 		return;
 	}
 	else /* if the SYMBOL is already in the table */
 	{
-		free(node); /* so there is no need for this node */
+		free(newNode); /* so there is no need for this node */
 		switch (status) {
 			case CODE_SYMBOL_DECLARATION:
 				if ((curr->address != NOT_DECLARED) || (curr->entry_extern == EXTERN_SYMBOL))
@@ -193,12 +198,12 @@ linkedListPtr newList()
     return calloc(1, sizeof(struct linkedList));
 }
 
-nodePtr searchSymbolNameInList(char symbolName[], nodePtr head)
+nodePtr searchSymbolNameInList(char* symbolName, linkedListPtr symbols)
 {
-    nodePtr searchedNode = head;
+    nodePtr searchedNode = symbols->head;
     while (searchedNode != NULL)
     {
-        if (strcmp(searchedNode->symbolName, symbolName) == 0)
+        if (!strcmp(searchedNode->symbolName, symbolName))
             return searchedNode;
         searchedNode = searchedNode->next;
     }

@@ -16,7 +16,7 @@ dc with or without 100???
 return the new node*/
 
 
-void freeDataNode(dataNodePtr toFree);/*a recursive function to free a node and his next node and so on till last one.
+void freeDataNode(dataLinkedListPtr toFree);/*a recursive function to free a node and his next node and so on till last one.
 to free the whole list just insert the head as a parameter*/
 
 /*!

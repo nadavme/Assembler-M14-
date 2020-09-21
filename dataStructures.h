@@ -21,7 +21,7 @@
 #define false 0
 #define NOT_RELAVANT -1
 #define MAX_STRING_NAME 31
-
+#define NUM_OF_COMMAND_CODES 15
 
 #define isWhiteSpace(x) (((x) == ' ')||((x) == '\t'))
 
@@ -82,21 +82,20 @@ typedef enum registers {R0, R1, R2, R3, R4, R5, R6, R7} registers;
 typedef enum instructions {STRING, DATA, ENTRY, EXTERN } instructions;
 
 
-
+struct TokenData
+{
+	char symbol[MAX_STRING_NAME];
+	char string[MAX_LINE];
+	int number;
+	char tempCh;
+	int command;
+	registers reg;
+	instructions instruction;
+};
 typedef struct Token
 {
     int type;
-    union
-    {
-        char symbol[MAX_STRING_NAME];
-        char string[MAX_LINE];
-        int number;
-        char tempCh;
-        int command;
-        int reg;
-        int instruction;
-    } data;
-
+	struct TokenData data;
 } Token;
 
 
@@ -105,45 +104,44 @@ typedef struct Token
  *This struct allows us to take a line from the input file and manipulate it, so we can assemble her to a machine
  * language code.
  */
+struct LineData
+{
+	char* line; /*This is the genuine line from the input, and we run over it*/
+
+	char* symbolName; /*This is where the symbol name parsed and stored, if found.*/
+
+	char* string; /*This is where the data of type string is parsed and stored, if found.*/
+
+	int number1; /*This is where the data of type number for parameter 1 is parsed and stored, if found */
+
+	int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
+
+	Token* operand1Token;/* if one of the operands is a symbol than this Token will contain its details.*/
+
+	Token* operand2Token;/* if one of the operands is a symbol than this Token will contain its details.*/
+
+	unsigned int lineNumber; /*This is the genuine line number from the input.*/
+
+	int isTranslated; /*This is a flag, helps us to understand if there is more job on this line.*/
+
+	int command; /*This is where the command name parsed and stored, if found.*/
+
+	int reg_op1; /*This is where the register number parsed and stored, if found */
+
+	int reg_op2;/*This is where the register number parsed and stored, if found */
+
+	int operand1;/*if there is at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
+				 it will contain the destination operand.*/
+
+	int operand2;/*if there is 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
+
+	int instruction; /*This is where the instruction type name parsed and stored, if found.*/
+
+};
 typedef struct LineStruct
 {
     int theLinePurpose; /*the line type/ purpose out of LinePurposes that declared above.*/
-    
-    union
-    {
-        char* line; /*This is the genuine line from the input, and we run over it*/
-
-        char* symbolName; /*This is where the symbol name parsed and stored, if found.*/
-
-        char* string; /*This is where the data of type string is parsed and stored, if found.*/
-
-        int number1; /*This is where the data of type number for parameter 1 is parsed and stored, if found */
-
-		int number2; /*This is where the data of type number for parameter 2 is parsed and stored, if found */
-
-		Token* operand1Token;/* if one of the operands is a symbol than this Token will contain its details.*/
-
-        Token* operand2Token;/* if one of the operands is a symbol than this Token will contain its details.*/
-
-        unsigned int lineNumber; /*This is the genuine line number from the input.*/
-
-        int isTranslated; /*This is a flag, helps us to understand if there is more job on this line.*/
-
-        int command; /*This is where the command name parsed and stored, if found.*/
-
-        int reg_op1; /*This is where the register number parsed and stored, if found */
-
-		int reg_op2;/*This is where the register number parsed and stored, if found */
-
-        int operand1;/*if there is at least 1 operand than one of the values of enum 'addressingMethods' will be stored here. if theres only 1 operand
-							it will contain the destination operand.*/
-
-        int operand2;/*if there is 2 operands than one of the values of enum 'addressingMethods' will be stored here. this is for destination operand*/
-
-        int instruction; /*This is where the instruction type name parsed and stored, if found.*/
-
-    }data;
-
+	struct LineData data;
 } LineStruct;
 
 

@@ -57,7 +57,7 @@ void weShare(LineStruct x); /*this function inserts 2 operands that use register
  * @param binaryNum
  * @return
  */
-int bin_to_octal(int binaryNum);/*converts from binary to octal, return the result.*/
+int bin_to_octal(short binaryNum);/*converts from binary to octal, return the result.*/
 
 
 /*!
